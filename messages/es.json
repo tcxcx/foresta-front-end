@@ -1,0 +1,16 @@
+{
+  "IndexPage": {
+    "title": "¡Hola mundo!",
+    "description": "Este es un mensaje de ¡Hola mundo! oficial."
+  },
+  "NotFoundPage": {
+    "title": "Página no encontrada",
+    "description": "¡Ups! Parece que has encontrado una página que no existe. No te preocupes, nuestra magia de internacionalización sigue trabajando duro en otras partes de la aplicación. ¡Siéntete libre de navegar hacia atrás para explorar más!"
+  },
+  "Navigation": {
+    "home": "Inicio"
+  },
+  "Footer": {
+    "copyright": "© 2024 Tu Aplicación. Todos los derechos reservados."
+  }
+}
