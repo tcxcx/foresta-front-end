@@ -1,7 +1,8 @@
 {
     "IndexPage": {
       "title": "Hello world!",
-      "description": "This is an official Hello world message!"
+      "description": "This is an official Hello world message!",
+      "connectWalletButtonText": "Connect Wallet"
     },
   "NotFoundPage": {
     "title": "Page Not Found",

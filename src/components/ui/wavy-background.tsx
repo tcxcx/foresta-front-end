@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef } from "react";
 import { createNoise3D } from "simplex-noise";
+import { useTheme } from "next-themes";
 
 export const WavyBackground = ({
   children,
@@ -45,6 +46,7 @@ export const WavyBackground = ({
         return 0.001;
     }
   };
+  const { theme } = useTheme();
 
   const init = () => {
     canvas = canvasRef.current;
@@ -87,27 +89,36 @@ export const WavyBackground = ({
       ctx.closePath();
     }
   };
+  
 
   let animationId: number;
   const render = () => {
-    ctx.fillStyle = backgroundFill || "white";
+    // Dynamically set ctx.fillStyle based on the current theme
+    if (theme === 'dark') {
+      ctx.fillStyle = backgroundFill || '#0C0A09';
+    } else {
+      ctx.fillStyle = backgroundFill || "white"; 
+    }
     ctx.globalAlpha = waveOpacity || 0.5;
     ctx.fillRect(0, 0, w, h);
     drawWave(5);
     animationId = requestAnimationFrame(render);
   };
 
+
   useEffect(() => {
     init();
+    // Rerender when theme changes to apply the new fillStyle
     return () => {
       cancelAnimationFrame(animationId);
     };
-  }, []);
+  }, [theme]);
 
   return (
-    <div
+    <div className="dark:bg-background">
+   <div
       className={cn(
-        "h-screen flex flex-col items-center justify-center",
+        "h-screen flex flex-col items-center justify-center dark:bg-background",
         containerClassName
       )}
     >
@@ -117,10 +128,12 @@ export const WavyBackground = ({
         ref={canvasRef}
         id="canvas"
       ></canvas>
-      <div className={cn("relative z-10", className)} {...props}>
+      <div className={cn("relative z-10 ", className)} {...props}>
         {children}
       </div>
 
     </div>
+    </div>
+ 
   );
 };

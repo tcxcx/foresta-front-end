@@ -1,7 +1,9 @@
 {
   "IndexPage": {
     "title": "¡Hola mundo!",
-    "description": "Este es un mensaje de ¡Hola mundo! oficial."
+    "description": "Este es un mensaje de ¡Hola mundo! oficial.",
+    "connectWalletButtonText": "Conecta tu Billetera"
+
   },
   "NotFoundPage": {
     "title": "Página no encontrada",
