@@ -88,7 +88,7 @@
 }
 
 &::-webkit-scrollbar-thumb:vertical {
-  background: green; 
+  background: #16A249; 
   border-radius: 4px;
 }
 
