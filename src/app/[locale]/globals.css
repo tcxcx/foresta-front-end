@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
  
+@font-face {
+  font-family: 'ClashDisplay';
+  font-weight: bold;
+  src: url('/fonts/ClashDisplay-Bold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'VioletSans';
+  font-weight: normal;
+  src: url('/fonts/VioletSans-Regular.otf') format('opentype');
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;

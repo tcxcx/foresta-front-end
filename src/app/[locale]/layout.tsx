@@ -31,7 +31,7 @@ export default function RootLayout({
         <TanstackProvider>
           <div className="flex flex-col min-h-screen max-w-4xl mx-auto">
             <Header />
-            <div className="flex-grow mt-20">{children}</div>
+            <div className="flex-grow mt-20 font-violet">{children}</div>
             <Footer />
           </div>
           <Toaster />

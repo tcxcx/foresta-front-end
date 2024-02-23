@@ -8,7 +8,8 @@ export default function Header() {
   return (
     <header className='p-4 z-10'>
       <nav className='flex items-center justify-between'>
-        <Link href='/'>{t('home')}</Link>
+        <Link href='/' className='font-violet uppercase hover:underline hover:text-green-500'>{t('home')}</Link>
+        <Link href='/'><h1 className='font-clash text-5xl uppercase hover:text-green-500'> 🟩Foresta</h1></Link>
         <LocalSwitcher />
       </nav>
     </header>
