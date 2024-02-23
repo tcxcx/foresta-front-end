@@ -6,7 +6,7 @@ export default function Header() {
   const t = useTranslations('Navigation');
 
   return (
-    <header className='p-4'>
+    <header className='p-4 z-10'>
       <nav className='flex items-center justify-between'>
         <Link href='/'>{t('home')}</Link>
         <LocalSwitcher />
