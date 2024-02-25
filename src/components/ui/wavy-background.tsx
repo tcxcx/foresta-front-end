@@ -46,7 +46,7 @@ export const WavyBackground = ({
         return 0.001;
     }
   };
-  const { theme } = useTheme();
+  const { theme, systemTheme } = useTheme();
 
   const init = () => {
     canvas = canvasRef.current;
@@ -91,19 +91,28 @@ export const WavyBackground = ({
   };
   
 
+  // const theme_detect = () => {
+  //   if (systemTheme = 'dark' ) {
+      
+  //   }
+  //   else (systemTheme = 'light' )  {
+
+  //   }
+  //   return
+  // }
+
+
+
   let animationId: number;
   const render = () => {
-    // Dynamically set ctx.fillStyle based on the current theme
-    if (theme === 'dark') {
-      ctx.fillStyle = backgroundFill || '#0C0A09';
-    } else {
-      ctx.fillStyle = backgroundFill || "white"; 
-    }
+    // Dynamically set ctx.fillStyle based on the current theme or system theme
+    const currentTheme = theme === 'system' ? systemTheme : theme; // Handles system theme preference
+    ctx.fillStyle = (currentTheme === 'dark' ? '#0C0A09' : "white") || backgroundFill;
     ctx.globalAlpha = waveOpacity || 0.5;
     ctx.fillRect(0, 0, w, h);
     drawWave(5);
     animationId = requestAnimationFrame(render);
-  };
+};
 
 
   useEffect(() => {
@@ -112,7 +121,7 @@ export const WavyBackground = ({
     return () => {
       cancelAnimationFrame(animationId);
     };
-  }, [theme]);
+  }, [render]);
 
   return (
     <div className="dark:bg-background">
