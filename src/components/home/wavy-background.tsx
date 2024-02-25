@@ -1,7 +1,8 @@
-import { useTranslations } from "next-intl";
 import React from "react";
+import { useTranslations } from "next-intl";
 import { WavyBackground } from "../ui/wavy-background";
 import GlobeComponent from "../ui/globe-component";
+import ResizableToggle from './ResizableToggle';
 
 export function WavyBackgroundDemo() {
   const t = useTranslations("IndexPage");
@@ -18,7 +19,10 @@ export function WavyBackgroundDemo() {
       <div className="pin-container">
         <GlobeComponent />
       </div>
-
+      {/* Centering the ResizableToggle component */}
+      <div className="flex justify-center items-center w-full">
+        <ResizableToggle />
+      </div>
     </WavyBackground>
   );
 }

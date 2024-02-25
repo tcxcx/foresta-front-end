@@ -38,7 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TanstackProvider>
-            <div className="flex flex-col min-h-screen max-w-4xl mx-auto dark:bg-background ">
+            <div className="flex flex-col min-h-screen max-w-7xl mx-auto dark:bg-background ">
               <Header />
               <div className="flex-grow mt-20 font-violet">{children}</div>
               <Footer />

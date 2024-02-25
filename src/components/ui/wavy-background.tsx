@@ -91,22 +91,9 @@ export const WavyBackground = ({
   };
   
 
-  // const theme_detect = () => {
-  //   if (systemTheme = 'dark' ) {
-      
-  //   }
-  //   else (systemTheme = 'light' )  {
-
-  //   }
-  //   return
-  // }
-
-
-
   let animationId: number;
   const render = () => {
-    // Dynamically set ctx.fillStyle based on the current theme or system theme
-    const currentTheme = theme === 'system' ? systemTheme : theme; // Handles system theme preference
+    const currentTheme = theme === 'system' ? systemTheme : theme;
     ctx.fillStyle = (currentTheme === 'dark' ? '#0C0A09' : "white") || backgroundFill;
     ctx.globalAlpha = waveOpacity || 0.5;
     ctx.fillRect(0, 0, w, h);
@@ -117,7 +104,6 @@ export const WavyBackground = ({
 
   useEffect(() => {
     init();
-    // Rerender when theme changes to apply the new fillStyle
     return () => {
       cancelAnimationFrame(animationId);
     };
