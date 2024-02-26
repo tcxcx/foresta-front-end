@@ -18,8 +18,7 @@ export default function LocaleSwitcher() {
   const [selectedLocale, setSelectedLocale] = useState(locale);
 
   const handleLocaleChange = (value: string) => {
-    setSelectedLocale(value); // Update the local state with the new value
-    // Perform the navigation
+    setSelectedLocale(value); 
     router.replace(`/${value}`);
   };
 
@@ -29,7 +28,6 @@ export default function LocaleSwitcher() {
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {/* Assuming 'en' and 'es' are your locale options */}
         <SelectItem value="en">English</SelectItem>
         <SelectItem value="es">Español</SelectItem>
       </SelectContent>

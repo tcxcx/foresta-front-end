@@ -4,8 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import TanstackProvider from "@/lib/TanstackProvider";
 import { Toaster } from "sonner";
 import "./globals.css";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
@@ -38,10 +37,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TanstackProvider>
-            <div className="flex flex-col min-h-screen max-w-7xl mx-auto dark:bg-background ">
-              <Header />
-              <div className="flex-grow mt-20 font-violet">{children}</div>
-              <Footer />
+            <div className="flex flex-col  mx-auto dark:bg-background ">
+              <div className="flex-grow font-violet">{children}</div>
             </div>
             <Toaster />
           </TanstackProvider>
