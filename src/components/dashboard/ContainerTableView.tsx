@@ -5,7 +5,6 @@ import Image from "next/image";
 import { CarbonDrawer } from "./CarbonDrawer";
 
 export const ContainerTableView = () => {
-  // Static data for demonstration purposes
   const containers = [
     { id: 1, name: "Container A", status: "Active" },
     { id: 2, name: "Container B", status: "Active" },
