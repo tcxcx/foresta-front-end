@@ -11,10 +11,9 @@ export default function NotFound() {
           <div className="h-64 w-full relative">
             <Image
               src="https://images.unsplash.com/photo-1572502006585-8d45f2d2c72b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt=""
+              alt="Picture of forest"
               layout="fill"
-              objectFit="cover"
-              className="rounded-md"
+              loading="lazy"
             />
           </div>
 

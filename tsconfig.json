@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/ui/SpotlightButton.jsx", "src/components/ui/Button.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/ui/SpotlightButton.jsx", "src/components/ui/Button.jsx", "src/components/map/index.tsx"],
   "exclude": ["node_modules"]
 }

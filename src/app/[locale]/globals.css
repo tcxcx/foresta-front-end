@@ -99,3 +99,7 @@
 &::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+.mapboxgl-popup-content {
+	padding: 0 !important;
+}
