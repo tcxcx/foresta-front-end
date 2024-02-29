@@ -29,17 +29,16 @@ export function Resizable(props: ResizableProps) {
           <span className="pr-6 uppercase font-violet text-primary p-0 pb-0 text-xl">
             {props.marketTitle}
           </span>
-          <span className="h-px flex-1  bg-black dark:bg-white"></span>
+          <span className="h-px flex-1 bg-black dark:bg-white"></span>
         </span>
-          <ContainerTableView {...props} />
+        <ContainerTableView {...props} />
       </ResizablePanel>
       <ResizableHandle withHandle />
-
       <ResizablePanel defaultSize={400} className="flex-1 overflow-hidden">
         <ResizablePanelGroup direction="vertical" className="h-full">
           <ResizablePanel defaultSize={400} className="overflow-hidden">
             <div className="flex h-full w-full items-center justify-center">
-              {/* <MapGlobe /> */}
+              <MapGlobe />
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />

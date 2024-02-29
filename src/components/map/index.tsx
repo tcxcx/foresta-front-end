@@ -1,3 +1,5 @@
+'use client';
+
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import Map, {
   NavigationControl,
