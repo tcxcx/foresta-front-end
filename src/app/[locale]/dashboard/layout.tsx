@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import SideMenu from "@/components/dashboard/SideMenu"; // Adjust the import path as needed
+import SideMenu from "@/components/dashboard/SideMenu";
 
 export const metadata: Metadata = {
   title: "Foresta | Dashboard",

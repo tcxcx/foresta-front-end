@@ -8,7 +8,7 @@ import Map, {
   FullscreenControl,
 } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useMapStore } from "@/hooks/useGeoLocation";
+import { useMapStore } from "@/hooks/context/useGeoLocation";
 
 const MapGlobe: FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
