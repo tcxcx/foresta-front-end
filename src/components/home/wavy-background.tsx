@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { WavyBackground } from "../ui/wavy-background";
 import GlobeComponent from "../ui/globe-component";
-import ResizableToggle from './ResizableToggle';
+import ResizableToggle from "./ResizableToggle";
 
 export function WavyBackgroundDemo() {
   const t = useTranslations("IndexPage");
@@ -20,7 +20,8 @@ export function WavyBackgroundDemo() {
         <GlobeComponent />
       </div>
       <div className="flex justify-center items-center w-full">
-        <ResizableToggle />
+        {/* Pass the translated text for the button, not the route */}
+        <ResizableToggle carbonButton={t("carbonButtonRoute")} />
       </div>
     </WavyBackground>
   );

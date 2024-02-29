@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -23,7 +23,7 @@ interface ResizableProps {
 
 export function Resizable(props: ResizableProps) {
   return (
-    <ResizablePanelGroup direction="horizontal" className="w-full h-full">
+    <ResizablePanelGroup direction="horizontal" className="w-full h-full p-4">
       <ResizablePanel defaultSize={250} className="flex-1 overflow-hidden">
         <span className="flex items-center p-2">
           <span className="pr-6 uppercase font-violet text-primary p-0 pb-0 text-xl">

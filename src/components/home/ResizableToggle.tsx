@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import ButtonOffset from './ButtonOffset';
 import { useLocale } from "next-intl";
 
-const ResizableToggle: React.FC = () => {
+interface ResizableToggleProps {
+  carbonButton: string;
+}
+
+const ResizableToggle: React.FC<ResizableToggleProps> = ({ carbonButton }) => {
   const router = useRouter();
   const locale = useLocale();
 
@@ -16,7 +20,7 @@ const ResizableToggle: React.FC = () => {
 
   return (
     <>
-      <ButtonOffset onClick={navigateToDashboard} />
+    <ButtonOffset onClick={navigateToDashboard} buttonText={carbonButton} />
     </>
   );
 };

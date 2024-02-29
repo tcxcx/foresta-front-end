@@ -1,8 +1,10 @@
 {
-    "IndexPage": {
+  "IndexPage": {
       "title": "Hello world!",
-      "description": "This is an official Hello world message!",
-      "connectWalletButtonText": "Connect Wallet"
+      "description": "satellite-based blockchain-verified carbon credits.",
+      "connectWalletButtonText": "Connect Wallet",
+      "carbonButtonRoute": "Purchase Carbon Credits"
+
     },
   "NotFoundPage": {
     "title": "Page Not Found",

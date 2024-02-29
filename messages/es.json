@@ -1,9 +1,9 @@
 {
   "IndexPage": {
     "title": "¡Hola mundo!",
-    "description": "Este es un mensaje de ¡Hola mundo! oficial.",
-    "connectWalletButtonText": "Conecta tu Billetera"
-
+    "description": "Créditos de carbono blockchain verificados por monitoreo satélital.",
+    "connectWalletButtonText": "Conecta tu Billetera",
+    "carbonButtonRoute": "Comprar Créditos de Carbono"
   },
   "NotFoundPage": {
     "title": "Página no encontrada",
@@ -13,7 +13,7 @@
     "home": "Inicio"
   },
   "Marketplace": {
-    "marketplaceTitle": "MERCADO DE CRÉDITOS DE CARBONO",
+    "marketplaceTitle": "MARKETPLACE DE CRÉDITOS DE CARBONO",
     "governanceTitle": "GOBERNANZA BASADA EN LA COMUNIDAD",
     "button": "Comprar Créditos",
     "title": "Compra Créditos de Carbono",
