@@ -11,6 +11,19 @@
   "Navigation": {
     "home": "Home"
   },
+  "Marketplace": {
+    "marketplaceTitle": "CARBON CREDIT MARKETPLACE",
+    "governanceTitle": "COMMUNITY-BASED GOVERNANCE",
+    "button": "Purchase Credits",
+    "title": "Purchase Carbon Credits",
+    "description": "Select the amount of carbon credits to purchase and retire.",
+    "decrease": "Decrease amount",
+    "credits": "Credits",
+    "increase": "Increase amout",
+    "confirm": "Confirm purchase",
+    "cancel": "Cancel"
+  },
+
   "Footer": {
     "copyright": "© 2024 Foresta. All rights reserved."
   }

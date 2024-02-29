@@ -1,10 +1,19 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
-import { CarbonDrawer } from "./CarbonDrawer";
+import { CarbonDrawer } from "@/components/dashboard/CarbonDrawer";
 
-export const ContainerTableView = () => {
+interface ContainerTableViewProps {
+  buttonText: string;
+  titleText: string;
+  descriptionText: string;
+  decreaseText: string;
+  increaseText: string;
+  confirmText: string;
+  cancelText: string;
+  creditsText: string;
+}
+
+export const ContainerTableView = (props: ContainerTableViewProps) => {
   const containers = [
     { id: 1, name: "Container A", status: "Active" },
     { id: 2, name: "Container B", status: "Active" },
@@ -17,14 +26,17 @@ export const ContainerTableView = () => {
       className="block max-w-md mx-auto rounded-lg p-4 shadow-sm shadow-indigo-100 hover:bg-gray-100 dark:hover:bg-zinc-950 md:max-w-xl lg:max-w-6xl"
     >
       <div className="h-56 w-full rounded-md relative">
+      <span className="absolute inset-x-0 z-10 bottom-0 h-2  bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
+
         <Image
           alt=""
           src="https://images.unsplash.com/photo-1591081658714-f576fb7ea3ed?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           layout="fill"
           objectFit="cover"
-          className="h-56 w-full rounded-md object-cover rounded-tr-3xl"
+          className="h-56 w-full rounded-md object-cover rounded-tr-3xl "
+          
         />
-        <span className="absolute inset-x-0 z-1 bottom-0 h-2  bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
+
       </div>
 
       <div className="mt-2">
@@ -48,8 +60,8 @@ export const ContainerTableView = () => {
             </dl>
           </div>
 
-          <div className="xl:ml-6 xl:mt-0 mt-4 w-full xl:w-auto">
-            <CarbonDrawer />
+          <div className="xl:ml-6 xl:mt-0 mt-4 w-full xl:w-auto z-100">
+          <CarbonDrawer {...props} />
           </div>
         </div>
 

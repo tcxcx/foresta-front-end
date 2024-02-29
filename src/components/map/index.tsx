@@ -50,7 +50,7 @@ const MapGlobe: FC = () => {
   }
 
   return (
-    <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }}>
+    <div ref={mapContainerRef} style={{ width: '100%', height: '100%'}}>
       <Map
         mapboxAccessToken={mapboxToken}
         mapStyle="mapbox://styles/mapbox/streets-v12"
@@ -60,6 +60,7 @@ const MapGlobe: FC = () => {
         onZoom={onViewportChange}
         maxZoom={20}
         minZoom={3}
+        
       >
         <GeolocateControl positionOptions={{ enableHighAccuracy: true }} trackUserLocation={true} />
         <NavigationControl position="bottom-right" />

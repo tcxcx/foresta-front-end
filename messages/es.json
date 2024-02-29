@@ -12,6 +12,18 @@
   "Navigation": {
     "home": "Inicio"
   },
+  "Marketplace": {
+    "marketplaceTitle": "MERCADO DE CRÉDITOS DE CARBONO",
+    "governanceTitle": "GOBERNANZA BASADA EN LA COMUNIDAD",
+    "button": "Comprar Créditos",
+    "title": "Compra Créditos de Carbono",
+    "description": "Selecciona la cantidad de créditos de carbono para comprar y retirar.",
+    "decrease": "Disminuir cantidad",
+    "credits": "Créditos",
+    "increase": "Aumentar cantidad",
+    "confirm": "Confirmar compra",
+    "cancel": "Cancelar"
+  },
   "Footer": {
     "copyright": "© 2024 Foresta. Todos los derechos reservados."
   }

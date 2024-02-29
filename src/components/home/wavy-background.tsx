@@ -19,7 +19,6 @@ export function WavyBackgroundDemo() {
       <div className="pin-container">
         <GlobeComponent />
       </div>
-      {/* Centering the ResizableToggle component */}
       <div className="flex justify-center items-center w-full">
         <ResizableToggle />
       </div>

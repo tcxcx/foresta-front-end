@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
 export const metadata: Metadata = {
-  title: "Examples",
-  description: "Check out some examples app built using the components.",
+  title: "Foresta | Log In",
+  description: "Log into the platform with blockchain based Substrate signatures",
 }
 
 interface ExamplesLayoutProps {

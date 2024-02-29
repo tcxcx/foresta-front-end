@@ -1,4 +1,3 @@
-// Use client directive for Next.js to understand this is a client-side only component
 "use client";
 
 import React, { useState } from "react";
