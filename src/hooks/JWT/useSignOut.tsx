@@ -1,12 +1,12 @@
 import { useRouter } from "next/navigation";
-import useWalletStore from "@/hooks/context/useWalletStore";
+import { useAuth } from "@/hooks/context/account";
 
 export const useSignOut = () => {
-  const { clearWallet } = useWalletStore();
+  const { logout } = useAuth();
   const router = useRouter();
 
   const signOut = () => {
-    clearWallet();
+    logout();
     router.push("/");
   };
 

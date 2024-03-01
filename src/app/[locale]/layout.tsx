@@ -4,7 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import TanstackProvider from "@/lib/TanstackProvider";
 import { Toaster } from "sonner";
 import "./globals.css";
-
+import { AuthProvider } from "@/hooks/context/account";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
@@ -37,9 +37,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TanstackProvider>
-            <div className="flex flex-col mx-auto dark:bg-background">
-              <div className="flex-grow font-violet">{children}</div>
-            </div>
+            <AuthProvider>
+              <div className="flex flex-col mx-auto dark:bg-background">
+                <div className="flex-grow font-violet">{children}</div>
+              </div>
+            </AuthProvider>
             <Toaster />
           </TanstackProvider>
         </ThemeProvider>

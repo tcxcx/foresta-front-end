@@ -3,6 +3,7 @@ import Link from "next/link";
 import LocalSwitcher from "./local-switcher";
 import { ModeToggle } from "./theme-toggle";
 import { SparklesCore } from "@/components/ui/sparkles";
+import AuthButton from "./auth/AuthButton";
 
 export default function Header() {
   const t = useTranslations("Navigation");
@@ -27,6 +28,7 @@ export default function Header() {
         <div className="flex-1 flex items-center justify-end space-x-4">
           <LocalSwitcher />
           <ModeToggle />
+          <AuthButton />
           <div className="opacity-0">{t("home")}</div>{" "}
         </div>
       </nav>

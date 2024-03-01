@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { copyToClipboard } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import useWalletStore from "@/hooks/context/useWalletStore";
+import { useAuth } from "@/hooks/context/account";
 import { useLocale } from "next-intl";
 import { useSignOut } from "@/hooks/JWT/useSignOut";
 
@@ -24,25 +24,17 @@ type Props = {
 export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
   const router = useRouter();
   const locale = useLocale();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { walletAddress, jwtToken, clearWallet } = useWalletStore();
-
+  const { logout, jwtToken } = useAuth(); 
+  const signOut = useSignOut();
   const { loading } = useProtectedService();
 
-  useEffect(() => {
-    if (!jwtToken || !walletAddress) {
-      router.push("/");
-    }
-  }, [jwtToken, walletAddress, router]);
-
-  const signOut = useSignOut();
 
   const goToDashboard = () => {
     if (jwtToken && account) {
       const path = `/${locale}/dashboard`;
       router.push(path);
     } else {
-      toast.error("You need to be signed in to access the dashboard.");
+      console.error("You need to be signed in to access the dashboard.");
     }
   };
 
