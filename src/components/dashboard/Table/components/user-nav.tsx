@@ -14,8 +14,10 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-  
+  import { useSignOut } from "@/hooks/JWT/useSignOut";
   export function UserNav() {
+    const signOut = useSignOut();
+
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -52,7 +54,7 @@ import {
             <DropdownMenuItem>New Team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onSelect={signOut}>
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

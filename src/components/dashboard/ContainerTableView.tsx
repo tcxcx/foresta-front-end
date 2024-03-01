@@ -1,4 +1,3 @@
-
 import React from "react";
 import Image from "next/image";
 import { CarbonDrawer } from "./CarbonDrawer";
@@ -59,7 +58,7 @@ export const ContainerTableView = (props: ContainerTableViewProps) => {
           </div>
 
           <div className="xl:ml-6 xl:mt-0 mt-4 w-full xl:w-auto">
-          <CarbonDrawer {...props} />
+            <CarbonDrawer {...props} />
           </div>
         </div>
 

@@ -1,16 +1,31 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next"
-import crypto from "crypto"
+// nonce.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import crypto from "crypto";
+import { EncryptJWT } from 'jose';
 
 type Data = {
-  nonce: string
-}
+  nonce?: string;
+  error?: string;
+};
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  // // @ts-ignore
-  const nonce = crypto.randomUUID()
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+  const nonce = crypto.randomUUID();
 
-  /** This is just an example. In production, we should encrypt cookies. */
-  res.setHeader("Set-Cookie", `siws-nonce=${nonce}; Path=/; HttpOnly; Secure; SameSite=Strict`)
-  res.status(200).json({ nonce })
+  try {
+    const encryptionKeyBuffer = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+    if (encryptionKeyBuffer.length !== 32) {
+      throw new Error('ENCRYPTION_SECRET must be 32 bytes long when decoded from hex.');
+    }
+
+    const encryptedNonce = await new EncryptJWT({ nonce })
+      .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
+      .encrypt(encryptionKeyBuffer);
+    const encryptedNonceUrlSafe = encodeURIComponent(encryptedNonce);
+
+    res.setHeader("Set-Cookie", `siws-nonce=${encryptedNonceUrlSafe}; Path=/; HttpOnly; Secure; SameSite=Strict`);
+    res.status(200).json({ nonce });
+  } catch (error) {
+    console.error('Encryption error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }

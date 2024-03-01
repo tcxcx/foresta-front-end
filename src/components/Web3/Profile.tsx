@@ -12,15 +12,18 @@ import { copyToClipboard } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useWalletStore from "@/hooks/context/useWalletStore";
+import { useLocale } from "next-intl";
+import { useSignOut } from "@/hooks/JWT/useSignOut";
 
 type Props = {
   account: InjectedAccountWithMeta;
-  jwtToken: string; 
+  jwtToken: string;
   onSignOut: () => void;
 };
 
 export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
   const router = useRouter();
+  const locale = useLocale();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { walletAddress, jwtToken, clearWallet } = useWalletStore();
 
@@ -28,19 +31,16 @@ export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
 
   useEffect(() => {
     if (!jwtToken || !walletAddress) {
-      router.push("/log-in");
+      router.push("/");
     }
   }, [jwtToken, walletAddress, router]);
 
-  const handleSignOut = () => {
-    clearWallet();
-    onSignOut();
-  };
+  const signOut = useSignOut();
 
   const goToDashboard = () => {
     if (jwtToken && account) {
-      // Navigate to the /marketplace route
-      router.push("/marketplace");
+      const path = `/${locale}/dashboard`;
+      router.push(path);
     } else {
       toast.error("You need to be signed in to access the dashboard.");
     }
@@ -59,7 +59,7 @@ export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
           </div>
         </div>
         <ExitIcon
-          onClick={onSignOut}
+          onClick={signOut}
           className="cursor-pointer text-white z-10"
         />
       </div>
@@ -69,8 +69,8 @@ export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
             Access Granted
           </h2>
           <p className="mt-4 text-sm text-gray-500">
-            Welcome to <span className="font-clash uppercase">FORESTA</span>
-            . You are securely signed in with your Polkadot account.
+            Welcome to <span className="font-clash uppercase">FORESTA</span>.
+            You are securely signed in with your Polkadot account.
           </p>
           <p className="mt-1 text-sm text-gray-500">
             Now you can go to the dashboard.

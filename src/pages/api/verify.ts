@@ -1,53 +1,46 @@
-import type { NextApiRequest, NextApiResponse } from "next"
-import jwt from "jsonwebtoken"
-import { verifySIWS } from "@talismn/siws"
-import { SIWS_DOMAIN } from "@/lib/constants"
+// verify.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import { verifySIWS } from "@talismn/siws";
+import { SIWS_DOMAIN } from "@/lib/constants";
+import { SignJWT, jwtDecrypt } from 'jose';
 
 type Data = {
-  error?: string
-  jwtToken?: string
-}
-
+  error?: string;
+  jwtToken?: string;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
-    // make sure the session is valid and has a nonce from previous request
-    const nonce = req.cookies["siws-nonce"]
-    if (!nonce) return res.status(401).json({ error: " Invalid session! Please try again." })
+    const encodedNonce = req.cookies["siws-nonce"];
+    if (!encodedNonce) throw new Error("Invalid session! Please try again.");
+    const encryptedNonce = decodeURIComponent(encodedNonce);
 
-    // get the key params from the request body
-    const { signature, message, address } = JSON.parse(req.body)
-
-    // verify that signature is valid
-    const siwsMessage = await verifySIWS(message, signature, address)
-
-    // validate that nonce is correct to prevent replay attack
-    if (nonce !== siwsMessage.nonce)
-      res.status(401).json({ error: "Invalid nonce! Please try again." })
-
-    // validate that domain is correct to prevent phishing attack
-    if (siwsMessage.domain !== SIWS_DOMAIN)
-      throw new Error("SIWS Error: Signature was meant for different domain.")
-
-    // ... add additional validation as necessary by business logic
-
-    // now that user has proved their ownership to the signing address
-    // we can create a JWT token that allows users to authenticate themselves
-    // so they don't have to sign in again
-    
-    const jwtPayload = {
-      address: siwsMessage.address,
-      // ... typically you will also query the user's id from your database and encode it in the payload
+    const encryptionKeyBuffer = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+    if (encryptionKeyBuffer.length !== 32) {
+      throw new Error('ENCRYPTION_SECRET must be 32 bytes long when decoded from hex.');
     }
 
-    const jwtToken = jwt.sign(jwtPayload, process.env.JWT_SECRET!, {
-      algorithm: "HS256",
-    })
+    // Decrypt the nonce
+    const decryptedResult = await jwtDecrypt(encryptedNonce, encryptionKeyBuffer);
+    const decryptedNonce = decryptedResult.payload.nonce; // Adjust based on your payload structure
 
-    // to securely store the JWT token, you should set it as an httpOnly cookie
-    // we're returning this to store client side for demonstration purposes only
-    res.status(200).json({ jwtToken })
+    const { signature, message, address } = JSON.parse(req.body);
+    const siwsMessage = await verifySIWS(message, signature, address);
+
+    if (decryptedNonce !== siwsMessage.nonce) {
+      throw new Error("Invalid nonce! Please try again.");
+    }
+
+    // Assuming further validation passes, sign the JWT
+    const jwtPayload = { address: siwsMessage.address };
+    const jwtToken = await new SignJWT(jwtPayload)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('2h')
+      .sign(encryptionKeyBuffer); // Use the same key for signing
+
+    res.status(200).json({ jwtToken });
   } catch (e: any) {
-    res.status(401).json({ error: e.message ?? "Invalid signature!" })
+    res.status(401).json({ error: e.message ?? "Invalid signature!" });
   }
 }

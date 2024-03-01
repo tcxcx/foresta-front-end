@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import Map, {
@@ -9,10 +9,12 @@ import Map, {
 } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useMapStore } from "@/hooks/context/useGeoLocation";
+import Spinner from "@/components/ui/spinner";
 
 const MapGlobe: FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ width: '100%', height: '100%' });
+  const [size, setSize] = useState({ width: "100%", height: "100%" });
+  const [isLoading, setIsLoading] = useState(true);
   const { viewport, setViewport } = useMapStore();
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -28,18 +30,18 @@ const MapGlobe: FC = () => {
 
   useEffect(() => {
     const currentRef = mapContainerRef.current;
-  
-    const resizeObserver = new ResizeObserver(entries => {
+
+    const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
         setSize({ width: `${width}px`, height: `${height}px` });
       }
     });
-  
+
     if (currentRef) {
       resizeObserver.observe(currentRef);
     }
-  
+
     return () => {
       if (currentRef) {
         resizeObserver.unobserve(currentRef);
@@ -48,11 +50,23 @@ const MapGlobe: FC = () => {
   }, []);
 
   if (!mapboxToken) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <Spinner />
+        <div className="mt-4 text-center text-xs text-clash">
+          Connect Mapbox API Token to display the map.
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div ref={mapContainerRef} style={{ width: '100%', height: '100%'}}>
+    <div ref={mapContainerRef} className="relative w-full h-full">
+      {isLoading && (
+        <div className="absolute inset-0 flex justify-center items-center">
+          <Spinner />
+        </div>
+      )}
       <Map
         mapboxAccessToken={mapboxToken}
         mapStyle="mapbox://styles/mapbox/streets-v12"
@@ -62,7 +76,8 @@ const MapGlobe: FC = () => {
         onZoom={onViewportChange}
         maxZoom={20}
         minZoom={3}
-        
+        onLoad={() => setIsLoading(false)}
+        onError={() => setIsLoading(false)}
       >
         <GeolocateControl positionOptions={{ enableHighAccuracy: true }} trackUserLocation={true} />
         <NavigationControl position="bottom-right" />
