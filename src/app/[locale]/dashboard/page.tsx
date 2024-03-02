@@ -10,7 +10,7 @@ export default function Dashboard() {
   const t = useTranslations("Marketplace");
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen overflow-hidden">
       <Suspense fallback={<ResizableSkeleton />}>
         <Resizable
           marketTitle={t("marketplaceTitle")}

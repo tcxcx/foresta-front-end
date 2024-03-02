@@ -1,9 +1,14 @@
+// ConnectWallet.tsx
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
-import { ButtonRight } from "@/components/ui/ButtonRight";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import useInjectedWeb3 from "@/components/Web3/useInjectedWeb3";
+import { Wallets } from "@/components/Web3/WalletList";
+import { ButtonRight } from "../ui/ButtonRight";
+import { badgeVariants } from "@/components/ui/badge";
+import Link from "next/link";
 
 type Props = {
   onAccounts: (accounts: InjectedAccountWithMeta[]) => void;
@@ -11,58 +16,91 @@ type Props = {
 
 export const ConnectWallet: React.FC<Props> = ({ onAccounts }) => {
   const [connecting, setConnecting] = useState(false);
-  const router = useRouter();
+  const { injectedWeb3 } = useInjectedWeb3();
 
-  const handleConnectWallet = async () => {
+  const walletOptions = Wallets.map((wallet) => ({
+    ...wallet,
+    available: !!injectedWeb3?.[wallet.extensionName],
+  }));
+
+  const handleConnectWallet = async (walletExtensionName: string) => {
     setConnecting(true);
-    const { web3Enable, web3Accounts } = await import(
-      "@polkadot/extension-dapp"
-    );
     try {
-      const extensions = await web3Enable(
-        "Sign-In with your Substrate Account"
+      const { web3Enable, web3Accounts } = await import(
+        "@polkadot/extension-dapp"
       );
-
-      if (extensions.length === 0) {
-        onAccounts([]);
-      } else {
-        const accounts = await web3Accounts();
-        onAccounts(accounts);
-      }
+      await web3Enable("Sign-In with your Substrate Account");
+      const accounts = await web3Accounts();
+      onAccounts(accounts);
     } catch (e) {
+      console.error(e);
     } finally {
       setConnecting(false);
     }
   };
 
-  const ForgotPassword = () => {
-    router.push("/forgot-password");
-  };
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center z-1 h-full">
+      <div className="grid grid-cols-1 gap-4 items-center justify-items-center sm:gap-4 sm:p-4">
         <p className="dark:text-white text-lg font-clash uppercase animate-pulse">
           Sign in here
         </p>
-        <p className="text-sm text-gray-600 mb-4 text-center text-violet">
+        <p className="text-sm text-gray-600 mb-2 text-center text-violet">
           Connect your Substrate-based wallet to continue.
         </p>
-        <ButtonRight
-          onClick={handleConnectWallet}
-          disabled={connecting}
-          text="Connect Wallet"
-          stateText="Connecting wallet..."
-        />
+        {walletOptions.map((wallet, index) => (
+          <div key={index} className="flex flex-col sm:flex-row items-center justify-center w-full">
+            {wallet.available ? (
+              <>
+                <Image
+                  src={wallet.logoSrc}
+                  alt={wallet.title}
+                  width={50}
+                  height={50}
+                />
+                <ButtonRight
+                  onClick={() => handleConnectWallet(wallet.extensionName)}
+                  text={`Connect  ${wallet.title}`}
+                  disabled={connecting}
+                  stateText={connecting ? "Connecting..." : ""}
+                />
+              </>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-center justify-center w-full">
+              <div className="flex flex-col items-center">
+                  <Link
+                    href={wallet.installUrl}
+                    passHref
+                    className="cursor-pointer mb-2"
+                  >
+                    <Image
+                      src={wallet.logoSrc}
+                      alt={wallet.title}
+                      width={40}
+                      height={40}
+                    />
+                  </Link>
+                  
+                  <Link
+                    href={wallet.installUrl}
+                    className={badgeVariants({ variant: "outline" })}
+                  >
+                    Install
+                  </Link>
+                </div>
+                <ButtonRight
+                  onClick={() => {}}
+                  text={wallet.title}
+                  disabled={true}
+                  stateText={"Wallet Not Available"}
+                />
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-      <div className="justify-center text-center z-10">
-        <h1
-          onClick={ForgotPassword}
-          className="font-clash uppercase text-sm hover:underline z-10 cursor-pointer"
-        >
-          Forgot your password?
-        </h1>
-      </div>
+    
     </>
   );
 };

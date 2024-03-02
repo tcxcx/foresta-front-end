@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useAuth, useLogout } from "@/hooks/context/account";
+import { useAuth } from "@/hooks/context/account";
 import { useLocale } from "next-intl";
 import { Button } from "../ui/button";
 import Identicon from "@polkadot/react-identicon";

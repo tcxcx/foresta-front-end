@@ -8,7 +8,7 @@ import { AuthProvider } from "@/hooks/context/account";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Foresta",
+  title: "Foresta | Home",
   description:
     "A carbon credit protocol based on the principles of community-based natural resource management for Conservation of Forests.",
 };
@@ -38,7 +38,7 @@ export default function RootLayout({
         >
           <TanstackProvider>
             <AuthProvider>
-              <div className="flex flex-col mx-auto dark:bg-background">
+              <div className="flex mx-auto dark:bg-background">
                 <div className="flex-grow font-violet">{children}</div>
               </div>
             </AuthProvider>

@@ -19,9 +19,9 @@ export default function AuthLayout({
 }) {
   return (
     <>
-      <div className="flex h-screen">
-        {/* Left panel with images, quote and overlay */}
-        <div className="relative w-full lg:w-1/2">
+      <div className="flex h-screen overflow-hidden">
+        {/* Left panel with images, quote and overlay - hidden on small screens */}
+        <div className="hidden lg:block relative w-full lg:w-1/2">
           <Image
             src="https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             layout="fill"
@@ -48,24 +48,23 @@ export default function AuthLayout({
             </div>
             <blockquote className="mt-auto text-white">
               <p className="text-2xl">
-                &quot;This is the assembly of life that took a billion years to
-                evolve. It holds the world steady.&quot;
+                &quot;This is the assembly of life that took a billion years to evolve. It holds the world steady.&quot;
               </p>
               <footer className="text-base">- Edward O. Wilson</footer>
             </blockquote>
           </div>
         </div>
 
-        {/* Right panel with wallet */}
-        <div className="w-full h-full lg:w-1/2 py-0 px-10 dark:bg-background bg-white">
+        {/* Right panel with wallet - always visible */}
+        <div className="flex-1 w-full h-full py-0 px-10 dark:bg-background bg-white overflow-auto">
           <Link
             href="/"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "absolute mt-4 z-1 uppercase"
+              "absolute mt-4 z-10 uppercase"
             )}
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5 mr-2" />
             Go Home
           </Link>
           {children}

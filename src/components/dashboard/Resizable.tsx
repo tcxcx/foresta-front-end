@@ -1,4 +1,4 @@
-// "use client";
+import React, { useEffect } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -7,10 +7,6 @@ import {
 import { ContainerTableView } from "@/components/dashboard/ContainerTableView";
 import MapGlobe from "@/components/map/index";
 import GovernanceOverview from "@/components/dashboard/GovernanceOverview";
-import { ContainerTableViewSkeleton } from "@/components/dashboard/Skeleton/ContainerTableViewSkeleton ";
-import MapGlobeSkeleton from "@/components/dashboard/Skeleton/MapGlobeSkeleton";
-import GovernanceOverviewSkeleton from "@/components/dashboard/Skeleton/GovernanceOverviewSkeleton";
-import { Skeleton } from "../ui/skeleton";
 
 interface ResizableProps {
   marketTitle: string;
@@ -26,7 +22,9 @@ interface ResizableProps {
 }
 
 export default function Resizable(props: ResizableProps) {
+
   return (
+    <>
     <ResizablePanelGroup direction="horizontal" className="w-full h-full p-4">
       <ResizablePanel defaultSize={250} className="flex-1 overflow-hidden">
         <span className="flex items-center p-2">
@@ -59,6 +57,6 @@ export default function Resizable(props: ResizableProps) {
       </ResizablePanel>
     </ResizablePanelGroup>
 
-
+    </>
   );
 }

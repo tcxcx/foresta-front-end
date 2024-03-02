@@ -19,11 +19,11 @@ export const Wallet = () => {
   ];
 
   const handleSignedIn = (selectedAccount: InjectedAccountWithMeta, jwt: string) => {
-    login(selectedAccount, jwt); // Use login function from useAuth
+    login(selectedAccount, jwt);
   };
 
   const handleSignOut = useCallback(() => {
-    logout(); // Use logout function from useAuth
+    logout();
   }, [logout]);
 
   // Subscribe to extension changes after first connect
@@ -53,12 +53,12 @@ export const Wallet = () => {
 
   return (
     <div className="w-full bg-zinc-900/10">
-      <div className="border-stone-800/40 overflow-hidden relative bg-gradient-to-r from-green-300/20 via-cyan-200/20 to-indigo-600/20 dark:bg-gradient-to-r dark:from-stone-800/5 dark:via-stone-800/5 dark:to-stone-800/20 hover:border-primary/40 dark:hover:border-stone-800/90 border p-4 rounded-xl w-full min-h-[384px] sm:h-96 flex flex-col flex-1 transition-colors duration-300 ease-in-out delay-50">
+      <div className="border-stone-800/40 overflow-hidden relative bg-gradient-to-r from-green-300/20 via-cyan-200/20 to-indigo-600/20 dark:bg-gradient-to-r dark:from-stone-800/5 dark:via-stone-800/5 dark:to-stone-800/20 hover:border-primary/40 dark:hover:border-stone-800/90 border p-4 rounded-xl w-full min-h-[384px] sm:h-full flex flex-col flex-1 transition-colors duration-300 ease-in-out delay-50">
         <GridPattern
-          size={64}
+          size={75}
           offsetX={0}
           offsetY={0}
-          className="absolute -top-1/2 right-0 h-[200%] w-2/3 skew-y-12 stroke-white/10 stroke-[2] [mask-image:linear-gradient(-85deg,black,transparent)]">
+          className="absolute -top-1/2 right-0 h-[200%] w-1/3 skew-y-12 stroke-white/10 stroke-[2] [mask-image:linear-gradient(-85deg,black,transparent)]">
           {gridBlocks.map(([row, column], index) => (
             <GridPattern.Block
               key={index}

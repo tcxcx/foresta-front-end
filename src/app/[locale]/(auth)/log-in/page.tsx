@@ -34,7 +34,7 @@ export default function AuthenticationPage() {
               .
             </p>
           </div> */}
-      <main className="flex min-h-screen items-center justify-center p-24">
+      <main className="flex min-h-screen items-center justify-center p-4">
         <Wallet />
       </main>
     </>
