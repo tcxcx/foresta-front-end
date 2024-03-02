@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import TanstackProvider from "@/lib/TanstackProvider";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
 import { AuthProvider } from "@/hooks/context/account";
 import { ThemeProvider } from "@/components/theme-provider";

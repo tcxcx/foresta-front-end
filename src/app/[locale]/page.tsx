@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="max-w-7xl w-full">
+        <div className="max-w-full w-full px-4">
           <Header />
         </div>
       </div>

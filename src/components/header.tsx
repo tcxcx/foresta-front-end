@@ -11,12 +11,14 @@ export default function Header() {
   return (
     <header className="relative p-4 z-10">
       <nav className="flex items-center justify-between">
-        <div className="flex-1">
+      <div className="flex-1 flex items-center justify-start space-x-4">
           <Link href="/" passHref>
             <div className="font-violet uppercase hover:underline hover:text-green-500 cursor-pointer">
               {t("home")}
             </div>
           </Link>
+          <LocalSwitcher />
+          <ModeToggle />
         </div>
         <div className="text-center">
           <Link href="/" passHref>
@@ -26,8 +28,7 @@ export default function Header() {
           </Link>
         </div>
         <div className="flex-1 flex items-center justify-end space-x-4">
-          <LocalSwitcher />
-          <ModeToggle />
+         
           <AuthButton />
           <div className="opacity-0">{t("home")}</div>{" "}
         </div>

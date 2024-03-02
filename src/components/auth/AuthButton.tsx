@@ -1,9 +1,13 @@
-'use client';
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from "@/hooks/context/account";
+"use client";
+import React from "react";
+import { useRouter } from "next/navigation";
+import { useAuth, useLogout } from "@/hooks/context/account";
 import { useLocale } from "next-intl";
-import { Button } from '../ui/button'; // Ensure the import path matches your project structure
+import { Button } from "../ui/button"; // Ensure the import path matches your project structure
+import Identicon from "@polkadot/react-identicon"; // Ensure this import path is correct
+import truncateMiddle from "truncate-middle"; // Ensure this import path is correct
+import { CopyIcon, ExitIcon } from "@radix-ui/react-icons";
+import ConnectedAccount from "../Web3/ConnectedAccount";
 
 export default function AuthButton() {
   const { account } = useAuth();
@@ -18,11 +22,23 @@ export default function AuthButton() {
   };
 
   return (
-    <Button
-      onClick={handleButtonClick}
-      variant={account ? "default" : "secondary"} 
-    >
-      {account ? "Go to Dashboard" : "Login"}
-    </Button>
+    <div className="flex items-center gap-4">
+      {account ? (
+        <>
+          <ConnectedAccount />
+          <Button
+            onClick={handleButtonClick}
+            variant="default"
+            className="uppercase text-pretty font-clash "
+          >
+            Go to Dashboard
+          </Button>
+        </>
+      ) : (
+        <Button onClick={handleButtonClick} variant="secondary">
+          Login
+        </Button>
+      )}
+    </div>
   );
 }

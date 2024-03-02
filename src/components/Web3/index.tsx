@@ -6,11 +6,11 @@ import { ConnectWallet } from "./ConnectWallet";
 import { SignIn } from "./SignIn";
 import { Profile } from "./Profile";
 import { GridPattern } from "@/components/ui/GridPattern";
-import { useAuth } from "@/hooks/context/account"; // Import useAuth instead of useWalletStore
+import { useAuth } from "@/hooks/context/account";
 
 export const Wallet = () => {
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[] | undefined>();
-  const { account, jwtToken, login, logout } = useAuth(); // Destructure needed functions and state from useAuth
+  const { account, jwtToken, login, logout } = useAuth()
 
   const gridBlocks = [
     [2, 5],

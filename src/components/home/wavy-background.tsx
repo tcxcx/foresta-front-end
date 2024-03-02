@@ -20,7 +20,6 @@ export function WavyBackgroundDemo() {
         <GlobeComponent />
       </div>
       <div className="flex justify-center items-center w-full">
-        {/* Pass the translated text for the button, not the route */}
         <ResizableToggle carbonButton={t("carbonButtonRoute")} />
       </div>
     </WavyBackground>

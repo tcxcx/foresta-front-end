@@ -24,7 +24,7 @@ type Props = {
 export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
   const router = useRouter();
   const locale = useLocale();
-  const { logout, jwtToken } = useAuth(); 
+  const { jwtToken } = useAuth(); 
   const signOut = useSignOut();
   const { loading } = useProtectedService();
 
