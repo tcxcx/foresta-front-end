@@ -12,11 +12,11 @@ export default function Header() {
     <header className="relative p-4 z-10">
       <nav className="flex items-center justify-between">
       <div className="flex-1 flex items-center justify-start space-x-4">
-          <Link href="/" passHref>
+          {/* <Link href="/" passHref>
             <div className="font-violet uppercase hover:underline hover:text-green-500 cursor-pointer">
               {t("home")}
             </div>
-          </Link>
+          </Link> */}
           <LocalSwitcher />
           <ModeToggle />
         </div>

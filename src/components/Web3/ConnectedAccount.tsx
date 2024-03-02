@@ -56,7 +56,7 @@ export default function ConnectedAccount() {
           <NavigationMenuItem>
             <NavigationMenuTrigger>
               <TooltipProvider>
-                <div className="flex items-center gap-4 m-4">
+                <div className="flex items-center m-4">
                   {/* Title of menu bar */}
                   <Tooltip>
                     <TooltipTrigger asChild>

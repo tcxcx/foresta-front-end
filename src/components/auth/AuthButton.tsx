@@ -3,11 +3,11 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, useLogout } from "@/hooks/context/account";
 import { useLocale } from "next-intl";
-import { Button } from "../ui/button"; // Ensure the import path matches your project structure
-import Identicon from "@polkadot/react-identicon"; // Ensure this import path is correct
-import truncateMiddle from "truncate-middle"; // Ensure this import path is correct
+import { Button } from "../ui/button";
+import Identicon from "@polkadot/react-identicon";
+import truncateMiddle from "truncate-middle";
 import { CopyIcon, ExitIcon } from "@radix-ui/react-icons";
-import ConnectedAccount from "../Web3/ConnectedAccount";
+import ConnectedAccount from "@/components/Web3/ConnectedAccount";
 
 export default function AuthButton() {
   const { account } = useAuth();
@@ -22,7 +22,7 @@ export default function AuthButton() {
   };
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center">
       {account ? (
         <>
           <ConnectedAccount />
@@ -31,11 +31,11 @@ export default function AuthButton() {
             variant="default"
             className="uppercase text-pretty font-clash "
           >
-            Go to Dashboard
+            Dashboard
           </Button>
         </>
       ) : (
-        <Button onClick={handleButtonClick} variant="secondary">
+        <Button onClick={handleButtonClick} variant="secondary" className="uppercase text-pretty font-clash">
           Login
         </Button>
       )}

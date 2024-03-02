@@ -11,7 +11,7 @@ export const useProtectedService = () => {
       try {
         const res = await fetch("../api/protected", {
           headers: {
-            Authorisation: `Bearer ${jwtToken}`,
+            Authorization: `Bearer ${jwtToken}`,
           },
         })
         const data = await res.json()
@@ -24,7 +24,7 @@ export const useProtectedService = () => {
         setLoading(false)
       }
     },
-    [ toast]
+    []
   )
 
   return { generate, randomText, loading }
