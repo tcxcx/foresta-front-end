@@ -69,10 +69,10 @@ export default function ConnectedAccount() {
                           />
                           <Separator orientation="vertical" />
                           <div>
-                            <div className="text-white font-bold">
+                            <div className="text-black dark:text-white font-bold">
                               {account.meta.name}
                             </div>
-                            <div className="text-stone-400 text-xs">
+                            <div className="text-stone-700 dark:text-stone-400 text-xs">
                               {truncateMiddle(account.address, 5, 5, "...")}
                             </div>
                           </div>
@@ -114,11 +114,11 @@ export default function ConnectedAccount() {
                       </div>
                       {/* Icon and Number */}
                       <div className="flex items-center mb-2 mt-4 leading-tight t">
-                        <Trees className="h-12 w-12 mr-2" />
+                        <Trees className="h-12 w-12 mr-2 text-indigo-600 dark:text-white" />
                         <span className="text-4xl font-medium font-clash text-green-300">
                           32
                         </span>
-                        <span className="ml-1 font-clash text-sm">mTon</span>
+                        <span className="ml-1 font-clash text-sm dark:text-black text-white">mTon</span>
                       </div>
                       <p className="mt-2 text-sm leading-tight text-left text-white text-muted-foreground">
                         <a className="underline decoration-indigo-500 font-clash ">
@@ -169,7 +169,7 @@ export default function ConnectedAccount() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button onClick={handleLogout} variant="outline">
-                <ExitIcon className="text-white" />
+                <ExitIcon className="dark:text-white text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" className="font-clash">
