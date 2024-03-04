@@ -11,6 +11,11 @@ export const checkKYCStatus = async (accountId: string) => {
     return api.query.kyc.kycStatus(accountId);
 };
 
+// export const getKYCStatus = async (accountId: string) => {
+//     const api = await initApi();
+//     return api.query.kyc.kycStatus(accountId).then(res => res.toHuman());
+//   };
+
 export const getProjectDetails = async (projectId: string) => {
     const api = await initApi();
     return api.query.project.projectDetails(projectId);
