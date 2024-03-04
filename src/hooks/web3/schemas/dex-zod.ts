@@ -1,25 +1,18 @@
-import { object, string, number, array } from 'zod';
+import { object, string, number, optional } from 'zod';
 
-export const createBuyOrderSchema = object({
-  orderId: string().min(1, "Order ID is required."),
+export const createSellOrderSchema = object({
   assetId: string().min(1, "Asset ID is required."),
-  units: number().min(1, "At least one unit must be purchased."),
-  maxFee: number().min(0, "Maximum fee cannot be negative."),
+  units: number().min(1, "Units must be greater than zero."),
+  pricePerUnit: number().min(1, "Price per unit must be greater than zero."),
 });
 
 export const cancelSellOrderSchema = object({
   orderId: string().min(1, "Order ID is required."),
 });
 
-export const createPoolSchema = object({
-  name: string().min(1, "Pool name is required."),
-  description: string().optional(),
-  assetIds: array(string()).min(1, "At least one asset ID is required."),
-  targetPoolSize: number().min(1, "Target pool size must be positive.").optional(),
-});
-
-export const addCreditsToPoolSchema = object({
-  poolId: string().min(1, "Pool ID is required."),
+export const buyOrderSchema = object({
+  orderId: string().min(1, "Order ID is required."),
   assetId: string().min(1, "Asset ID is required."),
-  units: number().min(1, "At least one unit must be contributed."),
+  units: number().min(1, "Units must be greater than zero."),
+  maxFee: optional(number().min(1, "Max fee must be greater than zero.")),
 });

@@ -2,7 +2,36 @@
 
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { sendTx } from "./sendTx";
-import { createProjectSchema, approveProjectSchema, mintCarbonCreditsSchema, retireCarbonCreditsSchema  } from "./schemas/carbon-credit-zod";
+import {
+  createProjectSchema,
+  approveProjectSchema,
+  mintCarbonCreditsSchema,
+  retireCarbonCreditsSchema,
+} from "./schemas/carbon-credit-zod";
+import {
+  createPoolFormSchema,
+  retireFormSchema,
+  depositFormSchema,
+} from "./schemas/carbon-credit-zod-pool-validation-form";
+import {
+  createSellOrderSchema,
+  cancelSellOrderSchema,
+  buyOrderSchema,
+} from "./schemas/dex-zod";
+import {
+  addCollectiveSchema,
+  voteSchema,
+  joinCollectiveSchema,
+  createProposalSchema,
+} from "./schemas/foresta-collectives-zod";
+import {
+  addMemberSchema,
+  removeMemberSchema,
+  modifyMemberSchema,
+  addAuthorizedAccountSchema,
+  removeAuthorizedAccountSchema,
+  setKycAirdropAmountSchema,
+} from "./schemas/kyc-zod";
 
 const WSS_ENDPOINT = process.env.NEXT_PUBLIC_WSS_ENDPOINT_DEV;
 
@@ -39,11 +68,16 @@ export async function listProject(senderAddress: string, projectDetails: any) {
   });
 }
 // - Approve or Reject a carbon credit project
-export async function approveOrRejectProject(senderAddress: string, projectApprovalDetails: any) {
+export async function approveOrRejectProject(
+  senderAddress: string,
+  projectApprovalDetails: any
+) {
   const api = await initApi();
-   const parsedDetails = approveProjectSchema.parse(projectApprovalDetails);
-   const tx = api.tx.carbonCredits.approveProject(parsedDetails.projectId, parsedDetails.isApproved);
- 
+  const parsedDetails = approveProjectSchema.parse(projectApprovalDetails);
+  const tx = api.tx.carbonCredits.approveProject(
+    parsedDetails.projectId,
+    parsedDetails.isApproved
+  );
 
   await sendTx({
     api,
@@ -69,7 +103,10 @@ export async function approveOrRejectProject(senderAddress: string, projectAppro
  * @param {string} senderAddress - The address of the user initiating the transaction.
  * @param {object} mintDetails - The details required for minting tokens, including the project and group IDs, the amount to mint, and whether to list them on the marketplace.
  */
-export async function mintTokensForProject(senderAddress: string, mintDetails: any) {
+export async function mintTokensForProject(
+  senderAddress: string,
+  mintDetails: any
+) {
   const api = await initApi(); // Make sure you have a function to initialize your Polkadot.js API
   // Validate mintDetails with Zod
   const parsedDetails = mintCarbonCreditsSchema.parse(mintDetails);
@@ -79,7 +116,7 @@ export async function mintTokensForProject(senderAddress: string, mintDetails: a
     parsedDetails.projectId,
     parsedDetails.groupId,
     parsedDetails.amountToMint,
-    parsedDetails.listToMarketplace,
+    parsedDetails.listToMarketplace
   );
 
   // Use sendTx to submit the transaction
@@ -88,13 +125,16 @@ export async function mintTokensForProject(senderAddress: string, mintDetails: a
     tx,
     signerAddress: senderAddress,
     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-    onFinalized: (blockHash) => console.log(`Transaction finalized at blockHash ${blockHash}`),
-    onInBlock: (eventData) => console.log(`Transaction included in block`, eventData),
+    onFinalized: (blockHash) =>
+      console.log(`Transaction finalized at blockHash ${blockHash}`),
+    onInBlock: (eventData) =>
+      console.log(`Transaction included in block`, eventData),
     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
     onClose: () => console.log("Transaction process ended"),
     dispatch: () => {},
     section: "carbonCredits",
-    method: "mint",  });
+    method: "mint",
+  });
 }
 
 // - Retire Credits Tokens
@@ -108,7 +148,7 @@ async function retireCarbonCredits(senderAddress: string, retireDetails: any) {
     parsedDetails.projectId,
     parsedDetails.groupId,
     parsedDetails.amount,
-    parsedDetails.reason,
+    parsedDetails.reason
   );
 
   // Use sendTx to submit the transaction, similar to how it's done in mintTokensForProject
@@ -117,8 +157,10 @@ async function retireCarbonCredits(senderAddress: string, retireDetails: any) {
     tx,
     signerAddress: senderAddress,
     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-    onFinalized: (blockHash) => console.log(`Transaction finalized at blockHash ${blockHash}`),
-    onInBlock: (eventData) => console.log(`Transaction included in block`, eventData),
+    onFinalized: (blockHash) =>
+      console.log(`Transaction finalized at blockHash ${blockHash}`),
+    onInBlock: (eventData) =>
+      console.log(`Transaction included in block`, eventData),
     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
     onClose: () => console.log("Transaction process ended"),
     dispatch: () => {},
@@ -127,45 +169,381 @@ async function retireCarbonCredits(senderAddress: string, retireDetails: any) {
   });
 }
 
-// - Create Pool
-
-
-
-// Examples
-// adapt this function to be used for buying carbon credits from carbon-credit pool project
-
-export async function buyNft(senderAddress: string, purchaseDetails: any) {
+// Create a Pool
+export async function createPool(senderAddress: string, poolDetails: any) {
   const api = await initApi();
-  const tx = api.tx.communityProject.buyNft(
-    purchaseDetails.collectionId,
-    purchaseDetails.nftType,
-    purchaseDetails.quantity
+  const parsedDetails = createPoolFormSchema.parse(poolDetails);
+
+  const tx = api.tx.carbonCreditPool.create(
+    parsedDetails.id,
+    parsedDetails.admin,
+    parsedDetails.config,
+    parsedDetails.maxLimit,
+    parsedDetails.assetSymbol
   );
 
   await sendTx({
     api,
     tx,
-    setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-    onFinalized: (blockHash) =>
-      console.log(`Transaction finalized at blockHash ${blockHash}`),
-    onInBlock: (eventData) =>
-      console.log(`Transaction included in block`, eventData),
-    onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
-    onClose: () => console.log("Transaction process ended"),
     signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
     dispatch: () => {},
-    section: "communityProject",
-    method: "BuyNft",
+    section: "carbonCreditPool",
+    method: "create",
   });
 }
 
-// - Deposit Credits into Pool
-// - Retire Pool Tokens
+// Deposit into a Pool
+export async function depositIntoPool(
+  senderAddress: string,
+  depositDetails: any
+) {
+  const api = await initApi();
+  const parsedDetails = depositFormSchema.parse(depositDetails);
+
+  const tx = api.tx.carbonCreditPool.deposit(
+    parsedDetails.poolId,
+    parsedDetails.assetId,
+    parsedDetails.amount
+  );
+
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "carbonCreditPool",
+    method: "deposit",
+  });
+}
+
+// Retire Pool Tokens
+export async function retirePoolTokens(
+  senderAddress: string,
+  retireDetails: any
+) {
+  const api = await initApi();
+  const parsedDetails = retireFormSchema.parse(retireDetails);
+
+  const tx = api.tx.carbonCreditPool.retire(
+    parsedDetails.poolId,
+    parsedDetails.amount
+  );
+
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "carbonCreditPool",
+    method: "retire",
+  });
+}
+
 // - Create Sell Order on DEX
+async function createSellOrder(senderAddress: string, sellOrderDetails: any) {
+  const api = await initApi();
+
+  const validatedDetails = createSellOrderSchema.parse(sellOrderDetails);
+  const tx = api.tx.dex.createSellOrder(
+    validatedDetails.assetId,
+    validatedDetails.units,
+    validatedDetails.pricePerUnit
+  );
+
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "dex",
+    method: "create_sell_order",
+  });
+}
+
 // - Cancel Sell Order on DEX
+
+async function cancelSellOrder(senderAddress: string, cancelOrderDetails: any) {
+  const api = await initApi();
+
+  const validatedDetails = cancelSellOrderSchema.parse(cancelOrderDetails);
+  const tx = api.tx.dex.cancelSellOrder(validatedDetails.orderId);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "dex",
+    method: "cancel_sell_order",
+  });
+}
+
 // - Buy Order on DEX
+
+async function buyOrder(senderAddress: string, buyOrderDetails: any) {
+  const api = await initApi();
+
+  const validatedDetails = buyOrderSchema.parse(buyOrderDetails);
+  const tx = api.tx.dex.createBuyOrder(
+    validatedDetails.orderId,
+    validatedDetails.assetId,
+    validatedDetails.units,
+    validatedDetails.maxFee || 0
+  );
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "dex",
+    method: "cancel_sell_order",
+  });
+}
+
+// - Add Collective
+async function addCollective(senderAddress: string, collectiveDetails: any) {
+  const api = await initApi();
+
+  const validatedDetails = addCollectiveSchema.parse(collectiveDetails);
+  const tx = api.tx.forestaCollectives.addCollective(
+    validatedDetails.name,
+    validatedDetails.managers,
+    validatedDetails.hash
+  );
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "foresta-collectives",
+    method: "add_collective",
+  });
+}
+
 // - Add Member to Collective
+
+async function joinCollective(senderAddress: string, joinDetails: any) {
+  const api = await initApi();
+
+  const validatedDetails = joinCollectiveSchema.parse(joinDetails);
+  const tx = api.tx.forestaCollectives.joinCollective(
+    validatedDetails.collectiveId
+  );
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "foresta-collectives",
+    method: "join_collective",
+  });
+}
+
 // - Create Proposal in Collective
+
+async function createProposal(senderAddress: string, proposalDetails: any) {
+  const api = await initApi();
+
+  const validatedDetails = createProposalSchema.parse(proposalDetails);
+  const tx = api.tx.forestaCollectives.createProposal(
+    validatedDetails.collectiveId,
+    validatedDetails.proposalHash
+  );
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "foresta-collectives",
+    method: "create_proposal",
+  });
+}
+
 // - Vote on Proposal
-// - Add Authorized Account for KYC
-// - Remove Authorized Account
+
+async function castVote(senderAddress: string, voteDetails: any) {
+  const api = await initApi();
+
+  const validatedDetails = voteSchema.parse(voteDetails);
+  const tx = api.tx.forestaCollectives.castVote(
+    validatedDetails.voteId,
+    validatedDetails.voteCast === "yes"
+  );
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "foresta-collectives",
+    method: "cast_vote",
+  });
+}
+// Add member to KYC list.
+async function addMember(senderAddress: string, details: any) {
+  const api = await initApi();
+
+  const validatedDetails = addMemberSchema.parse(details);
+  const tx = api.tx.kyc.addMember(validatedDetails.accountId, validatedDetails.kycLevel);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "foresta-collectives",
+    method: "cast_vote",
+  });
+}
+
+// Remove member from KYC list
+async function removeMember(senderAddress: string, details: any) {
+  const api = await initApi();
+  const validatedDetails = removeMemberSchema.parse(details);
+  const tx = api.tx.kyc.removeMember(validatedDetails.accountId);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "kyc",
+    method: "remove_member",
+  });
+}
+
+// Modify member in KYC list
+async function modifyMember(senderAddress: string, details: any) {
+  const api = await initApi();
+  const validatedDetails = modifyMemberSchema.parse(details);
+  const tx = api.tx.kyc.modifyMember(validatedDetails.accountId, validatedDetails.newKycLevel);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "kyc",
+    method: "modify_member",
+  });
+}
+
+// Add Authorized Account for KYC
+async function addAuthorizedAccount(senderAddress: string, details: any) {
+  const api = await initApi();
+  const validatedDetails = addAuthorizedAccountSchema.parse(details);
+  const tx = api.tx.kyc.forceAddAuthorizedAccount(validatedDetails.accountId);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "kyc",
+    method: "force_add_authorized_account",
+  });
+}
+
+// Remove Authorized Account
+async function removeAuthorizedAccount(senderAddress: string, details: any) {
+  const api = await initApi();
+  const validatedDetails = removeAuthorizedAccountSchema.parse(details);
+  const tx = api.tx.kyc.forceRemoveAuthorizedAccount(validatedDetails.accountId);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "kyc",
+    method: "force_remove_authorized_account",
+  });
+}
+
+// Set KYC airdrop amount
+async function setKycAirdropAmount(senderAddress: string, details: any) {
+  const api = await initApi();
+  const validatedDetails = setKycAirdropAmountSchema.parse(details);
+  const tx = api.tx.kyc.forceSetKycAirdrop(validatedDetails.amount);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "kyc",
+    method: "force_set_kyc_airdrop",
+  });
+}

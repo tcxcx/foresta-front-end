@@ -7,8 +7,6 @@ export const addMemberSchema = object({
   kycLevel: UserLevel,
 });
 
-
-
 // This schema is for removing an existing member from the KYC list.
 export const removeMemberSchema = object({
     accountId: number().min(1, "Account ID is required."),
