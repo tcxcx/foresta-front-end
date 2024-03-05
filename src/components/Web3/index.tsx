@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { ConnectWallet } from "./ConnectWallet";
 import { SignIn } from "./SignIn";
-import { Profile } from "./Profile";
+import { Profile } from "./AdminProfile";
 import { GridPattern } from "@/components/ui/GridPattern";
 import { useAuth } from "@/hooks/context/account";
 

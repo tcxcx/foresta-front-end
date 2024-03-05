@@ -18,6 +18,7 @@ import { useKYCSubscription } from "@/hooks/web3/useKycSubscription";
 import { Terminal } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { SheetKyc1 } from "@/components/dashboard/kycLevel1";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -38,9 +39,12 @@ export default function DashboardLayout({
   const { kycStatus, error } = useKYCSubscription(accountId);
   const needsKYC = !kycStatus || kycStatus.level === 0;
 
-  console.log("KYC Status: ", kycStatus);
 
-  console.log("this is the accountId: ", accountId);
+  // console.log("KYC Status: ", kycStatus);
+
+  // console.log("this is the accountId: ", accountId);
+
+
   return account ? (
     <>
       <div className="flex h-screen bg-gray-50 dark:bg-background border border-gray-100 dark:border-secondary z-50">
@@ -57,7 +61,9 @@ export default function DashboardLayout({
                     <Terminal className="h-6 w-6 font-clash" />
                     <AlertTitle className="font-clash text-xl  text-primary flex items-center p-2 pr-6">
                       User unverified! 
-                      <span className="h-px flex-1 px-12 bg-black dark:bg-white z-1"> </span>
+                      <span className="h-px flex-1 px-12 bg-black dark:bg-primary/30 z-1"> </span>
+                      <SheetKyc1 />
+
                     </AlertTitle>
                   </div>
                   <AlertDescription className="font-violet ">

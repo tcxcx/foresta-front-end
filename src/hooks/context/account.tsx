@@ -1,16 +1,24 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+} from "react";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 interface AuthContextType {
   account: InjectedAccountWithMeta | null;
   jwtToken: string | null;
+  role: "user" | "admin" | null;
   login: (account: InjectedAccountWithMeta, jwtToken: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const adminAddress = process.env.NEXT_PUBLIC_ADMIN_WALLET_ADDRESS;
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -19,21 +27,25 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [account, setAccount] = useState<InjectedAccountWithMeta | null>(null);
   const [jwtToken, setJwtToken] = useState<string | null>(null);
+  const [role, setRole] = useState<"user" | "admin" | null>(null);
 
-  const login = useCallback((account: InjectedAccountWithMeta, jwtToken: string) => {
-    setAccount(account);
-    setJwtToken(jwtToken);
-    // Here you can add additional logic for when a user logs in, if necessary.
-  }, []);
+  const login = useCallback(
+    (account: InjectedAccountWithMeta, jwtToken: string) => {
+      setAccount(account);
+      setJwtToken(jwtToken);
+      const isAdmin = account.address === adminAddress; 
+      setRole(isAdmin ? "admin" : "user");
+    },
+    []
+  );
 
   const logout = useCallback(() => {
     setAccount(null);
     setJwtToken(null);
-    // Here you can add additional logic for when a user logs out, if necessary.
   }, []);
 
   return (
-    <AuthContext.Provider value={{ account, jwtToken, login, logout }}>
+    <AuthContext.Provider value={{ account, jwtToken, role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

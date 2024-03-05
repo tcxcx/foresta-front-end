@@ -11,20 +11,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <Suspense fallback={<ResizableSkeleton />}>
-        <Resizable
-          marketTitle={t("marketplaceTitle")}
-          governanceTitle={t("governanceTitle")}
-          buttonText={t("button")}
-          titleText={t("title")}
-          descriptionText={t("description")}
-          decreaseText={t("decrease")}
-          increaseText={t("increase")}
-          confirmText={t("confirm")}
-          cancelText={t("cancel")}
-          creditsText={t("credits")}
-        />
-      </Suspense>
+  
     </div>
   );
 }
