@@ -33,7 +33,7 @@ export default function DashboardLayout({
   mapglobe,
   governance,
 }: DashboardLayoutProps) {
-  const { account } = useAuth();
+  const { jwtToken, account } = useAuth();
   const router = useRouter();
   const accountId = account?.address || "";
   const { kycStatus, error } = useKYCSubscription(accountId);
@@ -45,7 +45,7 @@ export default function DashboardLayout({
   // console.log("this is the accountId: ", accountId);
 
 
-  return account ? (
+  return jwtToken ? (
     <>
       <div className="flex h-screen bg-gray-50 dark:bg-background border border-gray-100 dark:border-secondary z-50">
         <Suspense fallback={<SideMenuSkeleton />}>

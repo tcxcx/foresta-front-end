@@ -39,75 +39,65 @@ export default function DashboardLayout({
   const { kycStatus, error } = useKYCSubscription(accountId);
   const needsKYC = !kycStatus || kycStatus.level === 0;
 
-
   // console.log("KYC Status: ", kycStatus);
 
   // console.log("this is the accountId: ", accountId);
 
-
   return account ? (
     <>
-            {needsKYC && (
-              <div className="flex justify-center mt-2 w-full border-b border-secondary">
-                <Alert variant="green" className="max-w-lg w-full space-x-2 mb-2">
-                  <div className="flex items-center space-x-2">
-                    <Terminal className="h-6 w-6 font-clash" />
-                    <AlertTitle className="font-clash text-xl  text-primary flex items-center p-2 pr-6">
-                      User unverified! 
-                      <span className="h-px flex-1 px-12 bg-black dark:bg-primary/30 z-1"> </span>
-                      <SheetKyc1 />
+      {needsKYC && (
+        <div className="flex justify-center mt-2 w-full border-b border-secondary">
+          <Alert variant="green" className="max-w-lg w-full space-x-2 mb-2">
+            <div className="flex items-center space-x-2">
+              <Terminal className="h-6 w-6 font-clash" />
+              <AlertTitle className="font-clash text-xl  text-primary flex items-center p-2 pr-6">
+                User unverified!
+                <span className="h-px flex-1 px-12 bg-black dark:bg-primary/30 z-1">
+                  {" "}
+                </span>
+                <SheetKyc1 />
+              </AlertTitle>
+            </div>
+            <AlertDescription className="font-violet ">
+              You need to complete KYC to access more features.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+      <Suspense fallback={<ResizableSkeleton />}>
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="w-full h-full p-4"
+        >
+          <ResizablePanel defaultSize={250} className="flex-1 overflow-hidden">
+            {marketplace}
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize={400} className="flex-1 overflow-hidden">
+            <ResizablePanelGroup direction="vertical" className="h-full">
+              <ResizablePanel defaultSize={400} className="overflow-hidden">
+                {mapglobe}
+              </ResizablePanel>
+              <ResizableHandle withHandle />
 
-                    </AlertTitle>
+              <ResizablePanel defaultSize={100} className="overflow-hidden">
+                {needsKYC ? (
+                  <div className="flex flex-col h-full w-full px-4 bg-[url('/images/topography.svg')] bg-cover">
+                    <span className="flex items-center p-2">
+                      <span className="h-px flex-1 bg-black dark:bg-white"></span>
+                      <span className="pl-6 uppercase font-violet text-primary text-xl">
+                        No Access w/o KYC
+                      </span>
+                    </span>
                   </div>
-                  <AlertDescription className="font-violet ">
-                      You need to complete KYC to access more features.
-                  </AlertDescription>
-                </Alert>
-              </div>
-            )}
-            <Suspense fallback={<ResizableSkeleton />}>
-              <ResizablePanelGroup
-                direction="horizontal"
-                className="w-full h-full p-4"
-              >
-                <ResizablePanel
-                  defaultSize={250}
-                  className="flex-1 overflow-hidden"
-                >
-                  {marketplace}
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-                <ResizablePanel
-                  defaultSize={400}
-                  className="flex-1 overflow-hidden"
-                >
-                  <ResizablePanelGroup direction="vertical" className="h-full">
-                    <ResizablePanel
-                      defaultSize={400}
-                      className="overflow-hidden"
-                    >
-                      {mapglobe}
-                    </ResizablePanel>
-                    <ResizableHandle withHandle />
-
-                    <ResizablePanel
-                      defaultSize={100}
-                      className="overflow-hidden"
-                    >
-                      {needsKYC ? (
-                        <div className="flex flex-col h-full w-full px-4 bg-[url('/images/topography.svg')] bg-cover">
-                          <div className="font-clash font-bold text-2xl text-[#eaeaea]">
-                            No Access
-                          </div>
-                        </div>
-                      ) : (
-                        governance
-                      )}
-                    </ResizablePanel>
-                  </ResizablePanelGroup>
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </Suspense>
+                ) : (
+                  governance
+                )}
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </Suspense>
     </>
   ) : (
     <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-background border border-gray-100 dark:border-secondary">

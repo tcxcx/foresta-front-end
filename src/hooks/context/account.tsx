@@ -6,6 +6,7 @@ import React, {
   useState,
   useCallback,
   ReactNode,
+  useEffect
 } from "react";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
@@ -29,6 +30,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [role, setRole] = useState<"user" | "admin" | null>(null);
 
+
   const login = useCallback(
     (account: InjectedAccountWithMeta, jwtToken: string) => {
       setAccount(account);
@@ -43,6 +45,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAccount(null);
     setJwtToken(null);
   }, []);
+
+   // This effect will run once on component mount to check if the user is already logged in by checking the existence of a session cookie
+   useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/session', {
+          credentials: 'include' // Needed to include HTTP-only cookies in the request
+        });
+        if (response.ok) {
+          const { account, role } = await response.json();
+          // Assume the response includes the account and role
+          // Adjust these lines based on your actual API response structure
+          setAccount(account);
+          setRole(role);
+        } else {
+          logout();
+        }
+      } catch (error) {
+        console.error("Session check failed:", error);
+        logout();
+      }
+    };
+    checkSession();
+  }, [logout]); 
+
 
   return (
     <AuthContext.Provider value={{ account, jwtToken, role, login, logout }}>

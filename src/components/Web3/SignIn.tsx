@@ -44,8 +44,8 @@ export const SignIn: React.FC<Props> = ({ accounts, onCancel, onSignedIn }) => {
         nonce,
         statement: "Connect to Foresta's Protocol testnet node - Galápagos",
         chainName: "Tanssi",
-        // expires in 15 mins
-        expirationTime: new Date().getTime() + 15 * 60 * 1000,
+        // expires in 1 hour
+        expirationTime: new Date().getTime() + 60 * 60 * 1000,
       });
 
       const { web3FromSource } = await import("@polkadot/extension-dapp");

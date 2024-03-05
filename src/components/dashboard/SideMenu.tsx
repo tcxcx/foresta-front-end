@@ -85,7 +85,7 @@ export default function SideMenu() {
                   </svg>
 
                   <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                    Account
+                    Carbon Trading
                   </span>
                 </Link>
               </li>
@@ -114,7 +114,7 @@ export default function SideMenu() {
               </li>
 
               <li>
-                <Link href={`/${locale}/dashboard/Account`} passHref>
+                <Link href={`/${locale}/dashboard/account`} passHref>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="size-5 opacity-75"

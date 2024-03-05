@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime('2h')
-      .sign(encryptionKeyBuffer); // Use the same key for signing
+      .sign(encryptionKeyBuffer);
 
     res.status(200).json({ jwtToken });
   } catch (e: any) {

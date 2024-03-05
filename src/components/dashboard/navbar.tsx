@@ -6,16 +6,16 @@ import { useAuth } from "@/hooks/context/account";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-    const { account } = useAuth();
+    const { jwtToken } = useAuth();
     const router = useRouter();
   
     useEffect(() => {
-      if (!account) {
+      if (!jwtToken) {
         router.push('/');
       }
-    }, [account, router]);
+    }, [jwtToken, router]);
   
-    if (!account) {
+    if (!jwtToken) {
       return <div> unauthorized...</div>;
     }
   
