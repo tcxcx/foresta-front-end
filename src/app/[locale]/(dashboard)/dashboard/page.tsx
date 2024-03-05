@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { useTranslations } from "next-intl";
 const Resizable = React.lazy(
-  () => import("../../../components/dashboard/Resizable")
+  () => import("../../../../components/dashboard/Resizable")
 );
 
 import { ResizableSkeleton } from "@/components/dashboard/Skeleton/ResizableSkeleton";
