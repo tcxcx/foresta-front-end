@@ -26,6 +26,8 @@ interface CarbonDrawerProps {
   creditsText: string;
 }
 
+
+
 export const CarbonDrawer = (props: CarbonDrawerProps) => {
   const [purchaseAmount, setPurchaseAmount] = React.useState(10);
   function adjustPurchaseAmount(adjustment: number) {
@@ -37,7 +39,7 @@ export const CarbonDrawer = (props: CarbonDrawerProps) => {
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="default">
-            <p>{props.buttonText}</p>
+          <p>{(props.buttonText)}</p>
           </Button>
         </DrawerTrigger>
         <DrawerContent>

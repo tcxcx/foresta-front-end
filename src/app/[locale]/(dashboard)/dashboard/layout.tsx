@@ -16,7 +16,7 @@ import {
 import { ResizableSkeleton } from "@/components/dashboard/Skeleton/ResizableSkeleton";
 import { useKYCSubscription } from "@/hooks/web3/useKycSubscription";
 import { Terminal } from "lucide-react";
-
+import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface DashboardLayoutProps {
@@ -51,16 +51,17 @@ export default function DashboardLayout({
           <Navbar />
           <main className="flex flex-col h-screen overflow-hidden">
             {needsKYC && (
-              <div className="flex justify-center mt-4 w-full">
-                <Alert variant="green" className="max-w-lg w-full">
+              <div className="flex justify-center mt-2 w-full border-b border-secondary">
+                <Alert variant="green" className="max-w-lg w-full space-x-2 mb-2">
                   <div className="flex items-center space-x-2">
-                    <Terminal className="h-4 w-4 font-clash" />
-                    <AlertTitle className="font-clash text-xl text-primary">
-                      User unverified!
+                    <Terminal className="h-6 w-6 font-clash" />
+                    <AlertTitle className="font-clash text-xl  text-primary flex items-center p-2 pr-6">
+                      User unverified! 
+                      <span className="h-px flex-1 px-12 bg-black dark:bg-white z-1"> </span>
                     </AlertTitle>
                   </div>
-                  <AlertDescription className="font-violet">
-                    You need to complete KYC to access more features.
+                  <AlertDescription className="font-violet ">
+                      You need to complete KYC to access more features.
                   </AlertDescription>
                 </Alert>
               </div>

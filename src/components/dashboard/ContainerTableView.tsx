@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import { CarbonDrawer } from "./CarbonDrawer";
+import { useTranslations } from "next-intl";
 
 interface ContainerTableViewProps {
   buttonText: string;
-  // Include other props
   titleText: string;
   descriptionText: string;
   decreaseText: string;
@@ -20,6 +20,7 @@ export const ContainerTableView = (props: ContainerTableViewProps) => {
     { id: 2, name: "Container B", status: "Active" },
     { id: 3, name: "Container C", status: "Active" },
   ];
+  const t = useTranslations("Marketplace");
 
   return (
     <a
@@ -58,7 +59,7 @@ export const ContainerTableView = (props: ContainerTableViewProps) => {
           </div>
 
           <div className="xl:ml-6 xl:mt-0 mt-4 w-full xl:w-auto">
-            <CarbonDrawer {...props} />
+          <CarbonDrawer {...props} />
           </div>
         </div>
 
