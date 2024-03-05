@@ -35,7 +35,7 @@ export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
       if (account.address === adminAddress) {
         path = `/${locale}/admin-dashboard`;
       } else {
-        path = `/${locale}/dashboard`;
+        path = `/${locale}/dashboard/explore`;
       }
       router.push(path);
     } else {

@@ -31,7 +31,7 @@ export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
 
   const goToDashboard = () => {
     if (jwtToken && account) {
-      const path = `/${locale}/dashboard`;
+      const path = `/${locale}/dashboard/explore`;
       router.push(path);
     } else {
       console.error("You need to be signed in to access the dashboard.");
