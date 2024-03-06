@@ -5,6 +5,19 @@ import { useTheme } from "next-themes";
 import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useLocale } from "next-intl";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  CandlestickChart,
+  FolderCheck,
+  Sprout,
+  TentTree,
+  User,
+} from "lucide-react";
 
 export default function SideMenu() {
   const { theme, setTheme } = useTheme();
@@ -16,7 +29,7 @@ export default function SideMenu() {
   const locale = useLocale();
 
   return (
-    <div className="flex h-screen w-16 flex-col justify-between border-e bg-white dark:bg-background z-1 border border-gray-100 dark:border-secondary">
+    <div className="flex h-screen w-16 flex-col justify-between border-e bg-white dark:bg-background border border-gray-100 dark:border-secondary">
       <div>
         <div className="inline-flex size-16 items-center justify-center">
           <span className="grid size-10 place-content-center rounded-lg bg-gray-100 dark:bg-secondary text-xs text-gray-600">
@@ -24,126 +37,126 @@ export default function SideMenu() {
           </span>
         </div>
 
-        <div className="border-t border-gray-100 dark:border-secondary">
-          <div className="px-2">
-            <div className="py-4">
-              <Link href={`/${locale}/dashboard/explore`} passHref>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="size-5 opacity-75"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M8 19a4 4 0 0 1-2.24-7.32A3.5 3.5 0 0 1 9 6.03V6a3 3 0 1 1 6 0v.04a3.5 3.5 0 0 1 3.24 5.65A4 4 0 0 1 16 19Z" />
-                  <path d="M12 19v3" />
-                </svg>
-
-                <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                  Explore
-                </span>
-              </Link>
+        <div className="border-t border-secondary">
+          <Link href={`/${locale}/dashboard/explore`} passHref>
+            <div className="flex items-center justify-center h-full py-4 dark:hover:bg-secondary/50 hover:bg-secondary">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <TentTree />
+                    <TooltipContent>
+                      {" "}
+                      <span className="font-clash">Explore</span>{" "}
+                    </TooltipContent>
+                  </TooltipTrigger>
+                </Tooltip>
+              </TooltipProvider>
             </div>
+          </Link>
 
-            <ul className="space-y-1 border-t border-gray-100 dark:border-secondary pt-4">
-              <li>
-                <Link href={`/${locale}/dashboard/carbon-pool`} passHref>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="size-5 opacity-75"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-                  </svg>
+          <ul className="space-y-1 border-t border-secondary ">
+            <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
+              <Link
+                href={`/${locale}/dashboard/carbon-pool`}
+                passHref
+                className="flex items-center justify-center h-full"
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="px-2">
+                        <div className="py-4">
+                          <Sprout />
 
-                  <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                    Carbon Pools
-                  </span>
-                </Link>
-              </li>
+                          <TooltipContent>
+                            {" "}
+                            <span className="font-clash">Carbon Pools</span>
+                          </TooltipContent>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </li>
 
-              <li>
-                <Link href={`/${locale}/dashboard/carbon-trading`} passHref>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="size-5 opacity-75"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-
-                  <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                    Carbon Trading
-                  </span>
-                </Link>
-              </li>
-
-              <li>
-                <Link href={`/${locale}/dashboard/project-management`} passHref>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="size-5 opacity-75"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-
-                  <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                    Account
-                  </span>
-                </Link>
-              </li>
-
-              <li>
-                <Link href={`/${locale}/dashboard/account`} passHref>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="size-5 opacity-75"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                    />
-                  </svg>
-
-                  <span className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
-                    My Account
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
+            <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
+              <Link
+                href={`/${locale}/dashboard/carbon-trading`}
+                passHref
+                className="flex items-center justify-center h-full"
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="px-2">
+                        <div className="py-4">
+                          <CandlestickChart />
+                          <TooltipContent>
+                            {" "}
+                            <span className="font-clash">Carbon Trading</span>
+                          </TooltipContent>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </li>
+            <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
+              <Link
+                href={`/${locale}/dashboard/project-management`}
+                passHref
+                className="flex items-center justify-center h-full"
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="px-2">
+                        <div className="py-4">
+                          <FolderCheck />
+                          <TooltipContent>
+                            <span className="font-clash">
+                              Project Management
+                            </span>
+                          </TooltipContent>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </li>
+            <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
+              <Link
+                href={`/${locale}/dashboard/account`}
+                passHref
+                className="flex items-center justify-center h-full"
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="px-2">
+                        <div className="py-4">
+                          <User />
+                          <TooltipContent>
+                            <span className="font-clash">My Account</span>
+                          </TooltipContent>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div className="sticky inset-x-0 bottom-0 border-t border-gray-100 dark:border-secondary bg-white dark:bg-background p-2 flex justify-center">
+      <div className="sticky inset-x-0 bottom-0 border-t border-gray-100 dark:border-secondary bg-white dark:bg-background p-2 flex justify-center hover:bg-secondary hover:text-grey-900 dark:hover:bg-secondary dark:hover:text-white">
         <button
           onClick={toggleTheme}
-          className="group relative flex justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-secondary hover:text-grey-900 dark:text-gray-500 dark:hover:bg-secondary dark:hover:text-white"
+          className="relative flex justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500  dark:text-gray-500 "
           aria-label="Toggle theme"
         >
           {theme === "dark" ? (

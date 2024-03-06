@@ -16,7 +16,7 @@ export default function AuthButton() {
 
   const handleButtonClick = () => {
     // Define the route based on the authentication status
-    const route = account ? `/${locale}/dashboard` : `/${locale}/log-in`;
+    const route = account ? `/${locale}/dashboard/explore` : `/${locale}/log-in`;
     // Navigate to the appropriate route
     router.push(route);
   };

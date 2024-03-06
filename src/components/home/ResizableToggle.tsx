@@ -14,7 +14,7 @@ const ResizableToggle: React.FC<ResizableToggleProps> = ({ carbonButton }) => {
   const locale = useLocale();
 
   const navigateToDashboard = () => {
-    const path = `/${locale}/dashboard`;
+    const path = `/${locale}/dashboard/carbon-trading`;
     router.push(path);
   };
 

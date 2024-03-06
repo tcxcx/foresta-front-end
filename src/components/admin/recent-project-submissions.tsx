@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button"; // Import Button component
+import { Button } from "@/components/ui/button";
 import { ProjectReviewDialog } from "./review-project-submission";
 export function RecentProjectSubmissions() {
   return (
@@ -9,7 +9,7 @@ export function RecentProjectSubmissions() {
         <div className="pl-12">Project Submitter</div>
         <div>Hectares of Land</div>
         <div>Credits Issuance Request</div>
-        <div>Actions</div> {/* Added a column title for actions */}
+        <div>Actions</div>
       </div>
       {/* Entries */}
       <div className="space-y-8">
