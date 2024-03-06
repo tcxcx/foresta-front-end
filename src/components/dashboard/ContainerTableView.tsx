@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { CarbonDrawer } from "./CarbonDrawer";
 import { useTranslations } from "next-intl";
+import ProjectIcons from "./ProjectCard";
 
 interface ContainerTableViewProps {
   buttonText: string;
@@ -21,6 +22,7 @@ export const ContainerTableView = (props: ContainerTableViewProps) => {
     { id: 3, name: "Container C", status: "Active" },
   ];
   const t = useTranslations("Marketplace");
+
 
   return (
     <a
@@ -59,77 +61,12 @@ export const ContainerTableView = (props: ContainerTableViewProps) => {
           </div>
 
           <div className="xl:ml-6 xl:mt-0 mt-4 w-full xl:w-auto">
-          <CarbonDrawer {...props} />
+            <CarbonDrawer {...props} />
           </div>
         </div>
 
         <div className="mt-6 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 sm:space-x-4">
-          <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-            <svg
-              className="size-4 lg:size-6 xl:size-8 text-indigo-700"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M16 7h.01" />
-              <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20" />
-              <path d="m20 7 2 .5-2 .5" />
-              <path d="M10 18v3" />
-              <path d="M14 17.75V21" />
-              <path d="M7 18a6 6 0 0 0 3.84-10.61" />
-            </svg>
-
-            <div className="mt-1.5 sm:mt-0">
-              <p className="text-gray-500 text-xs xl:text-sm">Hectares</p>
-
-              <p className="font-medium text-sm xl:text-base">10,000</p>
-            </div>
-          </div>
-
-          <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-            <svg
-              className="size-4 lg:size-6 xl:size-8 text-indigo-700"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
-              <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
-              <path d="M7 21h10" />
-              <path d="M12 3v18" />
-              <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" />
-            </svg>
-
-            <div className="mt-1.5 sm:mt-0">
-              <p className="text-gray-500 text-xs xl:text-sm">Community</p>
-
-              <p className="font-medium text-sm xl:text-base">Waorani</p>
-            </div>
-          </div>
-
-          <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-            <svg
-              className="size-4 lg:size-6 xl:size-8 text-indigo-700"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-            </svg>
-
-            <div className="mt-1.5 sm:mt-0">
-              <p className="text-gray-500 text-xs xl:text-sm">
-                Project Manager
-              </p>
-              <p className="font-medium text-sm xl:text-base">
-                Rainforest Ecuador
-              </p>
-            </div>
-          </div>
+          <ProjectIcons/>
         </div>
       </div>
     </a>

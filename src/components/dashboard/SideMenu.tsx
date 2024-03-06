@@ -11,13 +11,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  CandlestickChart,
-  FolderCheck,
-  Sprout,
-  TentTree,
-  User,
-} from "lucide-react";
+import { LordIcon } from "@/lib/lordicon/lord-icon";
+import GlobeLight from "@/lib/foresta-icons/wired-outline-959-internet.json";
+import ProjectLight from "@/lib/foresta-icons/wired-outline-972-financial-project.json";
+import TradeLight from "@/lib/foresta-icons/wired-outline-949-bonds.json";
+import UserCircleLight from "@/lib/foresta-icons/wired-outline-44-avatar-user-in-circle.json";
+import GlobeDark from "@/lib/foresta-dark/wired-gradient-959-internet.json";
+import ProjectDark from "@/lib/foresta-dark/wired-gradient-972-financial-project.json";
+import TradeDark from "@/lib/foresta-dark/wired-gradient-949-bonds.json";
+import UserCircleDark from "@/lib/foresta-dark/wired-gradient-44-avatar-user-in-circle.json";
+import SunAnimationLight from "@/lib/foresta-icons/wired-outline-804-sun.json";
+import MoonAnimationLight from "@/lib/foresta-icons/wired-outline-1821-night-sky-moon-stars.json";
+import SunAnimationDark from "@/lib/foresta-dark/wired-gradient-804-sun.json";
+import MoonAnimationDark from "@/lib/foresta-dark/wired-gradient-1821-night-sky-moon-stars.json";
 
 export default function SideMenu() {
   const { theme, setTheme } = useTheme();
@@ -26,7 +32,32 @@ export default function SideMenu() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  const Globe = theme === "dark" ? GlobeDark : GlobeLight;
+  const Project = theme === "dark" ? ProjectDark : ProjectLight;
+  const Trade = theme === "dark" ? TradeDark : TradeLight;
+  const UserCircle = theme === "dark" ? UserCircleDark : UserCircleLight;
+  const Sun = theme === "dark" ?  SunAnimationDark: SunAnimationLight;
+  const Moon = theme === "dark" ? MoonAnimationDark : MoonAnimationLight;
+
   const locale = useLocale();
+  const globeIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(Globe)
+  ).toString("base64")}`;
+  const tradeIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(Trade)
+  ).toString("base64")}`;
+  const projectIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(Project)
+  ).toString("base64")}`;
+  const userIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(UserCircle)
+  ).toString("base64")}`;
+  const sunIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(Sun)
+  ).toString("base64")}`;
+  const moonIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(Moon)
+  ).toString("base64")}`;
 
   return (
     <div className="flex h-screen w-16 flex-col justify-between border-e bg-white dark:bg-background border border-gray-100 dark:border-secondary">
@@ -43,9 +74,13 @@ export default function SideMenu() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <TentTree />
+                    <LordIcon
+                      src={globeIconDataUri}
+                      trigger="hover"
+                      colors={{ primary: "#303f9f" }}
+                      size={36}
+                    />
                     <TooltipContent>
-                      {" "}
                       <span className="font-clash">Explore</span>{" "}
                     </TooltipContent>
                   </TooltipTrigger>
@@ -55,8 +90,6 @@ export default function SideMenu() {
           </Link>
 
           <ul className="space-y-1 border-t border-secondary ">
-         
-
             <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
               <Link
                 href={`/${locale}/dashboard/carbon-trading`}
@@ -68,7 +101,12 @@ export default function SideMenu() {
                     <TooltipTrigger asChild>
                       <div className="px-2">
                         <div className="py-4">
-                          <CandlestickChart />
+                          <LordIcon
+                            src={tradeIconDataUri}
+                            trigger="hover"
+                            colors={{ primary: "#16A249" }}
+                            size={36}
+                          />{" "}
                           <TooltipContent>
                             <span className="font-clash">Carbon Trading</span>
                           </TooltipContent>
@@ -90,7 +128,12 @@ export default function SideMenu() {
                     <TooltipTrigger asChild>
                       <div className="px-2">
                         <div className="py-4">
-                          <FolderCheck />
+                          <LordIcon
+                            src={projectIconDataUri}
+                            trigger="hover"
+                            colors={{ primary: "#16A249" }}
+                            size={36}
+                          />{" "}
                           <TooltipContent>
                             <span className="font-clash">
                               Project Management
@@ -114,7 +157,12 @@ export default function SideMenu() {
                     <TooltipTrigger asChild>
                       <div className="px-2">
                         <div className="py-4">
-                          <User />
+                          <LordIcon
+                            src={userIconDataUri}
+                            trigger="hover"
+                            colors={{ primary: "#16A249" }}
+                            size={36}
+                          />
                           <TooltipContent>
                             <span className="font-clash">My Account</span>
                           </TooltipContent>
@@ -136,9 +184,19 @@ export default function SideMenu() {
           aria-label="Toggle theme"
         >
           {theme === "dark" ? (
-            <SunIcon className="h-6 w-6" />
+            <LordIcon
+              src={sunIconDataUri}
+              trigger="hover"
+              colors={{ primary: "#FCC419" }}
+              size={36}
+            />
           ) : (
-            <MoonIcon className="h-6 w-6" />
+            <LordIcon
+              src={moonIconDataUri}
+              trigger="morph"
+              colors={{ primary: "#FFF" }}
+              size={36}
+            />
           )}
         </button>
       </div>
