@@ -55,30 +55,7 @@ export default function SideMenu() {
           </Link>
 
           <ul className="space-y-1 border-t border-secondary ">
-            <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
-              <Link
-                href={`/${locale}/dashboard/carbon-pool`}
-                passHref
-                className="flex items-center justify-center h-full"
-              >
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="px-2">
-                        <div className="py-4">
-                          <Sprout />
-
-                          <TooltipContent>
-                            {" "}
-                            <span className="font-clash">Carbon Pools</span>
-                          </TooltipContent>
-                        </div>
-                      </div>
-                    </TooltipTrigger>
-                  </Tooltip>
-                </TooltipProvider>
-              </Link>
-            </li>
+         
 
             <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
               <Link
@@ -93,7 +70,6 @@ export default function SideMenu() {
                         <div className="py-4">
                           <CandlestickChart />
                           <TooltipContent>
-                            {" "}
                             <span className="font-clash">Carbon Trading</span>
                           </TooltipContent>
                         </div>
