@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,14 +9,33 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import useApproveRejectKYC from '@/hooks/web3/kycHooks/ApproveRejectKYC';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface KycReviewDialogProps {
   applicantId?: string;
 }
 
 export function KycReviewDialog({ applicantId }: KycReviewDialogProps) {
+  const { approveKYC, rejectKYC, isLoading } = useApproveRejectKYC();
+  const [selectedKycLevel, setSelectedKycLevel] = useState('');
+
+  const handleApprove = () => {
+      if (!applicantId) return;
+      approveKYC(applicantId, selectedKycLevel);
+  };
+
+  const handleReject = () => {
+      if (!applicantId) return;
+      rejectKYC(applicantId);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -24,33 +43,26 @@ export function KycReviewDialog({ applicantId }: KycReviewDialogProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-7xl w-full">
         <DialogHeader>
-          <DialogTitle>Review User Submission</DialogTitle>
+          <DialogTitle>KYC Review</DialogTitle>
           <DialogDescription>
-            Review and update project submission details.
+            Review and accept/reject user level request.
           </DialogDescription>
         </DialogHeader>
-        <form className="grid gap-4 py-4">
-          {/* Project Name */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="projectName" className="text-right">
-              User Name
-            </Label>
-            <Input id="projectName" defaultValue="" className="col-span-3" />
-          </div>
 
-          {/* Description */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Input id="description" defaultValue="" className="col-span-3" />
-          </div>
-        </form>
+        <Select onValueChange={setSelectedKycLevel} value={selectedKycLevel}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select KYC Level" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="KYCLevel1">KYC Level 1</SelectItem>
+            <SelectItem value="KYCLevel2">KYC Level 2</SelectItem>
+            <SelectItem value="KYCLevel3">KYC Level 3</SelectItem>
+          </SelectContent>
+        </Select>
+        
         <DialogFooter>
-          <Button type="submit">Accept User KYC</Button>
-          <Button variant={"destructive"} type="submit">
-            Reject User KYC
-          </Button>
+          <Button onClick={handleApprove}>Accept User KYC</Button>
+          <Button onClick={handleReject} variant={"destructive"}>Reject User KYC</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

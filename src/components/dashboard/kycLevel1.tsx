@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import useKycApplication from "@/hooks/web3/kycHooks/useKycApplication";
+import useKycApplication from "@/hooks/web3/kycHooks/useKycApplicationExtrinsic";
 
 
 export function SheetKyc1() {

@@ -449,6 +449,48 @@ async function addMember(senderAddress: string, details: any) {
   });
 }
 
+// Accept member to KYC list upon applicant's submission.
+async function acceptMember(senderAddress: string, details: any) {
+  const api = await initApi();
+
+  const validatedDetails = addMemberSchema.parse(details);
+  const tx = api.tx.kyc.addMember(validatedDetails.accountId, validatedDetails.kycLevel);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "foresta-collectives",
+    method: "cast_vote",
+  });
+}
+
+// Reject member to KYC list upon applicant's submission.
+async function rejectMember(senderAddress: string, details: any) {
+  const api = await initApi();
+
+  const validatedDetails = addMemberSchema.parse(details);
+  const tx = api.tx.kyc.addMember(validatedDetails.accountId, validatedDetails.kycLevel);
+  await sendTx({
+    api,
+    tx,
+    signerAddress: senderAddress,
+    setLoading: () => {},
+    onFinalized: () => {},
+    onInBlock: () => {},
+    onSubmitted: () => {},
+    onClose: () => {},
+    dispatch: () => {},
+    section: "foresta-collectives",
+    method: "cast_vote",
+  });
+}
+
 // Remove member from KYC list
 async function removeMember(senderAddress: string, details: any) {
   const api = await initApi();

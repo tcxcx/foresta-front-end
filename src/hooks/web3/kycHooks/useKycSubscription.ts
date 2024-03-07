@@ -27,11 +27,6 @@ export const useKYCSubscription = (accountId: string) => {
     };
 
     fetchStatus();
-
-    // In a real-world scenario, you would also subscribe to changes.
-    // For simplicity, this code only fetches the current status.
-    // Consider using api.query.kycPallet.members.subscribe for real-time updates.
-
   }, [accountId]);
 
   return { kycStatus, error };
