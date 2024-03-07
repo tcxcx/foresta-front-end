@@ -32,6 +32,7 @@ import {
   removeAuthorizedAccountSchema,
   setKycAirdropAmountSchema,
 } from "./schemas/kyc-zod";
+import { SunDimIcon } from "lucide-react";
 
 const WSS_ENDPOINT = process.env.NEXT_PUBLIC_WSS_ENDPOINT_DEV;
 
@@ -354,7 +355,7 @@ async function addCollective(senderAddress: string, collectiveDetails: any) {
   });
 }
 
-// - Add Member to Collective
+
 
 async function joinCollective(senderAddress: string, joinDetails: any) {
   const api = await initApi();

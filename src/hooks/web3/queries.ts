@@ -6,15 +6,13 @@ const initApi = async () => {
     return api;
 };
 
+
 export const checkKYCStatus = async (accountId: string) => {
     const api = await initApi();
-    return api.query.kyc.kycStatus(accountId);
+    const result = await api.query.kycPallet.members(accountId);
+    const kycLevel = result.toString();
+    return kycLevel;
 };
-
-// export const getKYCStatus = async (accountId: string) => {
-//     const api = await initApi();
-//     return api.query.kyc.kycStatus(accountId).then(res => res.toHuman());
-//   };
 
 export const getProjectDetails = async (projectId: string) => {
     const api = await initApi();

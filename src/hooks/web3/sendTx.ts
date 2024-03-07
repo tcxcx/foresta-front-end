@@ -1,18 +1,19 @@
 import { toast } from "sonner";
 import { APP_NAME } from "@/lib/constants";
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { ApiPromise, SubmittableResult } from '@polkadot/api';
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { ApiPromise, SubmittableResult } from "@polkadot/api";
+import { web3FromAddress } from "@polkadot/extension-dapp";
 
 export async function getSigner(signerAddress: string) {
-  const { web3Enable, web3FromAddress } = await import("@polkadot/extension-dapp");
-
+  const { web3Enable, web3FromAddress } = await import(
+    "@polkadot/extension-dapp"
+  );
 
   await web3Enable(APP_NAME);
   const injector = await web3FromAddress(signerAddress);
   return injector.signer;
 }
 
-// DispatchError is a custom type that you would need to define based on the structure of the errors you are receiving
 export function getDispatchError(dispatchError: any): string {
   let message = dispatchError.type;
 
@@ -33,20 +34,18 @@ export function getDispatchError(dispatchError: any): string {
 }
 
 interface SendTxParams {
-  api: ApiPromise,
-  tx: any, 
-  dispatch: Function,
-  setLoading: (isLoading: boolean) => void,
-  onFinalized: (blockHash: string | null) => void,
-  onInBlock: (eventData?: any) => void,
-  onSubmitted: (signerAddress: string) => void,
-  onClose: () => void,
-  signerAddress: string,
-  section?: string,
-  method?: string,
+  api: ApiPromise;
+  tx: any;
+  dispatch: Function;
+  setLoading: (isLoading: boolean) => void;
+  onFinalized: (blockHash: string | null) => void;
+  onInBlock: (eventData?: any) => void;
+  onSubmitted: (signerAddress: string) => void;
+  onClose: () => void;
+  signerAddress: string;
+  section?: string;
+  method?: string;
 }
-
-
 
 export async function sendTx({
   api,
@@ -61,45 +60,53 @@ export async function sendTx({
   method: methodName,
 }: SendTxParams): Promise<void> {
   setLoading(true);
-  const signer = await getSigner(signerAddress);
-  api.setSigner(signer);
-  let noWaitForFinalized = false;
 
   try {
-    const account = await api.query.system.account(signerAddress);
-    let blockHash: string | null = null;
+    const injector = await web3FromAddress(signerAddress);
+    if (!injector || !injector.signer) {
+      throw new Error("Unable to obtain signer");
+    }
+    
+    api.setSigner(injector.signer);
 
-    const unsub = await tx.signAndSend(signerAddress, { nonce: account.nonce }, (result: SubmittableResult) => {
-      const { events, status } = result;
-      if (status.isFinalized) {
-        toast.success("Transaction finalized.");
-        onFinalized(blockHash);
-        unsub();
-      } else if (status.isInBlock) {
-        blockHash = status.asInBlock.toString();
-        setLoading(false);
 
-        for (const { event: { section, method, data } } of events) {
-          if (section === sectionName && method === methodName) {
-            const eventData = data.toJSON();
-            onInBlock(eventData);
-            toast.success(`Transaction included in block: ${blockHash}`);
-            break;
+    console.log("Transaction Details before send:", tx.toHuman());
+
+    const unsub = await tx.signAndSend(
+      signerAddress,
+      { signer: injector.signer },
+      (result: SubmittableResult) => {
+        const { events, status } = result;
+        console.log("Transaction status after send:", status.toHuman());
+
+        if (status.isInBlock || status.isFinalized) {
+          const blockHash = status.isInBlock ? status.asInBlock.toString() : status.asFinalized.toString();
+          setLoading(false);
+          toast.success(`Transaction included in block: ${blockHash}`);
+
+          console.log("Transaction events:", events.map(e => e.toHuman()));
+          console.log("Transaction Details after send:", tx.toHuman());
+
+          if (status.isFinalized) {
+            onFinalized(blockHash);
+            unsub();
           }
-        }
 
-        if (noWaitForFinalized) {
-          unsub();
+          events.forEach(({ event: { section, method, data } }) => {
+            if (section === sectionName && method === methodName) {
+              const eventData = data.toJSON();
+              onInBlock(eventData);
+            }
+          });
         }
       }
-    });
+    );
 
     onSubmitted(signerAddress);
-  } catch (e) {
+  } catch (error: any) {
+    console.error("Error during transaction signing and sending:", error);
     setLoading(false);
-    if (e instanceof Error) {
-      toast.error(`Transaction failed: ${e.message}`);
-    }
+    toast.error(`Transaction failed: ${error.message || error.toString()}`);
   } finally {
     onClose();
   }

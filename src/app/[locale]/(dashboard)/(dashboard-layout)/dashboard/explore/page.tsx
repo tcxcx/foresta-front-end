@@ -14,7 +14,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { ResizableSkeleton } from "@/components/dashboard/Skeleton/ResizableSkeleton";
-import { useKYCSubscription } from "@/hooks/web3/useKycSubscription";
+import { useKYCSubscription } from "@/hooks/web3/kycHooks/useKycSubscription";
 import { Terminal } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

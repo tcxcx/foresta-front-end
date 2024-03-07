@@ -14,7 +14,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { ResizableSkeleton } from "@/components/dashboard/Skeleton/ResizableSkeleton";
-import { useKYCSubscription } from "@/hooks/web3/useKycSubscription";
+import { useKYCSubscription } from "@/hooks/web3/kycHooks/useKycSubscription";
 import { Terminal } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -37,7 +37,8 @@ export default function DashboardLayout({
   const router = useRouter();
   const accountId = account?.address || "";
   const { kycStatus, error } = useKYCSubscription(accountId);
-  const needsKYC = !kycStatus || kycStatus.level === 0;
+
+  const hasAccess = kycStatus && (kycStatus.level === 'KYCLevel1' || kycStatus.level === 'KYCLevel2' || kycStatus.level === 'KYCLevel3');
 
   // console.log("KYC Status: ", kycStatus);
 
@@ -45,7 +46,7 @@ export default function DashboardLayout({
 
   return account ? (
     <>
-      {needsKYC && (
+      {!hasAccess && (
         <div className="flex justify-center mt-2 w-full border-b border-secondary">
           <Alert variant="green" className="max-w-lg w-full space-x-2 mb-2">
             <div className="flex items-center space-x-2">
@@ -81,7 +82,7 @@ export default function DashboardLayout({
               <ResizableHandle withHandle />
 
               <ResizablePanel defaultSize={100} className="overflow-hidden">
-                {needsKYC ? (
+                {!hasAccess ? (
                   <div className="flex flex-col h-full w-full px-4 bg-[url('/images/topography.svg')] bg-cover">
                     <span className="flex items-center p-2">
                       <span className="h-px flex-1 bg-black dark:bg-white"></span>
