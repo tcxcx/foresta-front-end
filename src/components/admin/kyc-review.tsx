@@ -12,7 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function KycReviewDialog() {
+interface KycReviewDialogProps {
+  applicantId?: string;
+}
+
+export function KycReviewDialog({ applicantId }: KycReviewDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>

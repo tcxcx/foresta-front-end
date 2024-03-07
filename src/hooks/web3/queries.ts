@@ -1,4 +1,5 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
+import { hexToString } from '@polkadot/util';
 
 const initApi = async () => {
     const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_WSS_ENDPOINT_DEV);
@@ -6,13 +7,32 @@ const initApi = async () => {
     return api;
 };
 
-
 export const checkKYCStatus = async (accountId: string) => {
     const api = await initApi();
     const result = await api.query.kycPallet.members(accountId);
     const kycLevel = result.toString();
     return kycLevel;
 };
+
+export const fetchQueue = async () => {
+    const api = await initApi();
+    const queue = await api.query.kycPallet.queue();
+    return queue.toJSON();
+  };
+  
+  export const fetchApplicantDetails = async (accountId: string) => {
+    const api = await initApi();
+    const result = await api.query.kycPallet.applicants(accountId);
+    if (!result.isEmpty) {
+      const [nameBytes, emailBytes] = result.toJSON() as [string, string];
+      const name = hexToString(nameBytes);
+      const email = hexToString(emailBytes);
+      return { name, email };
+    } else {
+      return { name: 'Not Found', email: 'Not Found' };
+    }
+  };
+  
 
 export const getProjectDetails = async (projectId: string) => {
     const api = await initApi();
