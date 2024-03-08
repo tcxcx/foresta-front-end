@@ -14,6 +14,7 @@ export const checkKYCStatus = async (accountId: string) => {
     return kycLevel;
 };
 
+// KYC form requests and applicant details
 export const fetchQueue = async () => {
     const api = await initApi();
     const queue = await api.query.kycPallet.queue();
@@ -64,12 +65,77 @@ export const getUserCarbonCreditRetirements = async (accountId: string) => {
     return api.query.carbonCredits.retiredCredits(accountId);
 };
 
-export const getProjectProposals = async (collectiveId: string) => {
+
+// Foresta Collectives queries
+    // queries for project managament Collectives tab
+export const collectivesMembersCount = async (collectiveId: string) => {
+    const api = await initApi();
+    return api.query.forestaCollectives.membersCount(collectiveId);
+};
+
+
+/**
+ * Checks if a user is a member of a collective.
+ * @param collectiveId The ID of the collective.
+ * @param accountId The account ID of the user.
+ * @returns A promise that resolves to a boolean indicating membership status.
+ */
+export const userInCollective = async (collectiveId: string, accountId: string): Promise<boolean> => {
+    const api = await initApi();
+    const result = await api.query.forestaCollectives.members(collectiveId, accountId);
+    return result.toHuman() === true;
+};
+
+
+export const projectManager = async (collectiveId: string) => {
+    const api = await initApi();
+    return api.query.forestaCollectives.managers(collectiveId);
+};
+
+export const collectivesName = async (collectiveId: string) => {
+    const api = await initApi();
+    return api.query.forestaCollectives.collectivesMap(collectiveId);
+};
+
+export const collectivesCount = async () => {
+    const api = await initApi();
+    return api.query.forestaCollectives.collectivesCount();
+};
+
+export const collectiveApprovedProjects = async (collectiveId: string) => {
+    const api = await initApi();
+    return api.query.forestaCollectives.approvedProjects(collectiveId);
+};
+
+// collectives governance
+
+export const activeVoting = async (collectiveId: string) => {
+    const api = await initApi();
+    return api.query.collective.activeVoting(collectiveId);
+};
+
+export const checkMemberVote = async (collectiveId: string) => {
+    const api = await initApi();
+    return api.query.collective.checkMemberVote(collectiveId);
+};
+
+export const projectVote = async (collectiveId: string) => {
+    const api = await initApi();
+    return api.query.collective.projectVote(collectiveId);
+};
+
+// look what the two options mean and refactor
+export const getCollectiveProposals = async (collectiveId: string) => {
     const api = await initApi();
     return api.query.collective.proposals(collectiveId);
 };
 
-export const getVoteStatus = async (voteId: string) => {
+export const collectiveProposalsCount = async (collectiveId: string) => {
     const api = await initApi();
-    return api.query.voting.voteStatus(voteId);
+    return api.query.collective.proposalsCount(collectiveId);
+};
+
+export const getVotes = async (voteId: string) => {
+    const api = await initApi();
+    return api.query.voting.votes(voteId);
 };

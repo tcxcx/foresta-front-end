@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
@@ -20,7 +20,9 @@ import NetworkDark from "@/lib/foresta-dark/wired-gradient-952-business-network.
 import BonsaiDark from "@/lib/foresta-dark/wired-gradient-1851-bonsai.json";
 import { CollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-collectives";
 import { AllCollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-all-collectives";
-
+import { CollectivesArtwork } from "@/components/dashboard/ProjectManagement/collectives-artwork";
+import { useAuth } from "@/hooks/context/account";
+import { useFetchAllCollectivesInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchCollectivesInfo";
 
 export default function ProjectManagement() {
   const hasSubmittedProjects = currentProjects.some(
@@ -30,7 +32,7 @@ export default function ProjectManagement() {
     (project) => project.status === "Accepted"
   );
   const hasLiveCollectives = currentProjects.some(
-    (project) => project.status === "Live"
+    (collectives) => collectives.status === "Live"
   );
   const hasProjects = currentProjects.length > 0;
   const hasCollectives = currentCollectives.length > 0;
@@ -54,6 +56,17 @@ export default function ProjectManagement() {
     JSON.stringify(Bonsai)
   ).toString("base64")}`;
 
+  const { account } = useAuth();
+  const userAccountId = account?.address || "";
+  const { allCollectivesInfo, loading, error } =
+    useFetchAllCollectivesInfo(userAccountId);
+
+  useEffect(() => {
+    if (!loading && !error) {
+      console.log("All Collectives Info:", allCollectivesInfo);
+    }
+  }, [allCollectivesInfo, loading, error]);
+
   return (
     <div className="col-span-3 lg:col-span-4 lg:border-l">
       <div className="h-full px-4 py-6 lg:px-8">
@@ -69,7 +82,7 @@ export default function ProjectManagement() {
                 colors={{ primary: "#303f9f" }}
                 size={36}
               />
-              My Collectives
+              Collectives
             </TabsTrigger>
             <TabsTrigger
               value="projects"
@@ -95,7 +108,7 @@ export default function ProjectManagement() {
               <Tabs defaultValue="all" className="h-full space-y-6">
                 <div className="space-between flex items-center">
                   <TabsList>
-                  <TabsTrigger value="all" className="relative">
+                    <TabsTrigger value="all" className="relative">
                       All Collectives
                     </TabsTrigger>
                     <TabsTrigger value="live" className="relative">
@@ -105,7 +118,6 @@ export default function ProjectManagement() {
                       Upcoming Collectives
                     </TabsTrigger>
                   </TabsList>
-
                   {/* Add submit collective proposal to let communities around the world submit prepare to submit their project proposal */}
                   {/* <div className="ml-auto mr-4">
                     <SubmitProjectDialog />
@@ -115,7 +127,7 @@ export default function ProjectManagement() {
                   value="all"
                   className="border-none p-0 outline-none"
                 >
-                  {hasLiveCollectives ? (
+                  {hasCollectives ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -132,10 +144,10 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentProjects.map((project) => (
-                              <ProjectArtwork
-                                key={project.title}
-                                project={project}
+                            {currentCollectives.map((collectives) => (
+                              <CollectivesArtwork
+                                key={collectives.title}
+                                collective={collectives}
                                 className="w-[250px]"
                                 aspectRatio="square"
                                 width={250}
@@ -169,7 +181,7 @@ export default function ProjectManagement() {
                   value="live"
                   className="border-none p-0 outline-none"
                 >
-                  {hasLiveCollectives ? (
+                  {hasCollectives ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -178,7 +190,7 @@ export default function ProjectManagement() {
                           </h2>
                           <p className="text-sm text-muted-foreground">
                             Currently, these DAOs are managing natural reserves
-                            around the world.
+                            around the world and have issued carbon credits.
                           </p>
                         </div>
                       </div>
@@ -186,16 +198,20 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentProjects.map((project) => (
-                              <ProjectArtwork
-                                key={project.title}
-                                project={project}
-                                className="w-[250px]"
-                                aspectRatio="square"
-                                width={250}
-                                height={330}
-                              />
-                            ))}
+                            {currentCollectives
+                              .filter(
+                                (collectives) => collectives.status === "Live"
+                              )
+                              .map((collectives) => (
+                                <CollectivesArtwork
+                                  key={collectives.title}
+                                  collective={collectives}
+                                  className="w-[250px]"
+                                  aspectRatio="square"
+                                  width={250}
+                                  height={330}
+                                />
+                              ))}
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
@@ -233,7 +249,9 @@ export default function ProjectManagement() {
                           </h2>
                           <p className="text-sm text-muted-foreground">
                             These are the planned projects and communities
-                            coming to Foresta.
+                            coming to Foresta. These projects have not issued
+                            carbon credits yet and are in the process of
+                            certification.
                           </p>
                         </div>
                       </div>
@@ -241,16 +259,17 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentProjects
+                            {currentCollectives
                               .filter(
-                                (project) => project.status === "Submitted"
+                                (collectives) =>
+                                  collectives.status === "Upcoming"
                               )
-                              .map((project) => (
-                                <ProjectArtwork
-                                  key={project.title}
-                                  project={project}
+                              .map((collectives) => (
+                                <CollectivesArtwork
+                                  key={collectives.title}
+                                  collective={collectives}
                                   className="w-[250px]"
-                                  aspectRatio="portrait"
+                                  aspectRatio="square"
                                   width={250}
                                   height={330}
                                 />
