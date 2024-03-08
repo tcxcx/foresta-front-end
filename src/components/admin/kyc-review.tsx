@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import useApproveRejectKYC from '@/hooks/web3/kycHooks/ApproveRejectKYC';
+import useApproveRejectKYC from "@/hooks/web3/kycHooks/ApproveRejectKYCExtrinsic";
 import {
   Select,
   SelectContent,
@@ -24,16 +24,22 @@ interface KycReviewDialogProps {
 
 export function KycReviewDialog({ applicantId }: KycReviewDialogProps) {
   const { approveKYC, rejectKYC, isLoading } = useApproveRejectKYC();
-  const [selectedKycLevel, setSelectedKycLevel] = useState('');
+  const [selectedKycLevel, setSelectedKycLevel] = useState("");
 
   const handleApprove = () => {
-      if (!applicantId) return;
-      approveKYC(applicantId, selectedKycLevel);
+    if (!applicantId) {
+      console.error("Applicant ID is undefined");
+      return;
+    }
+    approveKYC(applicantId, selectedKycLevel);
   };
 
   const handleReject = () => {
-      if (!applicantId) return;
-      rejectKYC(applicantId);
+    if (!applicantId) {
+      console.error("Applicant ID is undefined");
+      return;
+    }
+    rejectKYC(applicantId);
   };
 
   return (
@@ -59,10 +65,12 @@ export function KycReviewDialog({ applicantId }: KycReviewDialogProps) {
             <SelectItem value="KYCLevel3">KYC Level 3</SelectItem>
           </SelectContent>
         </Select>
-        
+
         <DialogFooter>
           <Button onClick={handleApprove}>Accept User KYC</Button>
-          <Button onClick={handleReject} variant={"destructive"}>Reject User KYC</Button>
+          <Button onClick={handleReject} variant={"destructive"}>
+            Reject User KYC
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

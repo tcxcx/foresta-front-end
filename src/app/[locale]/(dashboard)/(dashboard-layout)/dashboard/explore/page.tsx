@@ -37,8 +37,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const accountId = account?.address || "";
   const { kycStatus, error } = useKYCSubscription(accountId);
-  const needsKYC = !kycStatus || kycStatus.level === 0;
-
+  const needsKYC = !kycStatus;
 
   // console.log("KYC Status: ", kycStatus);
 

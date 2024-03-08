@@ -1,21 +1,8 @@
-// Inside @marketplace/page.tsx
 import React from "react";
 import { ContainerTableView } from "@/components/dashboard/ContainerTableView";
 import { useTranslations } from "next-intl";
 
-interface ResizableProps {
-  marketTitle: string;
-  buttonText: string;
-  titleText: string;
-  descriptionText: string;
-  decreaseText: string;
-  increaseText: string;
-  confirmText: string;
-  cancelText: string;
-  creditsText: string;
-}
-
-export default function MarketplacePage(props: ResizableProps) {
+export default function MarketplacePage() {
   const t = useTranslations("Marketplace");
 
   return (
