@@ -34,36 +34,6 @@ export const fetchApplicantDetails = async (accountId: string) => {
   }
 };
 
-export const getProjectDetails = async (projectId: string) => {
-  const api = await initApi();
-  return api.query.project.projectDetails(projectId);
-};
-
-export const getAvailableCreditsInPool = async (poolId: string) => {
-  const api = await initApi();
-  return api.query.pool.availableCredits(poolId);
-};
-
-export const getCurrentSellOrders = async () => {
-  const api = await initApi();
-  return api.query.dex.sellOrders();
-};
-
-export const getCollectiveDetails = async (collectiveId: string) => {
-  const api = await initApi();
-  return api.query.collective.collectiveDetails(collectiveId);
-};
-
-export const getUserCarbonCreditBalance = async (accountId: string) => {
-  const api = await initApi();
-  return api.query.carbonCredits.creditBalance(accountId);
-};
-
-export const getUserCarbonCreditRetirements = async (accountId: string) => {
-  const api = await initApi();
-  return api.query.carbonCredits.retiredCredits(accountId);
-};
-
 // Foresta Collectives queries
 // queries for project managament Collectives tab
 export const collectivesMembersCount = async (collectiveId: string) => {
@@ -154,17 +124,171 @@ export const votesCount = async () => {
   return api.query.forestaCollectives.votesCount();
 };
 
+export const fetchProposalsForCollective = async (collectiveId: string) => {
+  const api = await initApi();
+  const proposalCount = await api.query.forestaCollectives.proposalsCount(
+    collectiveId
+  );
+  const count = Number(proposalCount.toString());
 
-export const fetchProposalsForCollective = async (collectiveId:string) => {
-    const api = await initApi();
-    const proposalCount = await api.query.forestaCollectives.proposalsCount(collectiveId);
-    const count = Number(proposalCount.toString());
-  
-    let proposals = [];
-    for (let i = 0; i < count; i++) {
-      const proposal = await api.query.forestaCollectives.proposals(collectiveId, i);
-      proposals.push(proposal.toJSON());
-    }
-    return proposals;
-  };
-  
+  let proposals = [];
+  for (let i = 0; i < count; i++) {
+    const proposal = await api.query.forestaCollectives.proposals(
+      collectiveId,
+      i
+    );
+    proposals.push(proposal.toJSON());
+  }
+  return proposals;
+};
+
+// carbon-credit queries
+
+// assetIdLookup (creditId: string): This query returns the details (ProjectId and GroupId) associated with a specific AssetId. It looks up the AssetIdLookup storage to find the mapping of an AssetId to its project and group within the carbon credits system.
+
+// nextAssetId(): This query retrieves the next available AssetId that can be used for creating a new carbon credit asset. It accesses the NextAssetId storage value, which tracks the identifier that should be assigned to the next created asset.
+
+// nextItemId (creditId: string): Similar to the nextAssetId, this function retrieves the next available ItemId for a given AssetId, indicating the next identifier that can be used for minting a new non-fungible token (NFT) within a carbon credit asset. It looks up the NextItemId storage map.
+
+// nextProjectId(): This function returns the next available ProjectId that can be assigned to a newly registered carbon credit project. It accesses the NextProjectId storage value.
+
+// projects (creditId: string): This query retrieves details about a specific carbon credit project identified by its ProjectId. It accesses the Projects storage map to get the project details such as name, description, issuer, and more.
+
+// retiredCredits (projectId: string, creditId: string): This function is likely intended to retrieve information about the retired carbon credits for a given project and AssetId. However, the code provided seems incorrect because it calls api.query.carbonCredits.projects(projectId, creditId), which does not match the expected behavior for querying retired credits. Instead, it should probably access the RetiredCredits storage map, which tracks retired carbon credits data.
+
+export const assetIdLookup = async (creditId: string) => {
+  const api = await initApi();
+  return api.query.carbonCredits.assetIdLookup(creditId);
+};
+
+export const nextAssetId = async () => {
+  const api = await initApi();
+  return api.query.carbonCredits.nextAssetId();
+};
+
+export const nextItemId = async (creditId: string) => {
+  const api = await initApi();
+  return api.query.carbonCredits.nextItemId(creditId);
+};
+
+export const nextProjectId = async () => {
+  const api = await initApi();
+  return api.query.carbonCredits.nextProjectId();
+};
+
+export const projects = async (projectId: string) => {
+  const api = await initApi();
+  return api.query.carbonCredits.projects(projectId);
+};
+
+export const retiredCredits = async (projectId: string, itemId: string) => {
+  const api = await initApi();
+  return api.query.carbonCredits.retiredCredits(projectId, itemId);
+};
+
+// carbon-credit-pool queries
+
+// poolCredits(poolId: string): This query fetches the credits associated with a specific pool identified by poolId. It retrieves information about the carbon credits (and potentially their amounts) that have been pooled together under this pool ID. The function accesses the PoolCredits storage map, which seems to track the collective information or assets of carbon credits within each pool.
+
+// pools(poolId: string): This query retrieves the configuration and state of a specific pool identified by poolId. It might include information such as the admin of the pool, the configuration defining which carbon credits can be accepted (e.g., specific registries or projects), and any limits on the pool. The function accesses the Pools storage map, which stores the detailed data structure (PoolOf<T>) for each pool, including its administrative and operational parameters.
+
+export const poolCredits = async (poolId: string) => {
+  const api = await initApi();
+  return api.query.carbonCreditsPool.poolCredits(poolId);
+};
+
+export const pools = async (poolId: string) => {
+  const api = await initApi();
+  return api.query.carbonCreditsPool.pools(poolId);
+};
+
+// dex queries
+
+// buyOrderCount: Retrieves the total count of buy orders that have been placed on the DEX. This helps to understand the demand side of the marketplace.
+
+// buyOrders: Fetches a list or details of all buy orders currently active on the DEX. This query provides insights into the specific buy orders, including quantities and prices.
+
+// buyOrdersByUser(accountId: string): Retrieves all buy orders placed by a specific user, identified by their account ID. This is useful for users to track their own buy orders on the DEX.
+
+// minPaymentValidations: Gets the minimum number of validations required for a payment to be considered valid. This setting is crucial for ensuring the security and reliability of transactions on the DEX.
+
+// orderCount: Returns the total count of orders (both buy and sell) that have been placed on the DEX. This provides an overall view of the market activity.
+
+// orders: Fetches details of all orders (buy and sell) currently active on the DEX. This comprehensive view helps users and observers understand the market's dynamics.
+
+// paymentFees: Retrieves the current fee percentage that is applied to payments made through the DEX. This fee is typically used to cover transaction costs and potentially distribute rewards to the platform's maintainers or stakeholders.
+
+// purchaseFees: Gets the fee amount charged for purchasing carbon credits through the DEX. This could be a fixed amount or percentage charged on top of the purchase price to cover operational costs or as a revenue mechanism for the platform.
+
+// sellerPayoutAuthority: Returns the account ID of the authority responsible for approving and executing payouts to sellers. This authority plays a key role in ensuring that sellers receive their funds after successful transactions.
+
+// sellerPayoutPreferences(accountId: string): Retrieves the payout preferences set by a specific seller, identified by their account ID. Sellers can choose their preferred method or conditions for receiving payments, and this query allows for the retrieval of such preferences.
+
+// sellerReceivables(accountId: string): Fetches the amount due to be paid out to a specific seller, identified by their account ID. This helps sellers track the payments they are expecting from completed transactions.
+
+// userOpenOrderUnitsAllowed(accountId: string): Determines the maximum number of units a user is allowed to have in open orders at any given time. This setting helps to prevent market manipulation and ensures fairness among participants by limiting the size of open orders a single user can have.
+
+export const buyOrderCount = async () => {
+  const api = await initApi();
+  return api.query.dex.buyOrderCount();
+};
+
+export const buyOrders = async () => {
+  const api = await initApi();
+  return api.query.dex.buyOrders();
+};
+
+export const buyOrdersByUser = async (accountId: string) => {
+  const api = await initApi();
+  return api.query.dex.buyOrdersByUser(accountId);
+};
+
+export const minPaymentValidations = async () => {
+  const api = await initApi();
+  return api.query.dex.minPaymentValidations();
+};
+
+export const orderCount = async () => {
+  const api = await initApi();
+  return api.query.dex.orderCount();
+};
+
+export const orders = async () => {
+  const api = await initApi();
+  return api.query.dex.orders();
+};
+
+export const paymentFees = async () => {
+  const api = await initApi();
+  return api.query.dex.paymentFees();
+};
+
+export const purchaseFees = async () => {
+  const api = await initApi();
+  return api.query.dex.purchaseFees();
+};
+
+export const sellerPayoutAuthority = async () => {
+  const api = await initApi();
+  return api.query.dex.sellerPayoutAuthority();
+};
+
+export const sellerPayoutPreferences = async (accountId: string) => {
+  const api = await initApi();
+  return api.query.dex.sellerPayoutPreferences(accountId);
+};
+
+export const sellerReceivables = async (accountId: string) => {
+  const api = await initApi();
+  return api.query.dex.sellerReceivables(accountId);
+};
+
+export const userOpenOrderUnitsAllowed = async (accountId: string) => {
+  const api = await initApi();
+  return api.query.dex.userOpenOrderUnitsAllowed(accountId);
+};
+
+// export const getUserCarbonCreditBalance = async (accountId: string) => {
+//   const api = await initApi();
+//   return api.query.carbonCredits.creditBalance(accountId);
+// };
