@@ -559,6 +559,27 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
               </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-4">
+                  <CardHeader>
+                    <CardTitle>Overview</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <Overview />
+                  </CardContent>
+                </Card>
+                <Card className="col-span-3">
+                  <CardHeader>
+                    <CardTitle>Users</CardTitle>
+                    <CardDescription>
+                      There have been 7 new users this month.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ApplicantsList />
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </div>

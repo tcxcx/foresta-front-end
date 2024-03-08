@@ -27,3 +27,7 @@ export interface Project {
     },
   ]
   
+  export const currentCollectives: Project[] = [
+
+  ]
+  
