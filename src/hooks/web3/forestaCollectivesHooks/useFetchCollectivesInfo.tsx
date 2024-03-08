@@ -1,26 +1,41 @@
 import { useState, useEffect } from "react";
-// Import query functions from queries.ts
 import {
+  collectivesCount,
   collectivesMembersCount,
-  userInCollective,
-  projectManager,
   collectivesName,
   collectiveApprovedProjects,
-  collectivesCount,
+  projectManager,
+  userInCollective,
+  activeVoting,
+  checkMemberVote,
+  projectVote,
+  getCollectiveProposals,
+  collectiveProposalsCount,
+  getVotes,
+  votesCount,
 } from "@/hooks/web3/queries";
 
 interface CollectivesInfo {
-  collectivesMap: any;
-  managers: string[];
-  approvedProjects: number[];
-  membersCount: number;
-  userIsMember: boolean;
+  ForestaCollectives: {
+    collectivesMap: any;
+    managers: string[];
+    approvedProjects: number[];
+    membersCount: number;
+    userIsMember: boolean;
+  };
+  ForestaCollectivesGovernance: {
+    activeVotings: number[];
+    memberVoteStatus: boolean;
+    projectVotes: any;
+    proposals: any;
+    proposalsCount: number;
+    votes: any;
+    votesCount: number;
+  };
 }
 
 export const useFetchAllCollectivesInfo = (userAccountId: string) => {
-  const [allCollectivesInfo, setAllCollectivesInfo] = useState<
-    CollectivesInfo[]
-  >([]);
+  const [allCollectivesInfo, setAllCollectivesInfo] = useState<CollectivesInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -30,9 +45,7 @@ export const useFetchAllCollectivesInfo = (userAccountId: string) => {
       try {
         const totalCollectivesCodec = await collectivesCount();
         const totalCollectives = Number(totalCollectivesCodec.toString());
-        const collectiveIds = Array.from({ length: totalCollectives }, (_, i) =>
-          i.toString()
-        );
+        const collectiveIds = Array.from({ length: totalCollectives }, (_, i) => i.toString());
 
         const collectiveInfos = await Promise.all(
           collectiveIds.map(async (id) => {
@@ -45,12 +58,42 @@ export const useFetchAllCollectivesInfo = (userAccountId: string) => {
             const approvedProjects = approvedProjectsCodec.toJSON() as number[];
             const userIsMember = await userInCollective(id, userAccountId);
 
+            // Governance-related queries
+            const activeVotingsCodec = await activeVoting(id);
+            const activeVotings = activeVotingsCodec.toJSON() as number[];
+            const memberVoteStatusCodec = await checkMemberVote(userAccountId, id);
+            const memberVoteStatus = memberVoteStatusCodec === true;
+            const projectVotesCodec = await projectVote(id);
+            const projectVotes = projectVotesCodec.toHuman();
+            const proposalsCountCodec = await collectiveProposalsCount(id);
+            const proposalsCount = Number(proposalsCountCodec.toString());
+            let proposals = [];
+            for (let i = 0; i < proposalsCount; i++) {
+              const proposalCodec = await getCollectiveProposals(id, i.toString());
+              proposals.push(proposalCodec.toHuman());
+            }
+            const votesCodec = await getVotes(id);
+            const votes = votesCodec.toHuman();
+            const votesCountCodec = await votesCount();
+            const votesCountNum = Number(votesCountCodec.toString());
+
             return {
-              collectivesMap,
-              managers,
-              approvedProjects,
-              membersCount,
-              userIsMember,
+              ForestaCollectives: {
+                collectivesMap,
+                managers,
+                approvedProjects,
+                membersCount,
+                userIsMember,
+              },
+              ForestaCollectivesGovernance: {
+                activeVotings,
+                memberVoteStatus,
+                projectVotes,
+                proposals,
+                proposalsCount,
+                votes,
+                votesCount: votesCountNum,
+              },
             };
           })
         );

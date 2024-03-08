@@ -23,6 +23,7 @@ import { AllCollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectMa
 import { CollectivesArtwork } from "@/components/dashboard/ProjectManagement/collectives-artwork";
 import { useAuth } from "@/hooks/context/account";
 import { useFetchAllCollectivesInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchCollectivesInfo";
+// import { useFetchGovernanceInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchGovernanceInfo"; // Adjust the import path
 
 export default function ProjectManagement() {
   const hasSubmittedProjects = currentProjects.some(
@@ -61,6 +62,8 @@ export default function ProjectManagement() {
   const { allCollectivesInfo, loading, error } =
     useFetchAllCollectivesInfo(userAccountId);
 
+
+    
   useEffect(() => {
     if (!loading && !error) {
       console.log("All Collectives Info:", allCollectivesInfo);
