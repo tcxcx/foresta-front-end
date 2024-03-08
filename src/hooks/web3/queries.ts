@@ -292,3 +292,40 @@ export const userOpenOrderUnitsAllowed = async (accountId: string) => {
 //   const api = await initApi();
 //   return api.query.carbonCredits.creditBalance(accountId);
 // };
+
+
+// Carbon Credits queries
+export const fetchCarbonCreditsDetails = async (assetId: string) => {
+    const api = await initApi();
+    const assetDetails = await api.query.carbonCredits.assetIdLookup(assetId);
+    const projectDetails = await api.query.carbonCredits.projects(assetDetails);
+    return { assetDetails: assetDetails.toJSON(), projectDetails: projectDetails.toJSON() };
+  };
+
+  // Pools queries
+  export const fetchPoolCredits = async (poolId: string) => {
+    const api = await initApi();
+    return (await api.query.carbonCreditsPool.poolCredits(poolId)).toJSON();
+  };
+  
+  export const fetchPoolDetails = async (poolId: string) => {
+    const api = await initApi();
+    return (await api.query.carbonCreditsPool.pools(poolId)).toJSON();
+  };
+  
+  // DEX queries
+  export const fetchDEXBuyOrderCount = async () => {
+    const api = await initApi();
+    return (await api.query.dex.buyOrderCount()).toJSON();
+  };
+  
+  export const fetchDEXOrders = async () => {
+    const api = await initApi();
+    return (await api.query.dex.orders()).toJSON();
+  };
+  
+  export const fetchDEXBuyOrdersByUser = async (accountId: string) => {
+    const api = await initApi();
+    return (await api.query.dex.buyOrdersByUser(accountId)).toJSON();
+  };
+  
