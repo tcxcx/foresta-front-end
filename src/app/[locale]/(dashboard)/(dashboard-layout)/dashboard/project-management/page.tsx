@@ -3,11 +3,8 @@
 import React, { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import { currentProjects } from "@/lib/data/projects";
-import { currentCollectives } from "@/lib/data/projects";
 import { ProjectEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-projects";
 import { TokensEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-tokens";
 import { ProjectArtwork } from "@/components/dashboard/ProjectManagement/project-artwork";
@@ -23,21 +20,9 @@ import { AllCollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectMa
 import { CollectivesArtwork } from "@/components/dashboard/ProjectManagement/collectives-artwork";
 import { useAuth } from "@/hooks/context/account";
 import { useFetchAllCollectivesInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchCollectivesInfo";
-// import { useFetchGovernanceInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchGovernanceInfo"; // Adjust the import path
+import Spinner from "@/components/ui/spinner";
 
 export default function ProjectManagement() {
-  const hasSubmittedProjects = currentProjects.some(
-    (project) => project.status === "Submitted"
-  );
-  const hasAcceptedProjects = currentProjects.some(
-    (project) => project.status === "Accepted"
-  );
-  const hasLiveCollectives = currentProjects.some(
-    (collectives) => collectives.status === "Live"
-  );
-  const hasProjects = currentProjects.length > 0;
-  const hasCollectives = currentCollectives.length > 0;
-
   const canMintTokens = false;
 
   const { theme, setTheme } = useTheme();
@@ -62,13 +47,42 @@ export default function ProjectManagement() {
   const { allCollectivesInfo, loading, error } =
     useFetchAllCollectivesInfo(userAccountId);
 
-
-    
   useEffect(() => {
-    if (!loading && !error) {
+    if (!loading && !error && allCollectivesInfo?.length > 0) {
       console.log("All Collectives Info:", allCollectivesInfo);
     }
   }, [allCollectivesInfo, loading, error]);
+
+  const hasProjects =
+    allCollectivesInfo[0]?.ForestaCollectives?.approvedProjects.length > 0;
+  const hasCollectives = allCollectivesInfo.length > 0;
+
+  const liveCollectives = allCollectivesInfo.filter(
+    (collectiveInfo) =>
+      collectiveInfo.ForestaCollectives.approvedProjects.length > 0
+  );
+
+  const upcomingCollectives = allCollectivesInfo.filter(
+    (collectiveInfo) =>
+      collectiveInfo.ForestaCollectives.approvedProjects.length === 0
+  );
+
+  //dummy data for now, need to query the carbon-credits pallet for this
+
+  const hasSubmittedProjects = currentProjects.some(
+    (project) => project.status === "Submitted"
+  );
+  const hasAcceptedProjects = currentProjects.some(
+    (project) => project.status === "Accepted"
+  );
+
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center w-full h-screen">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="col-span-3 lg:col-span-4 lg:border-l">
@@ -147,11 +161,10 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentCollectives.map((collectives) => (
+                            {allCollectivesInfo.map((collectiveInfo, index) => (
                               <CollectivesArtwork
-                                key={collectives.title}
-                                collective={collectives}
-                                className="w-[250px]"
+                                key={index}
+                                collective={collectiveInfo.ForestaCollectives}
                                 aspectRatio="square"
                                 width={250}
                                 height={330}
@@ -184,7 +197,7 @@ export default function ProjectManagement() {
                   value="live"
                   className="border-none p-0 outline-none"
                 >
-                  {hasCollectives ? (
+                  {liveCollectives.length > 0 ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -201,20 +214,15 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentCollectives
-                              .filter(
-                                (collectives) => collectives.status === "Live"
-                              )
-                              .map((collectives) => (
-                                <CollectivesArtwork
-                                  key={collectives.title}
-                                  collective={collectives}
-                                  className="w-[250px]"
-                                  aspectRatio="square"
-                                  width={250}
-                                  height={330}
-                                />
-                              ))}
+                            {liveCollectives.map((collectiveInfo, index) => (
+                              <CollectivesArtwork
+                                key={index}
+                                collective={collectiveInfo.ForestaCollectives}
+                                aspectRatio="square"
+                                width={250}
+                                height={330}
+                              />
+                            ))}
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
@@ -243,7 +251,7 @@ export default function ProjectManagement() {
                   value="upcoming"
                   className="border-none p-0 outline-none"
                 >
-                  {hasCollectives ? (
+                  {upcomingCollectives.length > 0 ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -262,21 +270,17 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentCollectives
-                              .filter(
-                                (collectives) =>
-                                  collectives.status === "Upcoming"
-                              )
-                              .map((collectives) => (
+                            {upcomingCollectives.map(
+                              (collectiveInfo, index) => (
                                 <CollectivesArtwork
-                                  key={collectives.title}
-                                  collective={collectives}
-                                  className="w-[250px]"
+                                  key={index}
+                                  collective={collectiveInfo.ForestaCollectives}
                                   aspectRatio="square"
                                   width={250}
                                   height={330}
                                 />
-                              ))}
+                              )
+                            )}
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
