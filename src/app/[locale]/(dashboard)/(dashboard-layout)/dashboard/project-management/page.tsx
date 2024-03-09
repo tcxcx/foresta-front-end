@@ -20,6 +20,7 @@ import { AllCollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectMa
 import { CollectivesArtwork } from "@/components/dashboard/ProjectManagement/collectives-artwork";
 import { useAuth } from "@/hooks/context/account";
 import { useFetchAllCollectivesInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchCollectivesInfo";
+import { useFetchAllProjectsInfo  } from "@/hooks/web3/carbonCreditHooks/useFetchProjects";
 import Spinner from "@/components/ui/spinner";
 
 export default function ProjectManagement() {
@@ -67,14 +68,27 @@ export default function ProjectManagement() {
       collectiveInfo.ForestaCollectives.approvedProjects.length === 0
   );
 
+  const { allProjects, pendingProjects, acceptedProjects, loading: projectsLoading, error: projectsError } = useFetchAllProjectsInfo();
+
+  useEffect(() => {
+    if (!projectsLoading && !projectsError && allProjects?.length > 0) {
+      console.log("All Projects Info:", allProjects);
+    }
+  }, [allProjects, projectsLoading, projectsError]);
+
+
   //dummy data for now, need to query the carbon-credits pallet for this
 
-  const hasSubmittedProjects = currentProjects.some(
-    (project) => project.status === "Submitted"
+  const hasPendingProjects = pendingProjects.filter(
+    (project) => project.approved === "Pending"
   );
-  const hasAcceptedProjects = currentProjects.some(
-    (project) => project.status === "Accepted"
+  const hasAcceptedProjects = currentProjects.filter(
+    (project) => project.status === "Approved"
   );
+
+
+
+
 
   if (loading) {
     return (
@@ -375,7 +389,7 @@ export default function ProjectManagement() {
                   value="submitted"
                   className="border-none p-0 outline-none"
                 >
-                  {hasSubmittedProjects ? (
+                  {hasPendingProjects ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">

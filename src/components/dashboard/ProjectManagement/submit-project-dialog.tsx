@@ -16,16 +16,23 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createProjectFormSchema } from "@/hooks/web3/schemas/carbon-credit-zod-validation-form";
 import { sdgs } from "@/lib/data/SDGs";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import StepOne from "./steps/StepOne";
 import StepTwo from "./steps/StepTwo";
 import StepThree from "./steps/StepThree";
 import StepFinal from "./steps/StepFinal";
+import { createProject } from "@/hooks/web3/sendTx-extrinsics"; // Adjust the import path as necessary
+import { useAuth } from "@/hooks/context/account"; // Assuming useAuth hook is correctly imported
 
 type ProjectFormData = z.infer<typeof createProjectFormSchema>;
 
 export default function SubmitProjectDialog() {
+  
+const { account } = useAuth();
+const currentUserAddress = account?.address || "";
+
+
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(createProjectFormSchema),
     defaultValues: {
@@ -45,48 +52,13 @@ export default function SubmitProjectDialog() {
       projectType: "",
     },
   });
-  interface RegistryDetail {
-    id: string;
-    registry: string;
-    details: string;
-  }
-  const {
-    fields: registryDetailsFields,
-    append,
-    remove,
-  } = useFieldArray({
-    control: form.control,
-    name: "registryDetails",
-  });
-
-  interface batchGroupCarbonDetail {
-    name: string;
-    totalSupply: number;
-    details: string;
-  }
-  interface batchCarbonDetail {
-    name: string;
-    totalSupply: number;
-    minted: number;
-    retired: number;
-    issuanceYear: number;
-  }
-
-  const {
-    fields: batchGroupFields,
-    append: appendBatchGroup,
-    remove: removeBatchGroup,
-  } = useFieldArray({
-    control: form.control,
-    name: "batchGroups",
-  });
 
   const [currentStep, setCurrentStep] = React.useState(1);
   const [submissionSuccess, setSubmissionSuccess] = useState<boolean | null>(
     null
   );
-  const [isOpen, setIsOpen] = useState(false);
 
+  
 
   const renderStep = () => {
     switch (currentStep) {
@@ -103,18 +75,26 @@ export default function SubmitProjectDialog() {
     }
   };
 
-  const onSubmit = async (data: ProjectFormData) => {
-    console.log("Form data submitted:", data);
+const onSubmit = async (data: ProjectFormData) => {
+  console.log("Form data submitted:", data);
+
+  try {
+    // Adjust this to match your createProject function's signature
+    await createProject(currentUserAddress, data);
+    console.log("Project submitted successfully");
     setSubmissionSuccess(true);
-    setCurrentStep(4);
-    // Reset form to step 1 after a delay of 3 seconds
-    setTimeout(() => {
-      form.reset();
-      setCurrentStep(1);
-      setSubmissionSuccess(null);
-      setIsOpen(false); // Close the dialog
-    }, 3000);
-  };
+  } catch (error) {
+    console.error("Failed to submit the project:", error);
+    setSubmissionSuccess(false);
+  }
+
+  setCurrentStep(4);
+  setTimeout(() => {
+    form.reset();
+    setCurrentStep(1);
+    setSubmissionSuccess(null);
+  }, 20000);
+};
 
   return (
     <Dialog>

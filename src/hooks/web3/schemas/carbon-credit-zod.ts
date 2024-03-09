@@ -1,63 +1,57 @@
-import { object, string, array, number, boolean, optional } from 'zod';
+import { z } from "zod";
+import { ApprovalStatus, projectType, SdgDetails } from "../carbonCreditHooks/createProjectTypes";
+// Assuming ApprovalStatus, projectType, SdgDetails enums are imported
 
-// This schema will validate the input for creating a new project. Based on the provided Rust code for the create_project function, the required fields can include project name, description, location, images, videos, documents, registry details, SDG details, royalties, batch groups, and project type.
-		/// Register a new project onchain
-		/// This new project can mint tokens after approval from an authorised account
-export const createProjectSchema = object({
-  name: string().min(1, "Project name is required"),
-  description: string().min(1, "Project description is required"),
-  location: string().min(1, "Project location is required"),
-  images: array(string()).optional(),
-  videos: array(string()).optional(),
-  documents: array(string()).optional(),
-  registryDetails: array(object({
-    registry: string(),
-    details: string(),
-  })).optional(),
-  sdgDetails: array(string()).optional(),
-  royalties: object({
-    recipient: string(),
-    percentage: number(),
+export const RegistryDetailSchema = z.object({
+  regName: z.string(),
+  name: z.string(),
+  id: z.string(),
+  summary: z.string(),
+});
+
+export const SDGDetailSchema = z.object({
+  sdgType: z.nativeEnum(SdgDetails),
+  description: z.string(),
+  references: z.array(z.string()),
+});
+
+export const BatchSchema = z.object({
+  name: z.string(),
+  uuid: z.string(), // Assuming UUID is in string format
+  issuanceYear: z.number(),
+  startDate: z.number(),
+  endDate: z.number(),
+  totalSupply: z.bigint(),
+  minted: z.bigint(),
+  retired: z.bigint(),
+});
+
+export const BatchGroupSchema = z.object({
+  name: z.string(),
+  uuid: z.string(), // Assuming UUID is in string format
+  assetId: z.number(),
+  totalSupply: z.bigint(),
+  minted: z.bigint(),
+  retired: z.bigint(),
+  batches: z.array(BatchSchema),
+});
+
+export const createProjectFormSchema = z.object({
+  name: z.string().min(1, "Please enter a project name."),
+  description: z.string().min(1, "Please provide a description for the project."),
+  location: z.string().min(1, "Project location is required."),
+  images: z.array(z.string()).optional(),
+  videos: z.array(z.string()).optional(),
+  documents: z.array(z.string()).optional(),
+  registryDetails: z.array(RegistryDetailSchema).optional(),
+  sdgDetails: z.array(SDGDetailSchema).optional(),
+  royalties: z.object({
+    recipient: z.string().min(1, "Royalty recipient address is required."),
+    percentage: z.number().min(0, "Royalty percentage must be 0 or more.").max(100, "Royalty percentage cannot exceed 100."),
   }).optional(),
-  batchGroups: array(object({
-    name: string(),
-    totalSupply: number(),
-    assetId: optional(string()),
-    batches: array(object({
-      name: string(),
-      totalSupply: number(),
-      minted: number(),
-      retired: number(),
-      issuanceYear: number(),
-    })),
-  })),
-  projectType: optional(string()),
+  batchGroups: z.array(BatchGroupSchema),
+  projectType: z.nativeEnum(projectType),
+  created: z.number(),
+  updated: z.number().nullable(),
+  approved: z.nativeEnum(ApprovalStatus),
 });
-
-		/// Set the project status to approve/reject
-
-export const approveProjectSchema = object({
-  projectId: number(),
-  isApproved: boolean(),
-});
-
-// This schema validates input for minting carbon credits for an approved project.
-
-export const mintCarbonCreditsSchema = object({
-    projectId: string(),
-    groupId: string(),
-    amountToMint: number(),
-    listToMarketplace: boolean(),
-  });
-  
-
-//   Retire Carbon Credits Schema
-// This schema is for retiring carbon credits, which includes specifying the amount and reason for retirement.
-
-export const retireCarbonCreditsSchema = object({
-    projectId: string(),
-    groupId: string(),
-    amount: number(),
-    reason: optional(string()),
-  });
-  

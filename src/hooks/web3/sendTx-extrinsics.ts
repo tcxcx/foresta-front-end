@@ -3,10 +3,7 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { sendTx } from "./sendTx";
 import {
-  createProjectSchema,
-  approveProjectSchema,
-  mintCarbonCreditsSchema,
-  retireCarbonCreditsSchema,
+  createProjectFormSchema
 } from "./schemas/carbon-credit-zod";
 import {
   createPoolFormSchema,
@@ -41,13 +38,13 @@ async function initApi() {
   return ApiPromise.create({ provider: wsProvider });
 }
 
-export async function listProject(senderAddress: string, projectDetails: any) {
+export async function createProject(senderAddress: string, projectDetails: any) {
   const api = await initApi();
   // Validate projectDetails with Zod
-  const parsedDetails = createProjectSchema.parse(projectDetails);
+  const parsedDetails = createProjectFormSchema.parse(projectDetails);
 
   // Construct the transaction
-  const tx = api.tx.carbonCredits.createProject(parsedDetails);
+  const tx = api.tx.carbonCredits.create(parsedDetails);
   await sendTx({
     api,
     tx,
@@ -68,107 +65,107 @@ export async function listProject(senderAddress: string, projectDetails: any) {
     method: "create", // Refers to the specific function or extrinsic within the pallet that you want to call. It's the action you want to perform within the specified section.
   });
 }
-// - Approve or Reject a carbon credit project
-export async function approveOrRejectProject(
-  senderAddress: string,
-  projectApprovalDetails: any
-) {
-  const api = await initApi();
-  const parsedDetails = approveProjectSchema.parse(projectApprovalDetails);
-  const tx = api.tx.carbonCredits.approveProject(
-    parsedDetails.projectId,
-    parsedDetails.isApproved
-  );
+// // - Approve or Reject a carbon credit project
+// export async function approveOrRejectProject(
+//   senderAddress: string,
+//   projectApprovalDetails: any
+// ) {
+//   const api = await initApi();
+//   const parsedDetails = approveProjectSchema.parse(projectApprovalDetails);
+//   const tx = api.tx.carbonCredits.approveProject(
+//     parsedDetails.projectId,
+//     parsedDetails.isApproved
+//   );
 
-  await sendTx({
-    api,
-    tx,
-    setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-    onFinalized: (blockHash) =>
-      console.log(`Transaction finalized at blockHash ${blockHash}`),
-    onInBlock: (eventData) =>
-      console.log(`Transaction included in block`, eventData),
-    onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
-    onClose: () => console.log("Transaction process ended"),
-    signerAddress: senderAddress,
-    dispatch: () => {},
-    section: "carbonCredits",
-    method: "approve_project",
-  });
-}
+//   await sendTx({
+//     api,
+//     tx,
+//     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
+//     onFinalized: (blockHash) =>
+//       console.log(`Transaction finalized at blockHash ${blockHash}`),
+//     onInBlock: (eventData) =>
+//       console.log(`Transaction included in block`, eventData),
+//     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
+//     onClose: () => console.log("Transaction process ended"),
+//     signerAddress: senderAddress,
+//     dispatch: () => {},
+//     section: "carbonCredits",
+//     method: "approve_project",
+//   });
+// }
 
 // - Mint Carbon Credits
 
-/**
- * Mint tokens for an approved project.
- * @param {string} senderAddress - The address of the user initiating the transaction.
- * @param {object} mintDetails - The details required for minting tokens, including the project and group IDs, the amount to mint, and whether to list them on the marketplace.
- */
-export async function mintTokensForProject(
-  senderAddress: string,
-  mintDetails: any
-) {
-  const api = await initApi(); // Make sure you have a function to initialize your Polkadot.js API
-  // Validate mintDetails with Zod
-  const parsedDetails = mintCarbonCreditsSchema.parse(mintDetails);
+// /**
+//  * Mint tokens for an approved project.
+//  * @param {string} senderAddress - The address of the user initiating the transaction.
+//  * @param {object} mintDetails - The details required for minting tokens, including the project and group IDs, the amount to mint, and whether to list them on the marketplace.
+//  */
+// export async function mintTokensForProject(
+//   senderAddress: string,
+//   mintDetails: any
+// ) {
+//   const api = await initApi(); // Make sure you have a function to initialize your Polkadot.js API
+//   // Validate mintDetails with Zod
+//   const parsedDetails = mintCarbonCreditsSchema.parse(mintDetails);
 
-  // Construct the transaction using Polkadot.js
-  const tx = api.tx.carbonCredits.mint(
-    parsedDetails.projectId,
-    parsedDetails.groupId,
-    parsedDetails.amountToMint,
-    parsedDetails.listToMarketplace
-  );
+//   // Construct the transaction using Polkadot.js
+//   const tx = api.tx.carbonCredits.mint(
+//     parsedDetails.projectId,
+//     parsedDetails.groupId,
+//     parsedDetails.amountToMint,
+//     parsedDetails.listToMarketplace
+//   );
 
-  // Use sendTx to submit the transaction
-  await sendTx({
-    api,
-    tx,
-    signerAddress: senderAddress,
-    setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-    onFinalized: (blockHash) =>
-      console.log(`Transaction finalized at blockHash ${blockHash}`),
-    onInBlock: (eventData) =>
-      console.log(`Transaction included in block`, eventData),
-    onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
-    onClose: () => console.log("Transaction process ended"),
-    dispatch: () => {},
-    section: "carbonCredits",
-    method: "mint",
-  });
-}
+//   // Use sendTx to submit the transaction
+//   await sendTx({
+//     api,
+//     tx,
+//     signerAddress: senderAddress,
+//     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
+//     onFinalized: (blockHash) =>
+//       console.log(`Transaction finalized at blockHash ${blockHash}`),
+//     onInBlock: (eventData) =>
+//       console.log(`Transaction included in block`, eventData),
+//     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
+//     onClose: () => console.log("Transaction process ended"),
+//     dispatch: () => {},
+//     section: "carbonCredits",
+//     method: "mint",
+//   });
+// }
 
 // - Retire Credits Tokens
 
-async function retireCarbonCredits(senderAddress: string, retireDetails: any) {
-  const api = await initApi(); // Initialize your Polkadot.js API
-  const parsedDetails = retireCarbonCreditsSchema.parse(retireDetails); // Validate input
+// async function retireCarbonCredits(senderAddress: string, retireDetails: any) {
+//   const api = await initApi(); // Initialize your Polkadot.js API
+//   const parsedDetails = retireCarbonCreditsSchema.parse(retireDetails); // Validate input
 
-  // Construct the transaction
-  const tx = api.tx.carbonCredits.retire(
-    parsedDetails.projectId,
-    parsedDetails.groupId,
-    parsedDetails.amount,
-    parsedDetails.reason
-  );
+//   // Construct the transaction
+//   const tx = api.tx.carbonCredits.retire(
+//     parsedDetails.projectId,
+//     parsedDetails.groupId,
+//     parsedDetails.amount,
+//     parsedDetails.reason
+//   );
 
-  // Use sendTx to submit the transaction, similar to how it's done in mintTokensForProject
-  await sendTx({
-    api,
-    tx,
-    signerAddress: senderAddress,
-    setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-    onFinalized: (blockHash) =>
-      console.log(`Transaction finalized at blockHash ${blockHash}`),
-    onInBlock: (eventData) =>
-      console.log(`Transaction included in block`, eventData),
-    onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
-    onClose: () => console.log("Transaction process ended"),
-    dispatch: () => {},
-    section: "carbonCredits",
-    method: "retire",
-  });
-}
+//   // Use sendTx to submit the transaction, similar to how it's done in mintTokensForProject
+//   await sendTx({
+//     api,
+//     tx,
+//     signerAddress: senderAddress,
+//     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
+//     onFinalized: (blockHash) =>
+//       console.log(`Transaction finalized at blockHash ${blockHash}`),
+//     onInBlock: (eventData) =>
+//       console.log(`Transaction included in block`, eventData),
+//     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
+//     onClose: () => console.log("Transaction process ended"),
+//     dispatch: () => {},
+//     section: "carbonCredits",
+//     method: "retire",
+//   });
+// }
 
 // Create a Pool
 export async function createPool(senderAddress: string, poolDetails: any) {

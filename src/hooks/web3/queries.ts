@@ -1,10 +1,15 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { hexToString } from "@polkadot/util";
 
-const initApi = async () => {
-  const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_WSS_ENDPOINT_DEV);
-  const api = await ApiPromise.create({ provider: wsProvider });
-  return api;
+
+let apiInstance: ApiPromise | null = null;
+
+const initApi = async (): Promise<ApiPromise> => {
+  if (!apiInstance) {
+    const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_WSS_ENDPOINT_DEV);
+    apiInstance = await ApiPromise.create({ provider: wsProvider });
+  }
+  return apiInstance;
 };
 
 export const checkKYCStatus = async (accountId: string) => {
@@ -176,7 +181,7 @@ export const nextProjectId = async () => {
   return api.query.carbonCredits.nextProjectId();
 };
 
-export const projects = async (projectId: string) => {
+export const getProjects = async (projectId: string) => {
   const api = await initApi();
   return api.query.carbonCredits.projects(projectId);
 };

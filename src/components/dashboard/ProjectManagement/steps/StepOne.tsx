@@ -15,9 +15,38 @@ type ProjectFormData = z.infer<typeof createProjectFormSchema>;
 const StepOne: React.FC<StepProps> = ({ form, setCurrentStep }) => {
   return (
     <div>
-      <FormTextInput control={form.control} name="name" label="Step 1 Name" placeholder="Step 1 name" />
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-        <Button type="button" variant={"ghost"} onClick={() => setCurrentStep(2)}><ChevronRight /></Button>
+      <FormTextInput
+        control={form.control}
+        name="name"
+        label="Project Name"
+        placeholder="Enter the project name"
+      />
+      <FormTextInput
+        control={form.control}
+        name="description"
+        label="Description"
+        placeholder="Provide a description for the project"
+      />
+      <FormTextInput
+        control={form.control}
+        name="location"
+        label="Location"
+        placeholder="Project location"
+      />{" "}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "20px",
+        }}
+      >
+        <Button
+          type="button"
+          variant={"ghost"}
+          onClick={() => setCurrentStep(2)}
+        >
+          <ChevronRight />
+        </Button>
       </div>
     </div>
   );

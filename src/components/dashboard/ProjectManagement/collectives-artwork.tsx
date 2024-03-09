@@ -33,7 +33,6 @@ export function CollectivesArtwork({
   className,
   ...props
 }: CollectivesArtworkProps) {
-  console.log("this is passes as props", collective);
 
   const joinCollective = () => {
     console.log("Joining collective", collective.collectivesMap?.name);
