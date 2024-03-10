@@ -4,7 +4,6 @@ import React, { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { currentProjects } from "@/lib/data/projects";
 import { ProjectEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-projects";
 import { TokensEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-tokens";
 import { ProjectArtwork } from "@/components/dashboard/ProjectManagement/project-artwork";
@@ -20,7 +19,8 @@ import { AllCollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectMa
 import { CollectivesArtwork } from "@/components/dashboard/ProjectManagement/collectives-artwork";
 import { useAuth } from "@/hooks/context/account";
 import { useFetchAllCollectivesInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchCollectivesInfo";
-import { useFetchAllProjectsInfo  } from "@/hooks/web3/carbonCreditHooks/useFetchProjects";
+import { useFetchAllProjectsInfo } from "@/hooks/web3/carbonCreditHooks/useFetchProjects";
+import { useFetchProjectsSubmitted } from "@/hooks/web3/carbonCreditHooks/useFetchProjectsInfo";
 import Spinner from "@/components/ui/spinner";
 
 export default function ProjectManagement() {
@@ -48,6 +48,12 @@ export default function ProjectManagement() {
   const { allCollectivesInfo, loading, error } =
     useFetchAllCollectivesInfo(userAccountId);
 
+  const {
+    projects,
+    loading: submittedProjectsLoading,
+    error: submittedProjectsError,
+  } = useFetchProjectsSubmitted();
+
   useEffect(() => {
     if (!loading && !error && allCollectivesInfo?.length > 0) {
       console.log("All Collectives Info:", allCollectivesInfo);
@@ -68,7 +74,12 @@ export default function ProjectManagement() {
       collectiveInfo.ForestaCollectives.approvedProjects.length === 0
   );
 
-  const { allProjects, pendingProjects, acceptedProjects, loading: projectsLoading, error: projectsError } = useFetchAllProjectsInfo();
+  const {
+    allProjects,
+    pendingProjects,
+    loading: projectsLoading,
+    error: projectsError,
+  } = useFetchAllProjectsInfo();
 
   useEffect(() => {
     if (!projectsLoading && !projectsError && allProjects?.length > 0) {
@@ -76,26 +87,33 @@ export default function ProjectManagement() {
     }
   }, [allProjects, projectsLoading, projectsError]);
 
+  useEffect(() => {
+    if (
+      !submittedProjectsLoading &&
+      submittedProjectsError === null &&
+      projects.length > 0
+    ) {
+      console.log("Fetched Projects:", projects);
+    }
+  }, [projects, submittedProjectsLoading, submittedProjectsError]);
 
-  //dummy data for now, need to query the carbon-credits pallet for this
-
-  const hasPendingProjects = pendingProjects.filter(
+  const submittedProjects = allProjects.filter(
     (project) => project.approved === "Pending"
   );
-  const hasAcceptedProjects = currentProjects.filter(
-    (project) => project.status === "Approved"
+  const acceptedProjects = allProjects.filter(
+    (project) => project.approved === "Approved"
   );
 
-
-
-
-
-  if (loading) {
+  if (loading || projectsLoading) {
     return (
       <div className="flex flex-col justify-center items-center w-full h-screen">
         <Spinner />
       </div>
     );
+  }
+
+  if (error || projectsError) {
+    return <div>Error loading data</div>;
   }
 
   return (
@@ -343,13 +361,14 @@ export default function ProjectManagement() {
                   </TabsList>
                   <div className="ml-auto mr-4">
                     <SubmitProjectDialog />
+                    
                   </div>
                 </div>
                 <TabsContent
                   value="all"
                   className="border-none p-0 outline-none"
                 >
-                  {hasProjects ? (
+                  {allProjects.length > 0 ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -365,11 +384,11 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentProjects.map((project) => (
+                            {allProjects.map((project, index) => (
                               <ProjectArtwork
-                                key={project.title}
+                                key={index}
+                                projectIdIndex={index} 
                                 project={project}
-                                className="w-[250px]"
                                 aspectRatio="portrait"
                                 width={250}
                                 height={330}
@@ -389,7 +408,7 @@ export default function ProjectManagement() {
                   value="submitted"
                   className="border-none p-0 outline-none"
                 >
-                  {hasPendingProjects ? (
+                  {pendingProjects.length > 0 ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -406,20 +425,16 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentProjects
-                              .filter(
-                                (project) => project.status === "Submitted"
-                              )
-                              .map((project) => (
-                                <ProjectArtwork
-                                  key={project.title}
-                                  project={project}
-                                  className="w-[250px]"
-                                  aspectRatio="portrait"
-                                  width={250}
-                                  height={330}
-                                />
-                              ))}
+                            {pendingProjects.map((project, index) => (
+                              <ProjectArtwork
+                                key={index}
+                                projectIdIndex={index} 
+                                project={project}
+                                aspectRatio="portrait"
+                                width={250}
+                                height={330}
+                              />
+                            ))}
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
@@ -448,7 +463,7 @@ export default function ProjectManagement() {
                   value="accepted"
                   className="h-full flex-col border-none p-0 data-[state=active]:flex"
                 >
-                  {hasAcceptedProjects ? (
+                  {acceptedProjects.length > 0 ? (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -464,20 +479,16 @@ export default function ProjectManagement() {
                       <div className="relative">
                         <ScrollArea>
                           <div className="flex space-x-4 pb-4">
-                            {currentProjects
-                              .filter(
-                                (project) => project.status === "Accepted"
-                              )
-                              .map((project) => (
-                                <ProjectArtwork
-                                  key={project.title}
-                                  project={project}
-                                  className="w-[250px]"
-                                  aspectRatio="portrait"
-                                  width={250}
-                                  height={330}
-                                />
-                              ))}
+                            {acceptedProjects.map((project, index) => (
+                              <ProjectArtwork
+                                key={index}
+                                project={project}
+                                projectIdIndex={index} 
+                                aspectRatio="portrait"
+                                width={250}
+                                height={330}
+                              />
+                            ))}
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>

@@ -18,7 +18,7 @@ import { LordIcon } from "@/lib/lordicon/lord-icon";
 import { useTheme } from "next-themes";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import MintProjectDialog from "./mint-project-dialog";
 
 export function TokensEmptyPlaceholder() {
   const { theme } = useTheme();
@@ -39,30 +39,8 @@ export function TokensEmptyPlaceholder() {
         <p className="mb-4 mt-2 text-sm text-muted-foreground">
           Ready to convert your project contributions into tokens? Start here.
         </p>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size="lg" className="relative">
-              Mint Tokens
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Mint Tokens</DialogTitle>
-              <DialogDescription>
-                Enter the amount of carbon credits to mint as tokens.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="credits">Carbon Credits</Label>
-                <Input id="url" placeholder="https://example.com/feed.xml" />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button>Mint Tokens</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          <MintProjectDialog/>
+          
       </div>
     </div>
   );

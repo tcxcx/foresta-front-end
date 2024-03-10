@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { getProjects, nextProjectId } from "@/hooks/web3/queries";
 import { ProjectDetail, ApprovalStatus } from "./createProjectTypes";
-import { hexToString } from "@polkadot/util";
 
 export const useFetchAllProjectsInfo = () => {
   const [allProjects, setAllProjects] = useState<ProjectDetail[]>([]);
