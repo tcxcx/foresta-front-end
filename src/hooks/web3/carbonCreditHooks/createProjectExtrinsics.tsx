@@ -7,8 +7,8 @@ import {
 } from "@polkadot/extension-dapp";
 import { sendTx } from "@/hooks/web3/sendTx";
 import { createProjectFormSchema } from "@/hooks/web3/schemas/carbon-credit-zod";
-import { toast } from "sonner"; // Assuming toast is correctly imported or use an alternative for notifications
-import { APP_NAME, WSS_ENDPOINT } from "@/lib/constants"; // Adjust the import paths as necessary
+import { toast } from "sonner";
+import { APP_NAME, WSS_ENDPOINT } from "@/lib/constants";
 
 const initApi = async () => {
   const wsProvider = new WsProvider(WSS_ENDPOINT);
@@ -53,10 +53,8 @@ export async function createProject(
     const signer = await getSigner(senderAddress);
     api.setSigner(signer);
 
-    // Validate projectDetails with Zod
     const parsedDetails = createProjectFormSchema.parse(projectDetails);
 
-    // Construct the transaction
     const tx = api.tx.carbonCredits.create(parsedDetails);
 
     await sendTx({

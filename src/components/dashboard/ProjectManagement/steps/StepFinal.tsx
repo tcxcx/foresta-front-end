@@ -37,7 +37,7 @@ const StepFinal: React.FC<StepFinalProps> = ({ isSuccess }) => {
             src={checkIconDataUri}
             trigger="hover"
             colors={{ primary: "#303f9f" }}
-            size={100}
+            size={200}
           />
           <p className="font-clash dark:text-white text-black text-lg">Submission was successful!</p>
         </>
@@ -47,7 +47,7 @@ const StepFinal: React.FC<StepFinalProps> = ({ isSuccess }) => {
             src={errorIconDataUri}
             trigger="hover"
             colors={{ primary: "#d32f2f" }}
-            size={36}
+            size={200}
           />
           <p className="font-clash dark:text-white text-blacktext-lg">Submission failed.</p>
         </>

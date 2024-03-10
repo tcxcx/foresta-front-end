@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { ApprovalStatus, projectType, SdgDetails } from "../carbonCreditHooks/createProjectTypes";
-// Assuming ApprovalStatus, projectType, SdgDetails enums are imported
+import { projectType, SdgDetails } from "../carbonCreditHooks/createProjectTypes";
 
 export const RegistryDetailSchema = z.object({
   regName: z.string(),
@@ -17,7 +16,7 @@ export const SDGDetailSchema = z.object({
 
 export const BatchSchema = z.object({
   name: z.string(),
-  uuid: z.string(), // Assuming UUID is in string format
+  uuid: z.string(),
   issuanceYear: z.number(),
   startDate: z.number(),
   endDate: z.number(),
@@ -28,12 +27,17 @@ export const BatchSchema = z.object({
 
 export const BatchGroupSchema = z.object({
   name: z.string(),
-  uuid: z.string(), // Assuming UUID is in string format
+  uuid: z.string(),
   assetId: z.number(),
   totalSupply: z.bigint(),
   minted: z.bigint(),
   retired: z.bigint(),
   batches: z.array(BatchSchema),
+});
+
+const RoyaltyDetailSchema = z.object({
+  recipient: z.string().min(1, "Royalty recipient address is required."),
+  percentage: z.number().min(0, "Royalty percentage must be 0 or more.").max(100, "Royalty percentage cannot exceed 100."),
 });
 
 export const createProjectFormSchema = z.object({
@@ -45,13 +49,9 @@ export const createProjectFormSchema = z.object({
   documents: z.array(z.string()).optional(),
   registryDetails: z.array(RegistryDetailSchema).optional(),
   sdgDetails: z.array(SDGDetailSchema).optional(),
-  royalties: z.object({
-    recipient: z.string().min(1, "Royalty recipient address is required."),
-    percentage: z.number().min(0, "Royalty percentage must be 0 or more.").max(100, "Royalty percentage cannot exceed 100."),
-  }).optional(),
+  royalties: z.optional(z.array(RoyaltyDetailSchema)),
   batchGroups: z.array(BatchGroupSchema),
   projectType: z.nativeEnum(projectType),
   created: z.number(),
   updated: z.number().nullable(),
-  approved: z.nativeEnum(ApprovalStatus),
 });

@@ -1,7 +1,48 @@
 import { object, string, array, number, optional } from 'zod';
 import { z } from "zod"
-
+import { projectType, RegNameList, SdgDetails } from '../carbonCreditHooks/createProjectTypes';
 // Enhanced schema for frontend validation with corrections
+const RegistryDetailSchema = z.object({
+  regName: z.nativeEnum(RegNameList),
+  name: z.string(),
+  id: z.string(),
+  summary: z.string(),
+});
+
+const RoyaltyDetailSchema = z.object({
+  recipient: z.string().min(1, "Royalty recipient address is required."),
+  percentage: z.number().min(0, "Royalty percentage must be 0 or more.").max(100, "Royalty percentage cannot exceed 100."),
+});
+
+const SDGDetailSchema = z.object({
+  sdgType: z.nativeEnum(SdgDetails),
+  description: z.string(),
+  references: z.array(z.string()),
+});
+
+const BatchSchema = z.object({
+  name: z.string(),
+  uuid: z.string(),
+  issuanceYear: z.number(),
+  startDate: z.number(),
+  endDate: z.number(),
+  totalSupply: z.bigint(),
+  minted: z.bigint(),
+  retired: z.bigint(),
+});
+
+
+const BatchGroupSchema = z.object({
+  name: z.string(),
+  uuid: z.string(),
+  assetId: z.number(),
+  totalSupply: z.bigint(),
+  minted: z.bigint(),
+  retired: z.bigint(),
+  batches: z.array(BatchSchema),
+});
+
+
 export const createProjectFormSchema = z.object({
   name: z.string().min(1, "Please enter a project name."),
   description: z.string().min(1, "Please provide a description for the project."),
@@ -19,21 +60,10 @@ export const createProjectFormSchema = z.object({
     registry: z.string().min(1, "Registry name is required."),
     details: z.string().min(1, "Registry details are required."),
   })).optional(),
-  sdgDetails: z.array(string()).optional(),
-  royalties: z.optional(object({
-    recipient: z.string().min(1, "Royalty recipient address is required."),
-    percentage: z.number().min(0, "Royalty percentage must be 0 or more.").max(100, "Royalty percentage cannot exceed 100."),
-  })),
-  batchGroups: z.array(object({
-    name: z.string().min(1, "Batch group name is required."),
-    totalSupply: z.number().min(1, "Total supply must be greater than 0."),
-    batches: z.array(object({
-      name: z.string().min(1, "Batch name is required."),
-      totalSupply: z.number().min(1, "Total supply must be greater than 0."),
-      minted: z.number().min(0, "Minted amount cannot be negative."),
-      retired: z.number().min(0, "Retired amount cannot be negative."),
-      issuanceYear: z.number().min(1900, "Issuance year must be after 1900.").max(new Date().getFullYear(), "Issuance year cannot be in the future."),
-    })),
-  })),
-  projectType: z.string().optional(),
+  sdgDetails: z.array(SDGDetailSchema).optional(),
+  royalties: z.optional(z.array(RoyaltyDetailSchema)),
+  batchGroups: z.array(BatchGroupSchema),
+  projectType: z.nativeEnum(projectType).optional(),
+  created: z.number(),
+  updated: z.number().optional().nullable(),
 });

@@ -35,27 +35,28 @@ export interface RegistryDetail {
 }
 
 export enum SdgDetails {
-  NoPoverty = "No Poverty",
-  ZeroHunger = "Zero Hunger",
-  GoodHealthAndWellBeing = "Good Health And WellBeing",
-  QualityEducation = "Quality Education",
-  GenderEquality = "Gender Equality",
-  CleanWaterAndSanitation = "Clean Water And Sanitation",
-  AffordableAndCleanEnergy = "Affordable And Clean Energy",
-  DecentWorkAndEconomicGrowth = "Decent Work And Economic Growth",
-  IndustryInnovationAndInfrastructure = "Industry Innovation And Infrastructure",
-  ReducedInequalities = "Reduced Inequalities",
-  SustainableCitiesAndCommunities = "Sustainable Cities And Communities",
-  ResponsibleConsumptionAndProduction = "Responsible Consumption And Production",
-  ClimateAction = "Climate Action",
-  LifeBelowWater = "Life Below Water",
-  LifeOnLand = "Life On Land",
-  PeaceJusticeAndStrongInstitutions = "Peace Justice And Strong Institutions",
-  PartnershipsForTheGoals = "Partnerships For The Goals",
+  NoPoverty = "NoPoverty",
+  ZeroHunger = "ZeroHunger",
+  GoodHealthAndWellBeing = "GoodHealthAndWellBeing",
+  QualityEducation = "QualityEducation",
+  GenderEquality = "GenderEquality",
+  CleanWaterAndSanitation = "CleanWaterAndSanitation",
+  AffordableAndCleanEnergy = "AffordableAndCleanEnergy",
+  DecentWorkAndEconomicGrowth = "DecentWorkAndEconomicGrowth",
+  IndustryInnovationAndInfrastructure = "IndustryInnovationAndInfrastructure",
+  ReducedInequalities = "ReducedInequalities",
+  SustainableCitiesAndCommunities = "SustainableCitiesAndCommunities",
+  ResponsibleConsumptionAndProduction = "ResponsibleConsumptionAndProduction",
+  ClimateAction = "ClimateAction",
+  LifeBelowWater = "LifeBelowWater",
+  LifeOnLand = "LifeOnLand",
+  PeaceJusticeAndStrongInstitutions = "PeaceJusticeAndStrongInstitutions",
+  PartnershipsForTheGoals = "PartnershipsForTheGoals",
 }
 
+
 export interface SDGDetails {
-  sdgType: SdgDetails;
+  sdgType: SdgDetails | '';
   description: string;
   references: string[];
 }
