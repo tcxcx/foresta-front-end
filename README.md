@@ -1,6 +1,6 @@
 # Foresta Front-end Application
 
-![Foresta](media/foresta-ui-banner.png)
+![Foresta](media/foresta-banner.png)
 
 **A cutting-edge platform for carbon credit issuance, trading, and management, leveraging blockchain technology.**
 
