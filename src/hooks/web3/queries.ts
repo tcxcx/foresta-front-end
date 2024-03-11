@@ -308,12 +308,12 @@ export const fetchCarbonCreditsDetails = async (assetId: string) => {
   };
 
   // Pools queries
-  export const fetchPoolCredits = async (poolId: string) => {
+  export const fetchPoolCredits = async (poolId: number) => {
     const api = await initApi();
     return (await api.query.carbonCreditsPool.poolCredits(poolId)).toJSON();
   };
   
-  export const fetchPoolDetails = async (poolId: string) => {
+  export const fetchPoolDetails = async (poolId: number) => {
     const api = await initApi();
     return (await api.query.carbonCreditsPool.pools(poolId)).toJSON();
   };
@@ -334,3 +334,10 @@ export const fetchCarbonCreditsDetails = async (assetId: string) => {
     return (await api.query.dex.buyOrdersByUser(accountId)).toJSON();
   };
   
+
+  // asset queries
+
+  export const assetsAccount = async (assetId: string, accountId: string) => {
+    const api = await initApi();
+    return (await api.query.assets.account(assetId, accountId)).toJSON();
+  };

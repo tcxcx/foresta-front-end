@@ -7,7 +7,6 @@ interface DEXDetails {
     userOrders: any[]; 
   }  
 
-
 export const useFetchDEXDetails = (userAccountId: string) => {
     const [dexDetails, setDEXDetails] = useState<DEXDetails | null>(null);
     const [loading, setLoading] = useState(true);

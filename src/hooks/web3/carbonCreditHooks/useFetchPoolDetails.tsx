@@ -1,35 +1,40 @@
-import { useState, useEffect } from "react";
-import { fetchPoolDetails } from "@/hooks/web3/queries";
+import { useEffect, useState } from "react";
+import { fetchPoolDetails, fetchPoolCredits } from "@/hooks/web3/queries";
 
 interface PoolDetails {
-  [key: string]: any;
+  admin: string;
+  config: any;
+  maxLimit: number;
+  credits: any;
 }
 
-export const useFetchPoolDetails = (poolId: string) => {
-  const [poolDetails, setPoolDetails] = useState<PoolDetails | null>(null);
+interface PoolCredits {}
+
+export const useFetchPoolDetails = (poolId: number) => {
+  const [poolDetails, setPoolDetails] = useState<any>(null);
+  const [poolCredits, setPoolCredits] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchDetails = async () => {
-      setLoading(true);
+    const fetchData = async () => {
       try {
-        const details = await fetchPoolDetails(poolId);
-        if (typeof details !== "undefined") {
-          setPoolDetails(details as PoolDetails);
-        } else {
-          setPoolDetails(null);
-        }
+        setLoading(true);
+        const detailsResult = await fetchPoolDetails(poolId);
+        const creditsResult = await fetchPoolCredits(poolId);
+
+        setPoolDetails(detailsResult);
+        setPoolCredits(creditsResult);
       } catch (e: any) {
-        console.error("Error fetching pool details:", e);
-        setError(e);
+        console.error("Failed to fetch pool data:", e);
+        setError(e.toString());
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDetails();
+    fetchData();
   }, [poolId]);
 
-  return { poolDetails, loading, error };
+  return { poolDetails, poolCredits, loading, error };
 };

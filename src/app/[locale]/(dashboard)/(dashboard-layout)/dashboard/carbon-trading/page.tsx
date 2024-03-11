@@ -12,11 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/hooks/context/account";
+import PoolTab from "@/components/dashboard/CarbonTrading/PoolTab";
 
 export default function CarbonTrading() {
   const [purchaseAmount, setPurchaseAmount] = useState<number>(0);
   const [sellAmount, setSellAmount] = useState<number>(0);
   const [retireAmount, setRetireAmount] = useState<number>(0);
+  const { account } = useAuth();
+  const userAccountId = account?.address || "";
 
   const handlePurchase = () => {
     // Logic for purchasing carbon credits
@@ -40,8 +44,8 @@ export default function CarbonTrading() {
           <TabsTrigger value="purchase" className="uppercase">
             Purchase
           </TabsTrigger>
-          <TabsTrigger value="sell" className="uppercase">
-            Add to Pool
+          <TabsTrigger value="pools" className="uppercase">
+            Pools
           </TabsTrigger>
           <TabsTrigger value="retire" className="uppercase">
             Retire
@@ -75,32 +79,8 @@ export default function CarbonTrading() {
             </CardFooter>
           </Card>
         </TabsContent>
-        <TabsContent value="sell">
-          <Card>
-            <CardHeader>
-              <CardTitle>Add to Carbon Credits Pool</CardTitle>
-              <CardDescription>
-                Enter the amount of carbon credits you want to add to the pool
-                for sale.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="sellAmount">Amount</Label>
-                <Input
-                  id="sellAmount"
-                  type="number"
-                  value={sellAmount.toString()}
-                  onChange={(e) => setSellAmount(parseInt(e.target.value, 10))}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleSell} className="font-clash uppercase">
-                Add to Pool
-              </Button>
-            </CardFooter>
-          </Card>
+        <TabsContent value="pools">
+         <PoolTab />
         </TabsContent>
         <TabsContent value="retire">
           <Card>

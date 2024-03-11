@@ -45,44 +45,38 @@ const getSigner = async (senderAddress: string) => {
   return injector.signer;
 };
 
-// Function to mint carbon credits
-export async function mintCarbonCredits(senderAddress: string, mintDetails: any, setLoading: (isLoading: boolean) => void) {
+export const retireFromPool = async (
+  senderAddress: string,
+  poolId: string,
+  amount: string,
+  setLoading: (isLoading: boolean) => void
+) => {
   try {
-    // Initialize API and get signer
     const api = await initApi();
     const signer = await getSigner(senderAddress);
     api.setSigner(signer);
 
-    // Validate mintDetails with Zod
-    const parsedDetails = mintCarbonCreditsSchema.parse(mintDetails);
+    const tx = api.tx.carbonCreditsPools.retire(poolId, amount);
 
-    const tx = api.tx.carbonCredits.mint(
-        parsedDetails.projectId,
-        parsedDetails.groupId,
-        parsedDetails.amountToMint,
-        parsedDetails.listToMarketplace
-      );
-  
-    // Send the transaction
     await sendTx({
-        api,
-        tx,
-        setLoading,
-        onFinalized: () => {
-          console.log("[mintCarbonCredits] Minting credits finalized successfully.");
-          toast.success("Credits minted successfully.");
-        },
-        onInBlock: () => {},
-        onSubmitted: () => {},
-        onClose: () => {},
-        signerAddress: senderAddress,
-        section: "carbonCredits",
-        method: "mint",
-        dispatch: () => {},
-      });
-      
+      api,
+      tx,
+      setLoading,
+      onFinalized: () => {
+        console.log(`[retireFromPool] Retirement from pool ${poolId} finalized successfully.`);
+        toast.success("Retirement successful.");
+      },
+      // Providing minimal implementations for the missing properties
+      onInBlock: () => {},
+      onSubmitted: () => {},
+      onClose: () => {},
+      dispatch: () => {},
+      signerAddress: senderAddress,
+      section: "carbonCreditsPools",
+      method: "retire",
+    });
   } catch (error: any) {
-    console.error("[mintCarbonCredits] Error in minting credits:", error);
-    toast.error(`Error in minting credits: ${error.message}`);
+    console.error("[retireFromPool] Error retiring from pool:", error);
+    toast.error(`Error retiring from pool: ${error.message}`);
   }
-}
+};
