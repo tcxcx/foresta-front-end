@@ -323,6 +323,11 @@ export const fetchCarbonCreditsDetails = async (assetId: string) => {
     const api = await initApi();
     return (await api.query.dex.buyOrderCount()).toJSON();
   };
+
+  export const createBuyOrder = async (orderId: string, assetId:string, units: number, maxFee: number) => {
+    const api = await initApi();
+    return (await api.query.dex.createBuyOrder(orderId, assetId, units, maxFee));
+  };
   
   export const fetchDEXOrders = async () => {
     const api = await initApi();

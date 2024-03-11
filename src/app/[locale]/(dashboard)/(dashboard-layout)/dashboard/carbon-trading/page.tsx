@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/context/account";
 import PoolTab from "@/components/dashboard/CarbonTrading/PoolTab";
-
+import PurchaseTab from "@/components/dashboard/CarbonTrading/PurchaseTab";
 export default function CarbonTrading() {
   const [purchaseAmount, setPurchaseAmount] = useState<number>(0);
   const [sellAmount, setSellAmount] = useState<number>(0);
@@ -52,35 +52,10 @@ export default function CarbonTrading() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="purchase">
-          <Card>
-            <CardHeader>
-              <CardTitle>Purchase Carbon Credits</CardTitle>
-              <CardDescription>
-                Enter the amount of carbon credits you want to purchase.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="purchaseAmount">Amount</Label>
-                <Input
-                  id="purchaseAmount"
-                  type="number"
-                  value={purchaseAmount.toString()}
-                  onChange={(e) =>
-                    setPurchaseAmount(parseInt(e.target.value, 10))
-                  }
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handlePurchase} className="font-clash uppercase">
-                Purchase
-              </Button>
-            </CardFooter>
-          </Card>
+          <PurchaseTab />
         </TabsContent>
         <TabsContent value="pools">
-         <PoolTab />
+          <PoolTab />
         </TabsContent>
         <TabsContent value="retire">
           <Card>
