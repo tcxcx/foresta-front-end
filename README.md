@@ -120,7 +120,7 @@ Our commitment is to develop a platform that not only addresses the current chal
 
 We owe a debt of gratitude to several organizations and communities for their support and inspiration:
 
-- **[Encode Club](https://www.encode.club/):** We extend our heartfelt thanks to Encode Club for organizing the hackathon that sparked the inception of our project. Their comprehensive workshops provided invaluable insights and learning opportunities. Notably, we attended all the workshops offered, which were instrumental in shaping our approach. A special mention goes to the workshop on SIWS (Substrate-based signing) by Talisman, which we have incorporated into our platform. These sessions were pivotal in enhancing our understanding and application of cutting-edge blockchain technologies.
+- **[Encode Club](https://www.encode.club/):** We extend our heartfelt thanks to Encode Club for organizing the hackathon that sparked the inception of our project. Their comprehensive workshops provided invaluable insights and learning opportunities. Notably, we attended all the workshops offered, which were instrumental in shaping our approach. A special mention goes to the workshop on Front-end Substrate were SIWS (Substrate-based signing) by Talisman was mentioned, which we have incorporated into our platform and adapted it to have additional functionalities based on the decoding of JWT as user log in/log out session, while also adding additional wallet providers to Polkadot.js. These sessions were pivotal in enhancing our understanding and application of cutting-edge blockchain technologies.
 
 - **[Tanssi](https://github.com/tcxcx/tanssi-foresta):** Our project leverages the cutting-edge Polkadot runtime technology envisioned by the Tanssi team. Their framework has been instrumental in enabling us to build a decentralized platform that supports our vision for a sustainable and carbon-neutral future.
 
@@ -128,8 +128,4 @@ We owe a debt of gratitude to several organizations and communities for their su
 
 Special thanks to both these projects and their communities for their open-source contributions, which have enabled us to patch their technologies together using the Dietner tool. This fusion has allowed us to bring Bitgreen's sustainability-focused blockchain solutions together with the latest Polkadot runtime technology, providing a robust foundation for the Foresta Node.
 
-We are deeply grateful for the work of these projects and their contributions to the blockchain and sustainability ecosystems. Their innovative approaches and commitment to open-source principles have been invaluable to our project's development.
-
-- Thanks to the Substrate and Polkadot communities for their invaluable resources and support including Web3 foundation grants and other hackathon projects that served as reference.
-
-- Special thanks to the contributors and maintainers of the libraries and tools we use.
+Special thanks to the contributors and maintainers of the libraries and tools we use.
