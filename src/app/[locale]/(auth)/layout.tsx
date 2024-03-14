@@ -41,14 +41,23 @@ export default function AuthLayout({
             alt="Authentication"
             className="hidden dark:block"
           />
-
           <div className="absolute inset-0 bg-black/50 z-10 flex flex-col p-10">
-            <div className="z-20 text-4xl text-white font-bold mb-4 uppercase font-clash">
-              🟩 Foresta
+            <div className="flex items-center mb-4">
+              <Image
+                src="/images/logo-icon.png"
+                alt="Foresta Logo"
+                width={50}
+                height={50}
+                objectFit="contain"
+              />
+              <h1 className="z-20 text-4xl text-white font-bold uppercase font-clash">
+                Foresta
+              </h1>
             </div>
             <blockquote className="mt-auto text-white">
               <p className="text-2xl">
-                &quot;This is the assembly of life that took a billion years to evolve. It holds the world steady.&quot;
+                &quot;This is the assembly of life that took a billion years to
+                evolve. It holds the world steady.&quot;
               </p>
               <footer className="text-base">- Edward O. Wilson</footer>
             </blockquote>

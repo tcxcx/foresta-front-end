@@ -4,21 +4,21 @@ import ConnectedAccount from "../Web3/ConnectedAccount";
 import Link from "next/link";
 import { useAuth } from "@/hooks/context/account";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Navbar() {
-    const { jwtToken } = useAuth();
-    const router = useRouter();
-  
-    useEffect(() => {
-      if (!jwtToken) {
-        router.push('/');
-      }
-    }, [jwtToken, router]);
-  
+  const { jwtToken } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
     if (!jwtToken) {
-      return <div> unauthorized...</div>;
+      router.push("/");
     }
-  
+  }, [jwtToken, router]);
+
+  if (!jwtToken) {
+    return <div> unauthorized...</div>;
+  }
 
   return (
     <>
@@ -26,8 +26,17 @@ export default function Navbar() {
         <nav className="flex items-center px-2 justify-between">
           <div className="text-center">
             <Link href="/" passHref>
-              <div className="font-clash text-2xl uppercase hover:text-green-500 cursor-pointer dark:text-white">
-                🟩Foresta
+              <div className="flex items-center my-4">
+                <Image
+                  src="/images/logo-icon.png"
+                  alt="Foresta Logo"
+                  width={30}
+                  height={30}
+                  objectFit="contain"
+                />
+                <div className="font-clash text-2xl uppercase hover:text-green-500 cursor-pointer dark:text-white">
+                  Foresta
+                </div>
               </div>
             </Link>
           </div>
@@ -36,9 +45,18 @@ export default function Navbar() {
           </div>
           {/* replace this with another functionality eventually for now leave it so that the ConnectedAccount does not overlap out */}
           <div className="text-center invisible">
+            <div className="flex items-center m-4">
+              <Image
+                src="/images/logo-icon.png"
+                alt="Foresta Logo"
+                width={30}
+                height={30}
+                objectFit="contain"
+              />
               <div className="font-clash text-2xl uppercase hover:text-green-500 cursor-pointer dark:text-white">
-                🟩Foresta
+                Foresta
               </div>
+            </div>
           </div>
         </nav>
       </header>

@@ -120,7 +120,7 @@ export default function PoolTab() {
                   <SelectValue placeholder="Select a pool" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10002">BioCarbon</SelectItem>
+                  <SelectItem value="10002">Gold Standard</SelectItem>
                   {/* <SelectItem value="10002">Verra</SelectItem> */}
                 </SelectContent>
               </Select>
@@ -161,7 +161,7 @@ export default function PoolTab() {
                   <SelectValue placeholder="Select a pool" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10002">BioCarbon</SelectItem>
+                  <SelectItem value="10002">Gold Standard</SelectItem>
                   {/* <SelectItem value="10002">Verra</SelectItem> */}
                 </SelectContent>
               </Select>
