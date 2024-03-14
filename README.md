@@ -4,9 +4,9 @@
 
 **A cutting-edge platform for carbon credit issuance, trading, and management, leveraging blockchain technology.**
 
-🌐 Visit us at [Foresta Network](https://www.foresta.network)  
-🐦 Follow us on [Twitter](https://twitter.com/Foresta) for the latest updates  
-💬 Join our [Discord server](https://discord.com/invite/) to engage with the community  
+🌐 Visit us at [Foresta]()  
+🐦 Follow us on [Twitter]() for the latest updates  
+💬 Join our [Discord server]() to engage with the community  
 
 ## Overview
 
