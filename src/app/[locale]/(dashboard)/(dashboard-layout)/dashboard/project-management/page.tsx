@@ -4,8 +4,6 @@ import React, { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { ProjectEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-projects";
-import { TokensEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-tokens";
 import { ProjectArtwork } from "@/components/dashboard/ProjectManagement/project-artwork";
 import SubmitProjectDialog from "@/components/dashboard/ProjectManagement/submit-project-dialog";
 import { LordIcon } from "@/lib/lordicon/lord-icon";
@@ -14,14 +12,14 @@ import NetworkLight from "@/lib/foresta-icons/wired-outline-952-business-network
 import BonsaiLight from "@/lib/foresta-icons/wired-outline-1851-bonsai.json";
 import NetworkDark from "@/lib/foresta-dark/wired-gradient-952-business-network.json";
 import BonsaiDark from "@/lib/foresta-dark/wired-gradient-1851-bonsai.json";
-import { CollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-collectives";
-import { AllCollectivesEmptyPlaceholder } from "@/components/dashboard/ProjectManagement/empty-placeholder-all-collectives";
 import { CollectivesArtwork } from "@/components/dashboard/ProjectManagement/collectives-artwork";
 import { useAuth } from "@/hooks/context/account";
 import { useFetchAllCollectivesInfo } from "@/hooks/web3/forestaCollectivesHooks/useFetchCollectivesInfo";
 import { useFetchAllProjectsInfo } from "@/hooks/web3/carbonCreditHooks/useFetchProjects";
 import { useFetchProjectsSubmitted } from "@/hooks/web3/carbonCreditHooks/useFetchProjectsInfo";
 import Spinner from "@/components/ui/spinner";
+import { PlaceholderComponent } from "@/components/dashboard/ProjectManagement/empty-placeholder";
+import { PlaceholderType } from "@/components/dashboard/ProjectManagement/placeholder-types";
 
 export default function ProjectManagement() {
   const canMintTokens = false;
@@ -221,7 +219,7 @@ export default function ProjectManagement() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                      <AllCollectivesEmptyPlaceholder />
+                      <PlaceholderComponent type={PlaceholderType.AllCollectives} />
                     </>
                   )}
                 </TabsContent>
@@ -275,7 +273,7 @@ export default function ProjectManagement() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                      <CollectivesEmptyPlaceholder />
+                      <PlaceholderComponent type={PlaceholderType.Collectives} />
                     </>
                   )}
                 </TabsContent>
@@ -333,7 +331,7 @@ export default function ProjectManagement() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                      <CollectivesEmptyPlaceholder />
+                      <PlaceholderComponent type={PlaceholderType.Collectives} />
                     </>
                   )}
                 </TabsContent>
@@ -401,7 +399,8 @@ export default function ProjectManagement() {
                       <Separator className="my-4" />
                     </>
                   ) : (
-                    <ProjectEmptyPlaceholder />
+                    <PlaceholderComponent type={PlaceholderType.Project} />
+
                   )}
                 </TabsContent>
                 <TabsContent
@@ -455,7 +454,7 @@ export default function ProjectManagement() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                      <ProjectEmptyPlaceholder />
+                      <PlaceholderComponent type={PlaceholderType.Project} />
                     </>
                   )}
                 </TabsContent>
@@ -507,7 +506,7 @@ export default function ProjectManagement() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                      <ProjectEmptyPlaceholder />
+                      <PlaceholderComponent type={PlaceholderType.Project} />
                     </>
                   )}
                 </TabsContent>
@@ -544,7 +543,7 @@ export default function ProjectManagement() {
                         </div>
                       </div>
                       <Separator className="my-4" />
-                      <TokensEmptyPlaceholder />
+                      <PlaceholderComponent type={PlaceholderType.Tokens} />
                     </>
                   )}
                 </TabsContent>
