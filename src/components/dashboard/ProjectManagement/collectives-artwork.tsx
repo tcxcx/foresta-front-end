@@ -2,7 +2,6 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Separator } from "@radix-ui/react-select";
 import {
   HoverCard,
   HoverCardContent,
@@ -11,12 +10,9 @@ import {
 import truncateMiddle from "truncate-middle";
 import Identicon from "@polkadot/react-identicon";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 
-import { Collective } from "@/lib/data/projects";
-import { SDG } from "@/lib/data/SDGs";
 
 interface CollectivesArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   collective: any;

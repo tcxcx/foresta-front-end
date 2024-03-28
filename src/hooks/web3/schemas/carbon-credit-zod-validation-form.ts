@@ -1,6 +1,6 @@
 import { object, string, array, number, optional } from 'zod';
 import { z } from "zod"
-import { projectType, RegNameList, SdgDetails } from '../carbonCreditHooks/createProjectTypes';
+import { projectType, RegNameList, SdgDetails } from '@/lib/data/createProjectTypes';
 // Enhanced schema for frontend validation with corrections
 const RegistryDetailSchema = z.object({
   regName: z.nativeEnum(RegNameList),
@@ -67,3 +67,5 @@ export const createProjectFormSchema = z.object({
   created: z.number(),
   updated: z.number().optional().nullable(),
 });
+
+export type ProjectFormData = z.infer<typeof createProjectFormSchema>;

@@ -9,10 +9,11 @@ import { useTheme } from "next-themes";
 
 interface StepFinalProps {
   isSuccess: boolean | null;
+  error: string | null;
 }
 
 
-const StepFinal: React.FC<StepFinalProps> = ({ isSuccess }) => {
+const StepFinal: React.FC<StepFinalProps> = ({ isSuccess, error }) => {
   const { theme } = useTheme();
 
   const Checkbox = theme === "dark" ? CheckboxDark : CheckboxLight;
@@ -50,6 +51,7 @@ const StepFinal: React.FC<StepFinalProps> = ({ isSuccess }) => {
             size={200}
           />
           <p className="font-clash dark:text-white text-blacktext-lg">Submission failed.</p>
+          <p className="font-clash dark:text-white text-black text-lg">Error: {error}</p>
         </>
       )}
     </div>
