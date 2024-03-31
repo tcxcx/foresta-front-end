@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { hexToString } from "@polkadot/util";
-
+import { Option } from "@polkadot/types";
 
 let apiInstance: ApiPromise | null = null;
 
@@ -298,51 +298,55 @@ export const userOpenOrderUnitsAllowed = async (accountId: string) => {
 //   return api.query.carbonCredits.creditBalance(accountId);
 // };
 
-
 // Carbon Credits queries
 export const fetchCarbonCreditsDetails = async (assetId: string) => {
-    const api = await initApi();
-    const assetDetails = await api.query.carbonCredits.assetIdLookup(assetId);
-    const projectDetails = await api.query.carbonCredits.projects(assetDetails);
-    return { assetDetails: assetDetails.toJSON(), projectDetails: projectDetails.toJSON() };
+  const api = await initApi();
+  const assetDetails = await api.query.carbonCredits.assetIdLookup(assetId);
+  const projectDetails = await api.query.carbonCredits.projects(assetDetails);
+  return {
+    assetDetails: assetDetails.toJSON(),
+    projectDetails: projectDetails.toJSON(),
   };
+};
 
-  // Pools queries
-  export const fetchPoolCredits = async (poolId: number) => {
-    const api = await initApi();
-    return (await api.query.carbonCreditsPool.poolCredits(poolId)).toJSON();
-  };
-  
-  export const fetchPoolDetails = async (poolId: number) => {
-    const api = await initApi();
-    return (await api.query.carbonCreditsPool.pools(poolId)).toJSON();
-  };
-  
-  // DEX queries
-  export const fetchDEXBuyOrderCount = async () => {
-    const api = await initApi();
-    return (await api.query.dex.buyOrderCount()).toJSON();
-  };
+// Pools queries
 
-  export const createBuyOrder = async (orderId: string, assetId:string, units: number, maxFee: number) => {
-    const api = await initApi();
-    return (await api.query.dex.createBuyOrder(orderId, assetId, units, maxFee));
-  };
-  
-  export const fetchDEXOrders = async () => {
-    const api = await initApi();
-    return (await api.query.dex.orders()).toJSON();
-  };
-  
-  export const fetchDEXBuyOrdersByUser = async (accountId: string) => {
-    const api = await initApi();
-    return (await api.query.dex.buyOrdersByUser(accountId)).toJSON();
-  };
-  
 
-  // asset queries
+export const fetchPoolDetails = async (poolId: number) => {
+  const api = await initApi();
+  return (await api.query.carbonCreditsPool.pools(poolId)).toJSON();
+};
 
-  export const assetsAccount = async (assetId: string, accountId: string) => {
-    const api = await initApi();
-    return (await api.query.assets.account(assetId, accountId)).toJSON();
-  };
+// DEX queries
+export const fetchDEXBuyOrderCount = async () => {
+  const api = await initApi();
+  return (await api.query.dex.buyOrderCount()).toJSON();
+};
+
+export const createBuyOrder = async (
+  orderId: string,
+  assetId: string,
+  units: number,
+  maxFee: number
+) => {
+  const api = await initApi();
+  return await api.query.dex.createBuyOrder(orderId, assetId, units, maxFee);
+};
+
+export const fetchDEXOrders = async () => {
+  const api = await initApi();
+  return (await api.query.dex.orders()).toJSON();
+};
+
+export const fetchDEXBuyOrdersByUser = async (accountId: string) => {
+  const api = await initApi();
+  return (await api.query.dex.buyOrdersByUser(accountId)).toJSON();
+};
+
+// asset queries
+
+export const assetsAccount = async (assetId: string, accountId: string) => {
+  const api = await initApi();
+  return (await api.query.assets.account(assetId, accountId)).toJSON();
+};
+

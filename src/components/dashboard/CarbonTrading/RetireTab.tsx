@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useFetchUserAssets } from "@/hooks/web3/assetHooks/useFetchUserAssets";
 import { useAuth } from "@/hooks/context/account";
-import { depositToPool } from "@/hooks/web3/dexHooks/depositToPoolExtrinsic";
 import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import {
   Select,
   SelectTrigger,
@@ -13,6 +14,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { retireFromPool } from "@/hooks/web3/dexHooks/retireFromPoolExtrinsic";
 import {
   Card,
   CardContent,
@@ -22,21 +24,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
+import { Label } from "@/components/ui/label";
 
-export default function PoolTab() {
+export default function RetireTab() {
   const { account } = useAuth();
   const accountId = account?.address || "";
   const [selectedPool, setSelectedPool] = useState("");
   const { toast } = useToast();
 
-  const poolId =
-    // selectedPool === "10003" ? "0" : selectedPool === "10002" ? "0" : "";
-    selectedPool === "10001" ? "1" : "";
-
   const { userAssets, loading: loadingAssets } = useFetchUserAssets(
-    poolId,
+    selectedPool,
     accountId
-  ); // Use the dynamic poolId
+  );
 
   const { handleSubmit, control, setValue, watch } = useForm({
     defaultValues: {
@@ -45,7 +44,6 @@ export default function PoolTab() {
     },
   });
   const amount = watch("amount");
-  const setAmount = setValue;
 
   useEffect(() => {
     if (userAssets) {
@@ -53,57 +51,45 @@ export default function PoolTab() {
     }
   }, [userAssets, setValue]);
 
-  const handleMaxClick = () => {
-    setValue("amount", userAssets?.balance.toString() || "0");
-  };
-  const handleDeposit = async () => {
+  const handleRetire = async () => {
     if (!selectedPool || amount === "") {
       toast({
-        description: "Please select a pool and enter an amount.",
+        description: "Please select a pool, enter an amount.",
       });
       return;
     }
-
-    // set assetId here for extrinsics
     try {
-      await depositToPool(accountId, selectedPool, "0", amount, () => {});
+      await retireFromPool(accountId, selectedPool, amount, () => {});
       toast({
-        description: "Deposit successful!",
+        title: "Retirement Successful!",
+        description: "Your retirement action was successful.",
       });
     } catch (error) {
-      console.error("Failed to deposit:", error);
+      console.error("Failed to retire:", error);
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Your Deposit failed.",
+        title: "Retirement Failed",
+        description: "Your retirement action could not be completed. Please try again.",
       });
     }
   };
 
   return (
     <div className="flex justify-center items-center h-full">
-      <Tabs defaultValue="addToPool" className="w-full max-w-xl">
+      <Tabs defaultValue="retireFromPool" className="w-full max-w-xl">
         <TabsList className="flex divide-x divide-gray-200 rounded-lg bg-gray-100 p-1">
-          <TabsTrigger value="addToPool" className="flex-1 uppercase">
-            Add to Pool
+          <TabsTrigger value="retireFromPool" className="flex-1 uppercase">
+            MINT NFT CERTIFICATE
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="addToPool">
+        <TabsContent value="retireFromPool">
           <Card>
             <CardHeader>
-              <CardTitle>Add to Pool</CardTitle>
+              <CardTitle>Retire Carbon Credits</CardTitle>
               <CardDescription>
-                Enter the amount of carbon credits you want to add to the pool
-                for sale.
+                Enter the amount of carbon credits you want to retire as CO2 emissions to get your NFT certificate.
               </CardDescription>
-              <>
-                {loadingAssets ? (
-                  <p>Loading assets...</p>
-                ) : (
-                  <p>Your Balance: {userAssets?.balance ?? 0}</p>
-                )}
-              </>
+              <p>Your Balance: {userAssets?.balance ?? 0}</p>
             </CardHeader>
             <CardContent className="space-y-2">
               <Select onValueChange={setSelectedPool}>
@@ -112,27 +98,21 @@ export default function PoolTab() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="10001">Bio Carbon</SelectItem>
-
-                  {/* <SelectItem value="10002">Gold Standard</SelectItem> */}
-                  {/* <SelectItem value="10002">Verra</SelectItem> */}
+                  {/* Add more pools as needed */}
                 </SelectContent>
               </Select>
-
-              <label htmlFor="depositAmount">Amount to Deposit</label>
+              <Label htmlFor="retireAmount">Amount</Label>
               <Input
-                id="depositAmount"
+                id="retireAmount"
                 type="number"
                 value={amount}
-                onChange={(e) => setAmount("amount", e.target.value)}
+                onChange={(e) => setValue("amount", e.target.value)}
                 min="0"
               />
             </CardContent>
             <CardFooter>
-              <Button onClick={handleDeposit} className="font-clash uppercase">
-                Add to Pool
-              </Button>
-              <Button type="button" onClick={handleMaxClick}>
-                Max
+              <Button onClick={handleRetire} className="font-clash uppercase">
+                Retire
               </Button>
             </CardFooter>
           </Card>

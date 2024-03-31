@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import SideMenu from "@/components/dashboard/SideMenu";
 import Navbar from "@/components/dashboard/navbar";
 import SideMenuSkeleton from "@/components/dashboard/Skeleton/SideMenuSkeleton";
+import { Toaster } from "@/components/ui/toaster";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <main className="flex flex-col h-screen overflow-hidden">
           {children}
         </main>
+        <Toaster />
       </div>
     </div>
   );

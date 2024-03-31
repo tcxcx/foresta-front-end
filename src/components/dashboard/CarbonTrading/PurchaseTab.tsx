@@ -1,5 +1,4 @@
-// PurchaseTab.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,6 +15,7 @@ import { useAuth } from "@/hooks/context/account";
 import { createBuyOrder } from "@/hooks/web3/dexHooks/useCreateBuyOrder";
 import { createSellOrder } from "@/hooks/web3/dexHooks/useCreateSellOrder";
 import { z } from "zod";
+// import { useFetchTotalAvailableCredits } from '@/hooks/web3/assetHooks/useFetchTotalAvailableCredits'; 
 
 function generateOrderId() {
   const timestamp = Date.now().toString();
@@ -35,9 +35,11 @@ export default function PurchaseTab() {
   const { account } = useAuth();
   const userAccountId = account?.address || "";
 
+  // const { totalAvailableCredits, loading, error } = useFetchTotalAvailableCredits();
+
+
   const handleSell = async () => {
     try {
-      // Validate input using Zod schema
       SellOrderSchema.parse({ sellAmount, pricePerUnit });
 
       const assetId = 0;
@@ -56,10 +58,8 @@ export default function PurchaseTab() {
       alert("Sell order created successfully!");
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Handle validation errors
         alert(error.errors.map((err) => err.message).join("\n"));
       } else {
-        // Handle other errors
         console.error("Failed to create sell order:", error);
         alert("Sell order creation failed.");
       }
@@ -156,6 +156,9 @@ export default function PurchaseTab() {
               <CardDescription>
                 Enter the amount of carbon credits you want to purchase.
               </CardDescription>
+              <p>
+                {/* Total Available Credits Across Pools: {totalAvailableCredits} */}
+              </p>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="space-y-1">

@@ -1,0 +1,87 @@
+Simplified Look at Foresta Pallets
+
+Requirements - Node, Front end. Two-Three accounts in the wallet. Polkadot.js.org/apps to access sudo and extrinsics.
+
+Compile Node
+
+    cargo build -p container-chain-template-simple-node --release
+
+Run Node in dev mode
+
+    ./target/release/container-chain-template-simple-node --dev --sealing 6000
+
+
+All the queries(chain state) and extrinsics are available using polkadot.js.org/apps (switch to development node) -> Developer Tab
+
+
+Fund wallet accounts from Alice account
+
+
+1. KYC Pallet
+
+    a. SUDO : Force add Authorized account Account1
+
+    b. Use Account1 to add Account2 etc. to the KYC members list
+
+    Carbon Credits Pallet
+
+    a. SUDO : Force add Authorized account Account1
+
+
+2. Foresta Collectives pallet
+
+    a. SUDO : Add Collective1 with Account1 as a manager
+
+    b. Account2 etc. join Collective1
+
+    c. Account2 creates proposal , a vote is created and other collective members can vote on it.
+
+    d. Account2 etc. can also initiate project approval and removal (If the project exists).
+
+
+3. Carbon Credits Pallet
+
+    a. SUDO : Force add Authorized account Account1
+
+    B. All carbon credits extrinsics are called either by SUDO or KYC’d members.
+
+    C. KYC protected extrinsics - create, resubmit, mint, retire
+
+    D. Flow - Account1 creates project -> Sudo approves it or we can use Collectives pallet to put the proposal up to vote, Once the project is approved any KYC member can call mint function to mint tokens to the creator.
+
+    e. Tokens are minted to the project creator so in theory anyone can call the mint function. For the demo purposes, it may make sense to have the same account call both the create and mint (after the project is approved) functions
+
+    f. Only project creator can update project or add more batch groups.
+
+
+4. Carbon Credits Pool Pallet
+
+    A: SUDO can create a new pool with create()
+    Pool ID's must be 10001 onwards
+
+    B. Deposit and retire functions can be called by any signed accounts. There isn’t much else to the pallet as it depends completely on the carbon credits pallet.
+
+
+5. Foresta Collectives pallet
+
+    a. SUDO : Add Collective1 with Account1 as a manager
+
+    b. Account2 etc. join Collective1
+
+    c. Account2 creates proposal , a vote is created and other collective members can vote on it.
+
+    d. Account2 etc. can also initiate project approval and removal (If the project exists).
+
+    e. There are two types of voting - collective voting and general membership voting. If it is a collectives vote (eg, createProposal() which deals with proposals inside a collective) only collectives members can vote. Other type (eg., creation of pool or dex management) is open to all KYC’d members.
+
+    f. We are using on_initialize hook to decide the voting outcome so if the voting id 100 is supposed to terminate at the block # 500 then at the creation of this block, the status of the vote will change to either VoteStatus::Passed or VoteStatus::Failed based on the vote count.
+
+
+Pallet Account Ids to be funded when starting the node
+Pallets Account ID
+
+    DEX - 5EYCAe5fvJMpFoTxRjUDmf4VvqJcpBTDEiD9Jg86JVWFB4Xm
+    CarbonCredits - 5EYCAe5fvJMpFobCKxFM9kjhoVwcYByEnDDWk36syUXiPdfM
+    CarbonCreditsPool - 5EYCAe5fvJMgizZc3hWRWmrEAaho3gA6ZnqX3AV72HGyJkAB
+    KYC - 5EYCAe5fvJMpFoWocGiiFrUTvzMXNBRccpYvNyuUGJyMcamb
+    ForestaCollectives - 5EYCAe5gj4MWc3L9QTJ8eRm96L356AknQ8Pi1TNjqAjGqFKF
