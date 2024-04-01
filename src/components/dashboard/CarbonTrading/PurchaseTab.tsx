@@ -16,6 +16,8 @@ import { createBuyOrder } from "@/hooks/web3/dexHooks/useCreateBuyOrder";
 import { createSellOrder } from "@/hooks/web3/dexHooks/useCreateSellOrder";
 import { z } from "zod";
 // import { useFetchTotalAvailableCredits } from '@/hooks/web3/assetHooks/useFetchTotalAvailableCredits'; 
+import { useToast } from "@/components/ui/use-toast";
+
 
 function generateOrderId() {
   const timestamp = Date.now().toString();
@@ -34,6 +36,7 @@ export default function PurchaseTab() {
   const [pricePerUnit, setPricePerUnit] = useState<number>(0);
   const { account } = useAuth();
   const userAccountId = account?.address || "";
+  const { toast } = useToast();
 
   // const { totalAvailableCredits, loading, error } = useFetchTotalAvailableCredits();
 
@@ -55,20 +58,20 @@ export default function PurchaseTab() {
         userAccountId,
         () => {}
       );
-      alert("Sell order created successfully!");
+      toast({ description: "Sell order created successfully!" });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        alert(error.errors.map((err) => err.message).join("\n"));
+        toast({ variant: "destructive", description: error.errors.map((err) => err.message).join("\n") });
       } else {
         console.error("Failed to create sell order:", error);
-        alert("Sell order creation failed.");
+        toast({ variant: "destructive", description: "Sell order creation failed." });
       }
     }
   };
 
   const handlePurchase = async () => {
     if (purchaseAmount <= 0) {
-      alert("Please enter a valid amount to purchase.");
+      toast({ variant: "destructive", description: "Please enter a valid amount to purchase." });
       return;
     }
     try {
