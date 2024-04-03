@@ -15,7 +15,6 @@ async function getTasks() {
   return z.array(taskSchema).parse(tasks);
 }
 
-
 export default async function ProposalsTable() {
   const tasks = await getTasks();
 

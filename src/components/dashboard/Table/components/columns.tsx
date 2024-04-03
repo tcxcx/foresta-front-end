@@ -10,6 +10,9 @@ import { Task } from "../data/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 
+
+// Column accesor sorters for checkbox and categories in headers
+
 export const columns: ColumnDef<Task>[] = [
   {
     id: "select",

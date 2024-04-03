@@ -25,6 +25,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { useFetchAllCollectives, useFetchProposalsForCollective, useFetchVoteDetails } from "@/hooks/web3/forestaCollectivesHooks/useCollectives";
+
 import { DataTablePagination } from "../components/data-table-pagination";
 import { DataTableToolbar } from "../components/data-table-toolbar";
 
@@ -66,6 +68,24 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  const { collectives, loading: loadingCollectives, error: errorCollectives } = useFetchAllCollectives();
+  const { proposals, loading: loadingProposals, error: errorProposals } = useFetchProposalsForCollective(0);
+  const { voteDetails, loading: loadingVoteDetails, error: errorVoteDetails } = useFetchVoteDetails(0, "5CFa7RyC8ifhHDiHRgXF46QZTdNGtiY8q3n9CCrBi7rDKB4y");
+
+    // Console log the data from hooks
+    console.log("Collectives:", collectives);
+    console.log("Loading Collectives:", loadingCollectives);
+    console.log("Error Collectives:", errorCollectives);
+
+    console.log("Proposals:", proposals);
+    console.log("Loading Proposals:", loadingProposals);
+    console.log("Error Proposals:", errorProposals);
+
+    console.log("Vote Details:", voteDetails);
+    console.log("Loading Vote Details:", loadingVoteDetails);
+    console.log("Error Vote Details:", errorVoteDetails);
+
 
   return (
     <div className="space-y-4">

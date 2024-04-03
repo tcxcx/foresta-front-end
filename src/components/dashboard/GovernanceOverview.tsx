@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProposalsTable from "@/components/dashboard/Table/index";
 
 export default function GovernanceOverview() {
+
   return (
     // Adjusted the container to use flex-start instead of centering items vertically
     <div className="flex flex-col h-full w-full items-start justify-start px-4 bg-[url('/images/topography.svg')] bg-cover">

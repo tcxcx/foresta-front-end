@@ -15,9 +15,8 @@ import { useAuth } from "@/hooks/context/account";
 import { createBuyOrder } from "@/hooks/web3/dexHooks/useCreateBuyOrder";
 import { createSellOrder } from "@/hooks/web3/dexHooks/useCreateSellOrder";
 import { z } from "zod";
-// import { useFetchTotalAvailableCredits } from '@/hooks/web3/assetHooks/useFetchTotalAvailableCredits'; 
+// import { useFetchTotalAvailableCredits } from '@/hooks/web3/assetHooks/useFetchTotalAvailableCredits';
 import { useToast } from "@/components/ui/use-toast";
-
 
 function generateOrderId() {
   const timestamp = Date.now().toString();
@@ -40,7 +39,6 @@ export default function PurchaseTab() {
 
   // const { totalAvailableCredits, loading, error } = useFetchTotalAvailableCredits();
 
-
   const handleSell = async () => {
     try {
       SellOrderSchema.parse({ sellAmount, pricePerUnit });
@@ -61,17 +59,26 @@ export default function PurchaseTab() {
       toast({ description: "Sell order created successfully!" });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        toast({ variant: "destructive", description: error.errors.map((err) => err.message).join("\n") });
+        toast({
+          variant: "destructive",
+          description: error.errors.map((err) => err.message).join("\n"),
+        });
       } else {
         console.error("Failed to create sell order:", error);
-        toast({ variant: "destructive", description: "Sell order creation failed." });
+        toast({
+          variant: "destructive",
+          description: "Sell order creation failed.",
+        });
       }
     }
   };
 
   const handlePurchase = async () => {
     if (purchaseAmount <= 0) {
-      toast({ variant: "destructive", description: "Please enter a valid amount to purchase." });
+      toast({
+        variant: "destructive",
+        description: "Please enter a valid amount to purchase.",
+      });
       return;
     }
     try {
@@ -94,10 +101,10 @@ export default function PurchaseTab() {
         userAccountId,
         () => {}
       );
-      alert("Purchase successful!");
+      toast({ description: "Purchase successful!" });
     } catch (error) {
       console.error("Failed to purchase:", error);
-      alert("Purchase failed.");
+      toast({ description: "Purchase failed!" });
     }
   };
 

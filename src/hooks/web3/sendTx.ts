@@ -3,6 +3,8 @@ import { APP_NAME } from "@/lib/constants";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { ApiPromise, SubmittableResult } from "@polkadot/api";
 import { web3FromAddress } from "@polkadot/extension-dapp";
+import { SubmittableExtrinsic } from "@polkadot/api/promise/types"
+import { ISubmittableResult } from "@polkadot/types/types"
 
 export async function getSigner(signerAddress: string) {
   const { web3Enable, web3FromAddress } = await import(
@@ -41,6 +43,7 @@ interface SendTxParams {
   onFinalized: (blockHash: string | null) => void;
   onInBlock: (eventData?: any) => void;
   onSubmitted: (signerAddress: string) => void;
+  onSuccess?: (result: ISubmittableResult) => void
   onClose: () => void;
   signerAddress: string;
   section?: string;
@@ -55,6 +58,7 @@ export async function sendTx({
   onInBlock,
   onSubmitted,
   onClose,
+  onSuccess,
   signerAddress,
   section: sectionName,
   method: methodName,

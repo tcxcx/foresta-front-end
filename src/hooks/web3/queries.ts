@@ -40,11 +40,6 @@ export const fetchApplicantDetails = async (accountId: string) => {
 };
 
 // Foresta Collectives queries
-// queries for project managament Collectives tab
-export const collectivesMembersCount = async (collectiveId: string) => {
-  const api = await initApi();
-  return api.query.forestaCollectives.membersCount(collectiveId);
-};
 
 /**
  * Checks if a user is a member of a collective.
@@ -52,8 +47,9 @@ export const collectivesMembersCount = async (collectiveId: string) => {
  * @param accountId The account ID of the user.
  * @returns A promise that resolves to a boolean indicating membership status.
  */
+
 export const userInCollective = async (
-  collectiveId: string,
+  collectiveId: number,
   accountId: string
 ): Promise<boolean> => {
   const api = await initApi();
@@ -64,34 +60,44 @@ export const userInCollective = async (
   return result.toHuman() === true;
 };
 
-export const projectManager = async (collectiveId: string) => {
+export const projectManager = async (collectiveId: number) => {
   const api = await initApi();
   return api.query.forestaCollectives.managers(collectiveId);
 };
 
-export const collectivesName = async (collectiveId: string) => {
+export const memberCollectiveCount = async (collectiveId: number) => {
+  const api = await initApi();
+  return api.query.forestaCollectives.membersCount(collectiveId);
+}
+
+export const collectivesName = async (collectiveId: number) => {
   const api = await initApi();
   return api.query.forestaCollectives.collectivesMap(collectiveId);
 };
 
-export const collectivesCount = async () => {
+export const totalCollectivesCount = async () => {
   const api = await initApi();
   return api.query.forestaCollectives.collectivesCount();
 };
 
-export const collectiveApprovedProjects = async (collectiveId: string) => {
+// forestaCollectives.projectVote: Option<PalletForestaCollectivesVote>
+// {
+//   yesVotes: 1
+//   noVotes: 0
+//   end: 2,358
+//   status: Deciding
+//   voteType: Proposal
+//   category: LandManagementAndRehabilitation
+//   priority: Low
+//   collectiveId: 0
+//   projectId: null
+// }
+export const collectiveVote = async (projectVote: number) => {
   const api = await initApi();
-  return api.query.forestaCollectives.approvedProjects(collectiveId);
+  return api.query.forestaCollectives.projectVote(projectVote);
 };
 
-// collectives governance
-
-export const activeVoting = async (collectiveId: string) => {
-  const api = await initApi();
-  return api.query.forestaCollectives.activeVoting(collectiveId);
-};
-
-export const checkMemberVote = async (accountId: string, voteId: string) => {
+export const checkMemberVote = async (accountId: string, voteId: number) => {
   const api = await initApi();
   const hasVoted = await api.query.forestaCollectives.checkMemberVote(
     accountId,
@@ -100,21 +106,16 @@ export const checkMemberVote = async (accountId: string, voteId: string) => {
   return hasVoted.toJSON();
 };
 
-export const projectVote = async (collectiveId: string) => {
-  const api = await initApi();
-  return api.query.forestaCollectives.projectVote(collectiveId);
-};
-
 // look what the two options mean and refactor
 export const getCollectiveProposals = async (
-  collectiveId: string,
-  proposalIndex: string
+  collectiveId: number,
+  voteId: number
 ) => {
   const api = await initApi();
-  return api.query.forestaCollectives.proposals(collectiveId, proposalIndex);
+  return api.query.forestaCollectives.proposals(collectiveId, voteId);
 };
 
-export const collectiveProposalsCount = async (collectiveId: string) => {
+export const collectiveProposalsCount = async (collectiveId: number) => {
   const api = await initApi();
   return api.query.forestaCollectives.proposalsCount(collectiveId);
 };
@@ -129,7 +130,7 @@ export const votesCount = async () => {
   return api.query.forestaCollectives.votesCount();
 };
 
-export const fetchProposalsForCollective = async (collectiveId: string) => {
+export const fetchProposalsForCollective = async (collectiveId: number) => {
   const api = await initApi();
   const proposalCount = await api.query.forestaCollectives.proposalsCount(
     collectiveId
@@ -145,6 +146,11 @@ export const fetchProposalsForCollective = async (collectiveId: string) => {
     proposals.push(proposal.toJSON());
   }
   return proposals;
+};
+
+export const collectiveApprovedProjects = async (collectiveId: string) => {
+  const api = await initApi();
+  return api.query.forestaCollectives.approvedProjects(collectiveId);
 };
 
 // carbon-credit queries
