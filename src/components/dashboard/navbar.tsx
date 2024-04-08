@@ -17,7 +17,7 @@ export default function Navbar() {
   }, [jwtToken, router]);
 
   if (!jwtToken) {
-    return <div> unauthorized...</div>;
+    return <div className="hidden"> unauthorized...</div>;
   }
 
   return (
