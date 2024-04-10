@@ -19,13 +19,16 @@ import { Terminal } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { SheetKyc1 } from "@/components/dashboard/kycLevel1";
-
+import { useMarketplaceData } from "@/hooks/context/useMarketplaceData";
+import MarketplacePage from "./@marketplace/page";
+import { MarketplaceWrapper } from "@/components/dashboard/MarketplaceWrapper";
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  marketplace: React.ReactNode;
+  marketplace: React.ReactElement;
   mapglobe: React.ReactNode;
   governance: React.ReactNode;
 }
+import { useLocale } from "next-intl";
 
 export default function DashboardLayout({
   children,
@@ -35,14 +38,30 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   const { account } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
   const accountId = account?.address || "";
   const { kycStatus, error } = useKYCSubscription(accountId);
+  const { liveCollectives, acceptedProjects, selectCollective } =
+    useMarketplaceData();
+  const marketplaceData = {
+    liveCollectives,
+    acceptedProjects,
+    selectCollective,
+  };
 
-  const hasAccess = kycStatus && (kycStatus.level === 'KYCLevel1' || kycStatus.level === 'KYCLevel2' || kycStatus.level === 'KYCLevel3');
+  const hasAccess =
+    kycStatus &&
+    (kycStatus.level === "KYCLevel1" ||
+      kycStatus.level === "KYCLevel2" ||
+      kycStatus.level === "KYCLevel3");
+  const marketplaceComponent = React.cloneElement(marketplace, {
+    marketplaceData,
+  });
 
   // console.log("KYC Status: ", kycStatus);
 
   // console.log("this is the accountId: ", accountId);
+  console.log("marketplaceData: ", marketplaceData);
 
   return account ? (
     <>
@@ -71,7 +90,11 @@ export default function DashboardLayout({
           className="w-full h-full p-4"
         >
           <ResizablePanel defaultSize={250} className="flex-1 overflow-hidden">
-            {marketplace}
+            <MarketplaceWrapper
+              marketplaceData={marketplaceData}
+              locale={locale}
+            />
+            {/* Render the MarketplaceWrapper component */}
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={400} className="flex-1 overflow-hidden">

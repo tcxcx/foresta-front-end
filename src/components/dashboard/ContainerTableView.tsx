@@ -3,10 +3,10 @@ import Image from "next/image";
 import { CarbonDrawer } from "./CarbonDrawer";
 import { useTranslations } from "next-intl";
 import ProjectIcons from "./ProjectCard";
-import useMarketplaceStore from "@/hooks/context/marketplaceStore";
-import { CollectiveInfo } from "@/lib/data/CollectiveTypes";
-import { PlaceholderType } from "@/components/dashboard/ProjectManagement/placeholder-types";
-import { Separator } from "@/components/ui/separator";
+import {
+  CollectiveInfo,
+  ProjectDetail,
+} from "@/hooks/context/marketplaceStore";
 import { Feather } from "lucide-react";
 
 interface ContainerTableViewProps {
@@ -20,19 +20,24 @@ interface ContainerTableViewProps {
   creditsText: string;
   liveCollectives: CollectiveInfo[];
   selectCollective: (id: number) => void;
+  acceptedProjects: ProjectDetail[];
 }
 
-export const ContainerTableView = (props: ContainerTableViewProps) => {
+export const ContainerTableView = ({
+  acceptedProjects,
+  selectCollective,
+  ...props
+}: ContainerTableViewProps) => {
   const t = useTranslations("Marketplace");
-  const { liveCollectives = [], selectCollective } = props;
+  console.log("acceptedProjects:", acceptedProjects);
 
   return (
     <div>
-      {liveCollectives.length > 0 ? (
-        liveCollectives.map((collective) => (
+      {acceptedProjects && acceptedProjects.length > 0 ? (
+        acceptedProjects.map((project) => (
           <a
-            key={collective.collectiveId}
-            onClick={() => selectCollective(collective.collectiveId)}
+            key={project.collectiveId}
+            onClick={() => selectCollective(project.collectiveId)}
             href="#"
             className="block max-w-md mx-auto rounded-lg p-4 shadow-sm shadow-indigo-100 hover:bg-gray-100 dark:hover:bg-zinc-950 md:max-w-xl lg:max-w-6xl"
           >
@@ -80,11 +85,7 @@ export const ContainerTableView = (props: ContainerTableViewProps) => {
         ))
       ) : (
         <>
-          <a
-            href="#"
-            className="block max-w-md mx-auto p-4 relative shadow-sm shadow-indigo-100 hover:bg-gray-100 dark:hover:bg-zinc-950 md:max-w-xl lg:max-w-6xl rounded-md border border-dashed"
-          >
-
+          <div className="block max-w-md mx-auto p-4 relative shadow-sm shadow-indigo-100 hover:bg-gray-100 dark:hover:bg-zinc-950 md:max-w-xl lg:max-w-6xl rounded-md border border-dashed">
             <div className="flex flex-col items-center pt-16 md:pt-4 text-center">
               <div className="p-2">
                 <Feather className="h-12" />
@@ -94,7 +95,7 @@ export const ContainerTableView = (props: ContainerTableViewProps) => {
                 have no live projects currently in the marketplace
               </p>
             </div>
-          </a>
+          </div>
         </>
       )}
     </div>
