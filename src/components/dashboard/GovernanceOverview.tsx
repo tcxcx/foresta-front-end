@@ -3,10 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProposalsTable from "@/components/dashboard/Table/index";
 import { CollectiveInfo } from "@/lib/data/CollectiveTypes";
 
-interface GovernanceOverviewProps {
-  liveCollectives: CollectiveInfo[];
-}
-export default function GovernanceOverview({ liveCollectives }: GovernanceOverviewProps) {
+
+export default function GovernanceOverview() {
 
   return (
     // Adjusted the container to use flex-start instead of centering items vertically

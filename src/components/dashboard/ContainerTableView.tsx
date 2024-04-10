@@ -59,7 +59,7 @@ export const ContainerTableView = ({
                     <div>
                       <dt className="sr-only">Name of Project Reserve</dt>
                       <dd className="text-sm text-gray-500 md:text-base">
-                        Ucumayu Natural Reserve
+                        {project.name}
                       </dd>
                     </div>
 

@@ -11,8 +11,8 @@ export const useMarketplaceData = () => {
     if (acceptedProjects) {
       const collectiveInfo = acceptedProjects
         .filter((project) => project.approved === "Approved")
-        .map((project) => ({
-          collectiveId: Number(project.collectiveId),
+        .map((project: any) => ({
+          collectiveId: project.collectiveId,
           name: project.name,
           status: project.approved,
           liveProjects: true,
