@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Wallet } from "@/components/Web3/index";
-import { UserAuthForm } from "@/components/user-auth-form";
 
 export default function AuthenticationPage() {
   return (

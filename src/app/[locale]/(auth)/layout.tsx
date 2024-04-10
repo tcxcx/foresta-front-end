@@ -1,5 +1,4 @@
-import { Application } from "@splinetool/runtime";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";

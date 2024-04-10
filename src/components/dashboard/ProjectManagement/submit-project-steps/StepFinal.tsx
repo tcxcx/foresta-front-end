@@ -1,5 +1,4 @@
 import React from "react";
-import { CheckCircle, XCircle } from "lucide-react";
 import CheckboxLight from "@/lib/foresta-icons/wired-outline-24-approved-checked.json";
 import ErrorCrossLight from "@/lib/foresta-icons/wired-outline-25-error-cross.json";
 import CheckboxDark from "@/lib/foresta-dark/wired-gradient-24-approved-checked.json";

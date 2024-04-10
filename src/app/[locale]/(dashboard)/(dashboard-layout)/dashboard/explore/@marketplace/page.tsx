@@ -1,5 +1,5 @@
 import React from "react";
-import { ContainerTableView } from "@/components/dashboard/ContainerTableView";
+import { ContainerTableView } from "@/components/dashboard/Marketplace/ContainerTableView";
 import { useTranslations } from "next-intl";
 
 interface MarketplacePageProps {

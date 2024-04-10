@@ -11,6 +11,7 @@ export interface ProjectDetail {
   collectiveId: number;
   name: string;
   approved: string;
+  location: string;
 }
 
 export interface MarketplaceState {

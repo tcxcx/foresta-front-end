@@ -1,4 +1,3 @@
-// PlaceholderComponent.tsx
 import React from "react";
 import { PlaceholderType, placeholderProps } from "./placeholder-types";
 import { useTheme } from "next-themes";

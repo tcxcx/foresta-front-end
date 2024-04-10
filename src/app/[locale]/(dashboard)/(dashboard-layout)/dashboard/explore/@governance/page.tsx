@@ -1,6 +1,5 @@
 import React from "react";
-import { WavyBackground } from "@/components/ui/wavy-background";
-import GovernanceOverview from "@/components/dashboard/GovernanceOverview";
+import GovernanceOverview from "@/components/dashboard/Marketplace/GovernanceOverview";
 import { useTranslations } from "next-intl";
 
 

@@ -14,8 +14,6 @@
   src: url('/fonts/VioletSans-Regular.otf') format('opentype');
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -1,7 +1,6 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProposalsTable from "@/components/dashboard/Table/index";
-import { CollectiveInfo } from "@/lib/data/CollectiveTypes";
 
 
 export default function GovernanceOverview() {

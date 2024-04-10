@@ -1,10 +1,4 @@
-import { useState, useEffect } from "react";
-import { WsProvider, ApiPromise } from "@polkadot/api";
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress,
-} from "@polkadot/extension-dapp"; // Corrected import
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

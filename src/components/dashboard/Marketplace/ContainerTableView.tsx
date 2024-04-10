@@ -8,6 +8,7 @@ import {
   ProjectDetail,
 } from "@/hooks/context/marketplaceStore";
 import { Feather } from "lucide-react";
+import { decodeHexString } from "@/lib/hexDecode";
 
 interface ContainerTableViewProps {
   buttonText: string;
@@ -59,14 +60,14 @@ export const ContainerTableView = ({
                     <div>
                       <dt className="sr-only">Name of Project Reserve</dt>
                       <dd className="text-sm text-gray-500 md:text-base">
-                        {project.name}
+                      {decodeHexString(project.name)}
                       </dd>
                     </div>
 
                     <div>
                       <dt className="sr-only">Origin</dt>
                       <dd className="font-medium text-sm md:text-base">
-                        Tena, Ecuador
+                        {decodeHexString(project.location)}
                       </dd>
                     </div>
                   </dl>

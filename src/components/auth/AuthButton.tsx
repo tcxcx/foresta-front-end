@@ -4,9 +4,6 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/context/account";
 import { useLocale } from "next-intl";
 import { Button } from "../ui/button";
-import Identicon from "@polkadot/react-identicon";
-import truncateMiddle from "truncate-middle";
-import { CopyIcon, ExitIcon } from "@radix-ui/react-icons";
 import ConnectedAccount from "@/components/Web3/ConnectedAccount";
 
 export default function AuthButton() {

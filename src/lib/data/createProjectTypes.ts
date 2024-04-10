@@ -62,6 +62,7 @@ export interface SDGDetails {
 }
 
 export interface ProjectDetail {
+  collectiveId: number;
   originator: string;
   name: string;
   description: string;

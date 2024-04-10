@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { fetchAllApplicants } from '@/hooks/web3/kycHooks/useFetchAllApplicants';
 import { KycReviewDialog } from '@/components/admin/kyc-review';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { string } from 'zod';
-
 
 interface Applicant {
     name: string;

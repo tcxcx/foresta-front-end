@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import truncateMiddle from "truncate-middle";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import Identicon from "@polkadot/react-identicon";
-import { CopyIcon, ExitIcon } from "@radix-ui/react-icons";
+import {  ExitIcon } from "@radix-ui/react-icons";
 import { useProtectedService } from "@/hooks/JWT/useProtectedService";
 import Button from "@/components/ui/ButtonLeft";
-import { Skeleton } from "@/components/ui/skeleton";
-import { copyToClipboard } from "@/lib/utils";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/context/account";
 import { useLocale } from "next-intl";

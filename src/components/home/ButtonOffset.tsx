@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"; // Ensure these imports match your project's structure
+} from "@/components/ui/tooltip";
 
 interface ButtonOffsetProps {
   onClick: () => void;
