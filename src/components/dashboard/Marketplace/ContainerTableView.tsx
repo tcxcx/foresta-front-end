@@ -37,11 +37,14 @@ export const ContainerTableView = ({
       {acceptedProjects && acceptedProjects.length > 0 ? (
         acceptedProjects.map((project) => (
           <a
-            key={project.collectiveId}
-            onClick={() => selectCollective(project.collectiveId)}
-            href="#"
-            className="block max-w-md mx-auto rounded-lg p-4 shadow-sm shadow-indigo-100 hover:bg-gray-100 dark:hover:bg-zinc-950 md:max-w-xl lg:max-w-6xl"
-          >
+          key={project.collectiveId}
+          onClick={() => {
+            console.log('selectCollective called with id:', project.collectiveId);
+            selectCollective(project.collectiveId);
+          }}
+          href="#"
+          className="block max-w-md mx-auto rounded-lg p-4 shadow-sm shadow-indigo-100 hover:bg-gray-100 dark:hover:bg-zinc-950 md:max-w-xl lg:max-w-6xl"
+        >
             <div className="h-56 w-full rounded-md relative">
               <Image
                 alt=""

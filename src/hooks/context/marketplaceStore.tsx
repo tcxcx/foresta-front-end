@@ -23,11 +23,12 @@ export interface MarketplaceState {
 const useMarketplaceStore = create<MarketplaceState>((set) => ({
   selectedCollectiveId: null,
   liveCollectives: [],
-  selectCollective: (collectiveId: number) =>
-    set((state) => ({ ...state, selectedCollectiveId: collectiveId })),
+  selectCollective: (collectiveId: number) => {
+    console.log('Setting selectedCollectiveId to:', collectiveId);
+    set((state) => ({ ...state, selectedCollectiveId: collectiveId }));
+  },
   loadLiveCollectives: (collectives: CollectiveInfo[]) =>
     set((state) => ({ ...state, liveCollectives: collectives })),
 }));
-
 
 export default useMarketplaceStore;

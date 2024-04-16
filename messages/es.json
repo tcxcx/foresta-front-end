@@ -22,7 +22,9 @@
     "credits": "Créditos",
     "increase": "Aumentar cantidad",
     "confirm": "Confirmar compra",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "loading": "Cargando..."
+
   },
   "Footer": {
     "copyright": "© 2024 Foresta. Todos los derechos reservados."

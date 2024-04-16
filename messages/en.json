@@ -25,7 +25,8 @@
     "credits": "Credits",
     "increase": "Increase amout",
     "confirm": "Confirm purchase",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loading": "Loading..."
   },
 
   "Footer": {

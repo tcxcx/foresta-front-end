@@ -3,22 +3,27 @@ import { ContainerTableView } from "@/components/dashboard/Marketplace/Container
 import { useTranslations } from "next-intl";
 
 interface MarketplacePageProps {
-  marketplaceData: {
-    liveCollectives: any[];
-    acceptedProjects: any[];
-    selectCollective: (id: number) => void;
-  } | undefined;
+  marketplaceData:
+    | {
+        liveCollectives: any[];
+        acceptedProjects: any[];
+        selectCollective: (id: number) => void;
+      }
+    | undefined;
 }
 
-export default function MarketplacePage({ marketplaceData }: MarketplacePageProps) {
+export default function MarketplacePage({
+  marketplaceData,
+}: MarketplacePageProps) {
   const t = useTranslations("Marketplace");
   console.log("marketplaceData in MarketplacePage: ", marketplaceData);
 
   if (!marketplaceData) {
-    return <div>Loading...</div>;
+    return <div>{t("loading")}</div>;
   }
 
-  const { liveCollectives, acceptedProjects, selectCollective } = marketplaceData;
+  const { liveCollectives, acceptedProjects, selectCollective } =
+    marketplaceData;
 
   return (
     <>

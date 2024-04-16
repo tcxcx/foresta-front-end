@@ -16,7 +16,7 @@ interface Proposal {
   voteId: number;
 }
 
-interface ProposalCategory {
+export interface ProposalCategory {
     LandManagementAndRehabilitation: {
       category: "Land Management and Rehabilitation";
       description: "Proposals focused on land restoration, afforestation, deforestation prevention, and general land care.";
