@@ -1,6 +1,5 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { hexToString } from "@polkadot/util";
-import { Option } from "@polkadot/types";
 
 let apiInstance: ApiPromise | null = null;
 
@@ -72,7 +71,8 @@ export const memberCollectiveCount = async (collectiveId: number) => {
 
 export const collectivesName = async (collectiveId: number) => {
   const api = await initApi();
-  return api.query.forestaCollectives.collectivesMap(collectiveId);
+  const result = await api.query.forestaCollectives.collectivesMap(collectiveId);
+  return result ? result.toHuman() : "";
 };
 
 export const totalCollectivesCount = async () => {

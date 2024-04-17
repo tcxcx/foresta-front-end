@@ -1,10 +1,13 @@
 import { AvatarImage, Avatar } from "@/components/ui/avatar";
 import { ResponsivePie } from "@nivo/pie";
 import { Proposal, VoteDetail } from "@/components/dashboard/Table/data/schema";
-import { Landmark } from "lucide-react";
+import { Frown, Landmark, Smile } from "lucide-react";
 import { statuses, priorities } from "../Table/data/data";
+
+
 interface ProposalOverviewProps {
   proposal: Proposal;
+  voteDetail?: VoteDetail;
 }
 
 interface DonutpieChartProps {
@@ -13,20 +16,21 @@ interface DonutpieChartProps {
   className?: string;
 }
 
-export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
-  const primaryColor = {
-    DEFAULT: "hsl(var(--primary))",
-    foreground: "hsl(var(--primary-foreground))",
-  };
-  const secondaryColor = {
-    DEFAULT: "hsl(var(--secondary))",
-    foreground: "hsl(var(--secondary-foreground))",
-  };
+export default function ProposalOverview({ proposal, voteDetail }: ProposalOverviewProps) {
 
+  const primaryColor = "#48BB78";
+  const secondaryColor = "#F56565";
+
+  const colors = [primaryColor, secondaryColor];
+
+  const totalVotes = voteDetail ? Number(voteDetail.yesVotes) + Number(voteDetail.noVotes) : 0;
+  const yesVotesPercentage = totalVotes > 0 && voteDetail ? (Number(voteDetail.yesVotes) / totalVotes) * 100 : 0;
+  const noVotesPercentage = totalVotes > 0 && voteDetail ? (Number(voteDetail.noVotes) / totalVotes) * 100 : 0;
   const pieData = [
-    { id: "In Favor", value: 70 },
-    { id: "Against", value: 30 },
+    { id: "In Favor", value: yesVotesPercentage },
+    { id: "Against", value: noVotesPercentage },
   ];
+
 
   return (
     <div className="mx-auto max-w-7xl w-full p-4">
@@ -36,7 +40,7 @@ export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Landmark className="w-6 h-6" />
-                <h1 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-2xl font-clash tracking-tight">
                   {proposal.title}
                 </h1>
               </div>
@@ -112,8 +116,8 @@ export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
           </div>
         </div>
         <div className="border border-gray-200 rounded-lg p-4 w-full dark:border-gray-800">
-          <h2 className="text-lg font-semibold mb-2.5">Description</h2>
-          <div className="text-sm font-medium leading-6 tracking-tight text-gray-500 dark:text-gray-400">
+          <h2 className="text-lg font-violet uppercase mb-2.5">Description</h2>
+          <div className="text-sm font-violet leading-6 tracking-tight text-gray-500 dark:text-gray-400">
             The proposal is to upgrade the DAO to V2. This upgrade will
             introduce new features such as quadratic voting and delegation. It
             will also improve the overall security and performance of the DAO.
@@ -123,8 +127,8 @@ export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
         </div>
         <div className="grid md:grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
-            <div className="border border-gray-200 rounded-lg p-4 w-full overflow-y-scroll custom-scrollbar dark:border-gray-800 h-60">
-              <h2 className="text-lg font-semibold">Chat</h2>
+          <div className="flex-grow border border-gray-200 rounded-lg p-4 overflow-y-scroll custom-scrollbar dark:border-gray-800">
+              <h2 className="text-lg font-violet uppercase">Chat</h2>
               <div className="grid gap-4">
                 <div className="flex items-start gap-4">
                   <Avatar>
@@ -138,16 +142,16 @@ export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
                   </Avatar>
                   <div className="grid gap-1">
                     <div className="flex items-center gap-2">
-                      <div className="text-sm font-medium">0x7a2b1bBc</div>
+                      <div className="text-sm font-clash">0x7a2b1bBc</div>
                       <time
-                        className="text-xs font-normal text-gray-400"
+                        className="text-xs font-violet text-gray-400"
                         dateTime="2023-11-05T16:34:00Z"
                       >
                         November 5, 2023
                       </time>
                     </div>
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
-                      <p className="text-sm font-medium leading-tight">
+                      <p className="text-sm font-violet leading-tight">
                         I think this proposal is a great idea. The new features
                         will definitely improve the voting process and encourage
                         more participation from the community.
@@ -167,7 +171,7 @@ export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
                   </Avatar>
                   <div className="grid gap-1">
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
-                      <p className="text-sm font-medium leading-tight">
+                      <p className="text-sm font-violet leading-tight">
                         What are your thoughts on this proposal? Should the DAO
                         approve the upgrade to V2?
                       </p>
@@ -178,28 +182,30 @@ export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 p-4 border border-gray-200 rounded-lg dark:border-gray-800">
+          <div className="flex flex-col gap-3 font-violet p-4 border border-gray-200 rounded-lg dark:border-gray-800">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Vote Tally</h2>
+              <h2 className="text-lg font-violet uppercase">Vote Tally</h2>
               <div className="flex space-x-4">
-                <HeartIcon className="fill-current text-green-500 md:fill-muted w-6 h-6" />
-                <HeartIcon className="fill-current text-red-600 md:fill-muted w-6 h-6" />
+                <Smile className="fill-current text-green-500 md:fill-muted w-6 h-6" />
+                <Frown className="fill-current text-red-600 md:fill-muted w-6 h-6" />
               </div>
             </div>
-            <DonutpieChart
-              data={pieData}
-              colors={[primaryColor.DEFAULT, secondaryColor.DEFAULT]}
-              className="w-full aspect-[4/3] mx-auto"
-            />
+            {totalVotes > 0 ? (
+            <DonutpieChart data={pieData} colors={colors} className="w-full aspect-square" />
+          ) : (
+            <div className="w-full flex justify-center items-center" style={{ height: "300px" }}>
+              <p className="text-lg font-clash text-gray-600">No votes tallied yet.</p>
+            </div>
+          )}
             <div className="mt-4 space-x-12 justify-start flex">
               <div className="flex space-x-2 items-center">
-                <HeartIcon className="fill-current text-green-500 md:fill-muted w-5 h-5" />
-                <div className="text-sm font-medium">In Favor - 70%</div>
+                <Smile className="fill-current text-green-500 md:fill-muted w-5 h-5" />
+                <div className="text-sm font-medium">In Favor - {yesVotesPercentage.toFixed(2)}%</div>
               </div>
             </div>
-            <div className="space-x-12 flex items-center">
-              <HeartOffIcon className="fill-current text-red-600 md:fill-muted w-5 h-5" />
-              <div className="text-sm font-medium">Against - 30%</div>
+            <div className="space-x-2 flex items-center">
+              <Frown className="fill-current text-red-600 md:fill-muted w-5 h-5" />
+              <div className="text-sm font-medium">Against - {noVotesPercentage.toFixed(2)}%</div>
             </div>
           </div>
         </div>
@@ -207,15 +213,9 @@ export default function ProposalOverview({ proposal }: ProposalOverviewProps) {
     </div>
   );
 }
-
-function DonutpieChart({
-  data,
-  colors,
-  className,
-  ...props
-}: DonutpieChartProps) {
+function DonutpieChart({ data, colors, className }: DonutpieChartProps) {
   return (
-    <div {...props}>
+    <div className={className} style={{ height: "300px", width: "100%" }}>
       <ResponsivePie
         data={data}
         sortByValue
@@ -250,45 +250,5 @@ function DonutpieChart({
         role="application"
       />
     </div>
-  );
-}
-
-function HeartIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
-  );
-}
-
-function HeartOffIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="2" y1="2" x2="22" y2="22" />
-      <path d="M16.5 16.5 12 21l-7-7c-1.5-1.45-3-3.2-3-5.5a5.5 5.5 0 0 1 2.14-4.35" />
-      <path d="M8.76 3.1c1.15.22 2.13.78 3.24 1.9 1.5-1.5 2.74-2 4.5-2A5.5 5.5 0 0 1 22 8.5c0 2.12-1.3 3.78-2.67 5.17" />
-    </svg>
   );
 }

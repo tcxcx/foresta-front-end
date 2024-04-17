@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel } from "@/components/ui/carousel";
+// import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel } from "@/components/ui/carousel";
 import { CardContent, Card } from "@/components/ui/card";
 import { BentoSection } from "@/components/dashboard/Marketplace/bento-section";
 import { SDGIcons } from "@/components/dashboard/Marketplace/sdg-icons";
@@ -124,7 +124,7 @@ export default function Component() {
       <div className="flex flex-col gap-2 items-start">
         <Card>
           <CardContent className="p-4">
-            <Carousel className="w-full max-w-md">
+            {/* <Carousel className="w-full max-w-md">
               <CarouselContent>
                 <CarouselItem>
                 <Image
@@ -156,7 +156,7 @@ export default function Component() {
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
-            </Carousel>
+            </Carousel> */}
             <h2 className="font-bold text-xl mt-4">SolarAid: Empowering Communities with Clean Energy</h2>
             <p className="text-sm">
               SolarAid is on a mission to brighten lives and empower communities by providing access to clean, sustainable energy. With a focus on off-grid regions in sub-Saharan Africa, SolarAids innovative solar solutions are replacing harmful and expensive kerosene lamps, allowing families to illuminate their homes, power essential devices, and create new opportunities for growth and prosperity.

@@ -112,7 +112,7 @@ export const useFetchAllCollectives = () => {
           // Transform fetched data to match the Collective interface
           allCollectives.push({
             id: i,
-            name: nameResult.toString(),
+            name: nameResult ? nameResult.toString() : '',
             proposalsCount: Number(proposalsCountResult.toString()),
             proposals: proposalsResult as any[],
             membersCount: Number(membersCountResult.toString()),

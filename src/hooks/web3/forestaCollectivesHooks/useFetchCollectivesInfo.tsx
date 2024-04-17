@@ -52,7 +52,7 @@ export const useFetchAllCollectivesInfo = (userAccountId: string) => {
                 const membersCount = Number(membersCountCodec.toString());
                 const managersCodec = await projectManager(Number(id));
                 const managers = managersCodec.toJSON() as string[];
-                const collectivesMap = (await collectivesName(Number(id))).toHuman();
+                const collectivesMap = (await collectivesName(Number(id)))?.toString();
                 const userIsMember = await userInCollective(Number(id), userAccountId);
                 const approvedProjectsCodec = await collectiveApprovedProjects(id);
                 const approvedProjects = approvedProjectsCodec.toJSON() as number[];

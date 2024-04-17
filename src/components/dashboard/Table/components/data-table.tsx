@@ -30,15 +30,12 @@ import {
 import { useAccount } from "@/hooks/context/account";
 import { DataTablePagination } from "../components/data-table-pagination";
 import { DataTableToolbar } from "../components/data-table-toolbar";
-import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
-  DrawerTitle,
 } from "@/components/ui/drawer";
 import { useState } from "react";
 
@@ -46,7 +43,6 @@ interface DataTableProps<TData extends Proposal, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
 export function DataTable<TData extends Proposal, TValue>({
   columns,
   data,
@@ -100,13 +96,16 @@ export function DataTable<TData extends Proposal, TValue>({
         <DrawerContent>
           <DrawerHeader>
             <DrawerDescription>
-              View more information about the proposal and take actions if you
-              are part of this collective.
+              <p className="font-violet">
+                View more information about the proposal and take actions if you
+                are part of this collective.
+              </p>
             </DrawerDescription>
           </DrawerHeader>
           {selectedProposal && (
             <ProposalOverview
               proposal={selectedProposal}
+              voteDetail={selectedProposal.voteDetail}
             />
           )}
         </DrawerContent>

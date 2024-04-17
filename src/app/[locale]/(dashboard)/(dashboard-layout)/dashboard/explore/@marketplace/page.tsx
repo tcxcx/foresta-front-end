@@ -1,15 +1,14 @@
 import React from "react";
 import { ContainerTableView } from "@/components/dashboard/Marketplace/ContainerTableView";
 import { useTranslations } from "next-intl";
+import { CollectiveInfo, ProjectDetail } from "@/lib/data/CollectiveTypes";
 
 interface MarketplacePageProps {
-  marketplaceData:
-    | {
-        liveCollectives: any[];
-        acceptedProjects: any[];
-        selectCollective: (id: number) => void;
-      }
-    | undefined;
+  marketplaceData?: {
+    liveCollectives: CollectiveInfo[];
+    acceptedProjects: ProjectDetail[];
+    selectCollective: (id: number) => void;
+  };
 }
 
 export default function MarketplacePage({
