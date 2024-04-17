@@ -14,8 +14,10 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Row,
 } from "@tanstack/react-table";
-
+import { Proposal } from "../data/schema";
+import ProposalOverview from "@/components/dashboard/Governance/index";
 import {
   Table,
   TableBody,
@@ -24,16 +26,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { useAccount } from "@/hooks/context/account";
 import { DataTablePagination } from "../components/data-table-pagination";
 import { DataTableToolbar } from "../components/data-table-toolbar";
+import { cn } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import { useState } from "react";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends Proposal, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Proposal, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -45,7 +59,9 @@ export function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const account = useAccount();
-  const accountAddress = account?.address || '';
+  const accountAddress = account?.address || "";
+  const [open, setOpen] = React.useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const table = useReactTable({
     data,
@@ -69,6 +85,34 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
+    null
+  );
+
+  const handleRowClick = (row: Row<TData>) => {
+    setSelectedProposal(row.original);
+    setOpen(true);
+  };
+
+  const renderDialog = () => {
+    return (
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerDescription>
+              View more information about the proposal and take actions if you
+              are part of this collective.
+            </DrawerDescription>
+          </DrawerHeader>
+          {selectedProposal && (
+            <ProposalOverview
+              proposal={selectedProposal}
+            />
+          )}
+        </DrawerContent>
+      </Drawer>
+    );
+  };
 
   return (
     <div className="space-y-4">
@@ -99,6 +143,8 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => handleRowClick(row)}
+                  className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -124,6 +170,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
+      {renderDialog()}
     </div>
   );
 }

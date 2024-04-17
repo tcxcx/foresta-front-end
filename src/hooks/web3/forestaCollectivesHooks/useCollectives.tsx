@@ -159,17 +159,28 @@ export const useFetchProposalsForCollective = (collectiveId: number) => {
 };
 
 // Hook to fetch vote details
-export const useFetchVoteDetails = (voteId: number, accountId: string) => {
-  const [voteDetails, setVoteDetails] = useState<{ details: VoteDetail; hasVoted: boolean } | null>(null);
+export const useFetchVoteDetails = (collectiveId: number, accountId: string) => {
+  const [voteDetails, setVoteDetails] = useState<{ details: VoteDetail[]; hasVoted: boolean[] } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const details = await collectiveVote(voteId);
-        const hasVoted = await checkMemberVote(accountId, voteId);
-        setVoteDetails({ details: details.toHuman() as any, hasVoted: hasVoted as boolean });
+        const proposalsCount = await collectiveProposalsCount(collectiveId);
+        const proposalsCountNum = Number(proposalsCount.toString());
+
+        const voteDetailsPromises = Array.from({ length: proposalsCountNum }, async (_, i) => {
+          const details = await collectiveVote(i);
+          const hasVoted = await checkMemberVote(accountId, i);
+          return { details: details.toHuman() as any, hasVoted: hasVoted as boolean };
+        });
+
+        const voteDetailsArray = await Promise.all(voteDetailsPromises);
+        setVoteDetails({
+          details: voteDetailsArray.map((item) => item.details),
+          hasVoted: voteDetailsArray.map((item) => item.hasVoted),
+        });
       } catch (err: any) {
         setError(err);
       } finally {
@@ -178,7 +189,7 @@ export const useFetchVoteDetails = (voteId: number, accountId: string) => {
     };
 
     fetchDetails();
-  }, [voteId, accountId]);
+  }, [collectiveId, accountId]);
 
   return { voteDetails, loading, error };
 };

@@ -12,6 +12,7 @@
     "@faker-js/faker": "^8.4.1",
     "@hookform/resolvers": "^3.3.4",
     "@lordicon/react": "^1.5.1",
+    "@nivo/pie": "^0.85.1",
     "@polkadot/api": "^10.11.3",
     "@polkadot/api-contract": "^10.11.3",
     "@polkadot/extension-dapp": "^0.46.7",

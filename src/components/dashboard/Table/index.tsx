@@ -41,8 +41,8 @@ export default function ProposalsTable() {
   console.log("proposals:", proposals);
   console.log("voteDetails:", voteDetails);
 
-  const transformedData = proposals.map((proposal) => {
-    const voteDetail = voteDetails?.details;
+  const transformedData = proposals.map((proposal, index) => {
+    const voteDetail = voteDetails?.details[index];
     return {
       id: proposal.voteId,
       title: decodeHexString(proposal.title),
