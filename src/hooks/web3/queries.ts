@@ -106,6 +106,13 @@ export const checkMemberVote = async (accountId: string, voteId: number) => {
   return hasVoted.toJSON();
 };
 
+// vote for or against for a given user in a given vote. Returns boolean or none if the user has not voted.
+
+export const getVotePreference = async (  voteId: number, accountId: string ) => {
+  const api = await initApi();
+  return api.query.forestaCollectives.votePreferences(voteId, accountId);
+};
+
 // look what the two options mean and refactor
 export const getCollectiveProposals = async (
   collectiveId: number,

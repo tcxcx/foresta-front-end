@@ -3,7 +3,10 @@ import { ResponsivePie } from "@nivo/pie";
 import { Proposal, VoteDetail } from "@/components/dashboard/Table/data/schema";
 import { Frown, Landmark, Smile } from "lucide-react";
 import { statuses, priorities } from "../Table/data/data";
-
+import { castVote } from "@/hooks/web3/governanceHooks/castVote";
+import { useAuth } from "@/hooks/context/account";
+import { useState } from "react";
+import { useVotePreference } from "@/hooks/web3/governanceHooks/getVotePreference";
 
 interface ProposalOverviewProps {
   proposal: Proposal;
@@ -16,21 +19,57 @@ interface DonutpieChartProps {
   className?: string;
 }
 
-export default function ProposalOverview({ proposal, voteDetail }: ProposalOverviewProps) {
-
+export default function ProposalOverview({
+  proposal,
+  voteDetail,
+}: ProposalOverviewProps) {
   const primaryColor = "#48BB78";
   const secondaryColor = "#F56565";
 
   const colors = [primaryColor, secondaryColor];
 
-  const totalVotes = voteDetail ? Number(voteDetail.yesVotes) + Number(voteDetail.noVotes) : 0;
-  const yesVotesPercentage = totalVotes > 0 && voteDetail ? (Number(voteDetail.yesVotes) / totalVotes) * 100 : 0;
-  const noVotesPercentage = totalVotes > 0 && voteDetail ? (Number(voteDetail.noVotes) / totalVotes) * 100 : 0;
+  const totalVotes = voteDetail
+    ? Number(voteDetail.yesVotes) + Number(voteDetail.noVotes)
+    : 0;
+  const yesVotesPercentage =
+    totalVotes > 0 && voteDetail
+      ? (Number(voteDetail.yesVotes) / totalVotes) * 100
+      : 0;
+  const noVotesPercentage =
+    totalVotes > 0 && voteDetail
+      ? (Number(voteDetail.noVotes) / totalVotes) * 100
+      : 0;
   const pieData = [
     { id: "In Favor", value: yesVotesPercentage },
     { id: "Against", value: noVotesPercentage },
   ];
 
+  const { account } = useAuth();
+  const accountId = account?.address || "";
+
+  const [userVote, setUserVote] = useState();
+
+  const { votePreference, loading, error } = useVotePreference(
+    proposal.id,
+    accountId,
+    proposal.status 
+  );
+
+  console.log("This is the vote preference for the user:", votePreference);
+
+  if (loading) {
+    return <div>Loading vote preference...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const handleVote = (vote: boolean) => {
+    if (votePreference === null) {
+      castVote(accountId, proposal.id, vote);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-7xl w-full p-4">
@@ -93,10 +132,17 @@ export default function ProposalOverview({ proposal, voteDetail }: ProposalOverv
             </p>
           </div>
           <div className="text-right md:text-left">
-            {proposal.status === 'Deciding' ? (
+            {proposal.status === "Deciding" ? (
               <div className="flex md:flex-row flex-col gap-4">
                 <div>
-                  Your current vote: <strong>In Favor</strong>
+                  Your current vote:
+                  <strong className="font-clash">
+                    {votePreference === true
+                      ? " In Favor"
+                      : votePreference === false
+                      ? " Against"
+                      : " Not voted"}
+                  </strong>
                 </div>
                 <div>
                   Vote in progress:
@@ -105,11 +151,14 @@ export default function ProposalOverview({ proposal, voteDetail }: ProposalOverv
               </div>
             ) : (
               <div>
-                {proposal.status === 'Passed' ? (
-
-                  <div className="text-primary text-base lg:text-xl font-violet uppercase tracking-tight">Passed</div>
+                {proposal.status === "Passed" ? (
+                  <div className="text-primary text-base lg:text-xl font-violet uppercase tracking-tight">
+                    Passed
+                  </div>
                 ) : (
-                  <div className="text-red-600 text-base lg:text-xl font-violet uppercase tracking-tight">Rejected</div>
+                  <div className="text-red-600 text-base lg:text-xl font-violet uppercase tracking-tight">
+                    Rejected
+                  </div>
                 )}
               </div>
             )}
@@ -127,7 +176,7 @@ export default function ProposalOverview({ proposal, voteDetail }: ProposalOverv
         </div>
         <div className="grid md:grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
-          <div className="flex-grow border border-gray-200 rounded-lg p-4 overflow-y-scroll custom-scrollbar dark:border-gray-800">
+            <div className="flex-grow border border-gray-200 rounded-lg p-4 overflow-y-scroll custom-scrollbar dark:border-gray-800">
               <h2 className="text-lg font-violet uppercase">Chat</h2>
               <div className="grid gap-4">
                 <div className="flex items-start gap-4">
@@ -178,7 +227,6 @@ export default function ProposalOverview({ proposal, voteDetail }: ProposalOverv
                     </div>
                   </div>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -186,26 +234,101 @@ export default function ProposalOverview({ proposal, voteDetail }: ProposalOverv
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-violet uppercase">Vote Tally</h2>
               <div className="flex space-x-4">
-                <Smile className="fill-current text-green-500 md:fill-muted w-6 h-6" />
-                <Frown className="fill-current text-red-600 md:fill-muted w-6 h-6" />
+                {proposal.status === "Deciding" && votePreference === null && (
+                  <>
+                    <button
+                      className="flex items-center p-2 gap-2 hover:bg-green-100"
+                      onClick={() => handleVote(true)}
+                    >
+                      <Smile className="fill-current text-green-500 w-6 h-6" />
+                      <span className="text-base font-clash tracking-tight">
+                        Vote In Favor
+                      </span>
+                    </button>
+                    <button
+                      className="flex items-center p-2 gap-2 hover:bg-red-100"
+                      onClick={() => handleVote(false)}
+                    >
+                      <Frown className="fill-current text-red-600 w-6 h-6" />
+                      <span className="text-base font-clash tracking-tight">
+                        Vote Against
+                      </span>
+                    </button>
+                  </>
+                )}
+                {votePreference !== null && (
+                  <>
+                    <button
+                      className={`flex items-center p-2 gap-2 ${
+                        votePreference === true
+                          ? "bg-green-100"
+                          : "bg-gray-100 cursor-not-allowed"
+                      }`}
+                      disabled
+                    >
+                      <Smile
+                        className="fill-current w-6 h-6"
+                        style={{
+                          color:
+                            votePreference === true ? "#48BB78" : "#48BB78",
+                        }}
+                      />
+                      <span className="text-base font-clash tracking-tight">
+                        Vote In Favor
+                      </span>
+                    </button>
+                    <button
+                      className={`flex items-center p-2 gap-2 ${
+                        votePreference === false
+                          ? "bg-red-100"
+                          : "bg-gray-100 cursor-not-allowed"
+                      }`}
+                      disabled
+                    >
+                      <Frown
+                        className="fill-current w-6 h-6"
+                        style={{
+                          color:
+                            votePreference === false ? "#F56565" : "#F56565",
+                        }}
+                      />
+                      <span className="text-base font-clash tracking-tight">
+                        Vote Against
+                      </span>
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             {totalVotes > 0 ? (
-            <DonutpieChart data={pieData} colors={colors} className="w-full aspect-square" />
-          ) : (
-            <div className="w-full flex justify-center items-center" style={{ height: "300px" }}>
-              <p className="text-lg font-clash text-gray-600">No votes tallied yet.</p>
-            </div>
-          )}
+              <DonutpieChart
+                data={pieData}
+                colors={colors}
+                className="w-full aspect-square"
+              />
+            ) : (
+              <div
+                className="w-full flex justify-center items-center"
+                style={{ height: "300px" }}
+              >
+                <p className="text-lg font-clash text-gray-600">
+                  No votes tallied yet.
+                </p>
+              </div>
+            )}
             <div className="mt-4 space-x-12 justify-start flex">
               <div className="flex space-x-2 items-center">
                 <Smile className="fill-current text-green-500 md:fill-muted w-5 h-5" />
-                <div className="text-sm font-medium">In Favor - {yesVotesPercentage.toFixed(2)}%</div>
+                <div className="text-sm font-medium">
+                  In Favor - {yesVotesPercentage.toFixed(2)}%
+                </div>
               </div>
             </div>
             <div className="space-x-2 flex items-center">
               <Frown className="fill-current text-red-600 md:fill-muted w-5 h-5" />
-              <div className="text-sm font-medium">Against - {noVotesPercentage.toFixed(2)}%</div>
+              <div className="text-sm font-medium">
+                Against - {noVotesPercentage.toFixed(2)}%
+              </div>
             </div>
           </div>
         </div>
