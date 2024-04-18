@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import { Wallet } from "@/components/Web3/index";
 
 export default function AuthenticationPage() {

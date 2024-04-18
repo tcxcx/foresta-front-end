@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import LocalSwitcher from "./local-switcher";
 import { ModeToggle } from "./theme-toggle";
 import { SparklesCore } from "@/components/ui/sparkles";

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import ConnectedAccount from "../Web3/ConnectedAccount";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import { useAuth } from "@/hooks/context/account";
 import { useRouter } from "next/navigation";
 import Image from "next/image";

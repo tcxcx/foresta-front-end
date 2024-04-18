@@ -10,13 +10,13 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-background border border-gray-100 dark:border-secondary z-50">
+    <div className="flex h-full bg-gray-50 dark:bg-background border border-gray-100 dark:border-secondary z-50">
       <Suspense fallback={<SideMenuSkeleton />}>
         <SideMenu />
       </Suspense>
       <div className="flex flex-col flex-1 overflow-hidden">
         <Navbar />
-        <main className="flex flex-col h-screen overflow-hidden">
+        <main className="flex flex-col h-full overflow-hidden">
           {children}
         </main>
         <Toaster />

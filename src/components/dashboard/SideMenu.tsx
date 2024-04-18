@@ -2,8 +2,7 @@
 
 import React from "react";
 import { useTheme } from "next-themes";
-import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import { useLocale } from "next-intl";
 import {
   Tooltip,

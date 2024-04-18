@@ -11,7 +11,7 @@ import { LordIcon } from "@/lib/lordicon/lord-icon";
 import { useTheme } from "next-themes";
 
 export default function ProjectIcons() {
-    const { theme } = useTheme(); // Detect current theme
+    const { theme } = useTheme();
 
     const Colibri = theme === 'dark' ? ColibriDark : ColibriLight;
     const Community = theme === 'dark' ? CommunityDark : CommunityLight;

@@ -1,3 +1,4 @@
+
 export enum ApprovalStatus {
   Pending = "Pending",
   Rejected = "Rejected",
@@ -20,6 +21,22 @@ export enum projectType {
   WASTE_HANDLING = "WASTE_HANDLING",
 }
 
+export const projectTypeNames: Record<projectType, string> = {
+  [projectType.AGRICULTURE_FORESTRY_AND_OTHER_LAND_USE]: 'Agriculture, Forestry, and Other Land Use',
+  [projectType.CHEMICAL_INDUSTRY]: 'Chemical Industry',
+  [projectType.ENERGY_DEMAND]: 'Energy Demand',
+  [projectType.ENERGY_DISTRIBUTION]: 'Energy Distribution',
+  [projectType.ENERGY_INDUSTRIES]: 'Energy Industries',
+  [projectType.FUGITIVE_EMISSIONS_FROM_FUELS]: 'Fugitive Emissions from Fuels',
+  [projectType.FUGITIVE_EMISSIONS_FROM_CARBONS]: 'Fugitive Emissions from Carbons',
+  [projectType.LIVESTOCK]: 'Livestock',
+  [projectType.MANUFACTURING_INDUSTRIES]: 'Manufacturing Industries',
+  [projectType.METAL_PRODUCTION]: 'Metal Production',
+  [projectType.MINING_MINERAL_PRODUCTION]: 'Mining and Mineral Production',
+  [projectType.TRANSPORT]: 'Transport',
+  [projectType.WASTE_HANDLING]: 'Waste Handling',
+};
+
 export enum RegNameList {
   Verra = 'Verra',
   GoldStandard = 'Gold Standard',
@@ -27,6 +44,7 @@ export enum RegNameList {
   BioCarbon = 'BioCarbon',
   ClimateActionReserve = 'Climate Action Reserve'
 }
+
 export interface RegistryDetail {
   regName: string;
   name: string;
@@ -54,7 +72,6 @@ export enum SdgDetails {
   PartnershipsForTheGoals = "PartnershipsForTheGoals",
 }
 
-
 export interface SDGDetails {
   sdgType: SdgDetails | '';
   description: string;
@@ -78,4 +95,16 @@ export interface ProjectDetail {
   created: number;
   updated: number | null;
   approved: ApprovalStatus;
+}
+
+export interface CollectiveInfo {
+  collectiveId: number;
+  name: string;
+  status: string;
+  liveProjects: boolean;
+}
+
+export interface CollectiveName {
+  name: string;
+  hash_: string;
 }
