@@ -11,6 +11,17 @@ import truncateMiddle from "truncate-middle";
 import Identicon from "@polkadot/react-identicon";
 import { CarbonDrawer } from "@/components/dashboard/Marketplace/CarbonDrawer";
 import { useTranslations } from "next-intl";
+import {
+  Carousel,
+  CarouselMainContainer,
+  CarouselNext,
+  CarouselPrevious,
+  SliderMainItem,
+  CarouselThumbsContainer,
+  CarouselIndicator,
+} from "@/components/ui/carousel";
+import { DialogTrigger, DialogContent, Dialog } from "@/components/ui/dialog";
+import { useState } from "react";
 
 interface ProjectOverviewProps {
   project: ProjectDetail;
@@ -21,13 +32,34 @@ export default function ProjectOverview({
   project,
   projectTypeName,
 }: ProjectOverviewProps) {
-
   const openBlockExplorer = (address: string) => {
     const blockExplorerUrl = `https://polkadot.subscan.io/account/${address}`;
     window.open(blockExplorerUrl, "_blank");
   };
 
   const t = useTranslations("Marketplace");
+
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
+
+  const handleVideoClick = (videoUrl: string) => {
+    setSelectedVideo(videoUrl);
+  };
+
+  const handleImageClick = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+  const dummyImages = [
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+    "https://images.unsplash.com/photo-1534447677768-be436bb09401",
+    "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+    "https://images.unsplash.com/photo-1500534623283-312aade485b7",
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+  ];
+
+  const dummyVideoUrl = "https://www.example.com/video.mp4";
 
   return (
     <div className="grid md:grid-cols-2 gap-6 xl:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
@@ -147,6 +179,39 @@ export default function ProjectOverview({
       <div className="flex flex-col gap-4 items-start">
         <Card>
           <CardContent className="p-4">
+            <Carousel>
+              <CarouselNext />
+              <CarouselPrevious />
+              <div className="relative ">
+                <CarouselMainContainer className="h-60">
+                  {/* {project.images.map((image, index) => ( */}
+                  {dummyImages.map((image, index) => (
+                    <SliderMainItem key={index} className="bg-transparent">
+                      <div
+                        className="outline outline-1 outline-border size-full flex items-center justify-center rounded-xl bg-background cursor-pointer"
+                        onClick={() => handleImageClick(index)}
+                      >
+                        <Image
+                          src={image}
+                          alt={`Slide ${index + 1}`}
+                          className="w-full h-full object-cover"
+                          width={600}
+                          height={400}
+                        />
+                      </div>
+                    </SliderMainItem>
+                  ))}
+                </CarouselMainContainer>
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+                  <CarouselThumbsContainer className="gap-x-1 ">
+                    {/* {Array.from({ length: 5 }).map((_, index) => ( */}
+                    {dummyImages.map((_, index) => (
+                      <CarouselIndicator key={index} index={index} />
+                    ))}
+                  </CarouselThumbsContainer>
+                </div>
+              </div>
+            </Carousel>
             <h2 className="font-bold text-xl mt-4">{project.name}</h2>
             <p className="text-sm">{project.description}</p>
           </CardContent>
@@ -174,23 +239,140 @@ export default function ProjectOverview({
             <li>Approval Status: {ApprovalStatus[project.approved]}</li>
           </ul>
           <div className="grid gap-4">
-            <DocumentLinks
+            {/* <DocumentLinks
               title="Project Documents"
               documents={project.documents.map((doc, index) => ({
                 name: `Document ${index + 1}`,
                 url: doc,
               }))}
+            /> */}
+            <DocumentLinks
+              title="Project Documents"
+              documents={[
+                {
+                  name: "Document 1",
+                  url: "https://example.com/document1.pdf",
+                },
+                {
+                  name: "Document 2",
+                  url: "https://example.com/document2.pdf",
+                },
+                {
+                  name: "Document 3",
+                  url: "https://example.com/document3.txt",
+                },
+              ]}
             />
-            <VideoLinks
+
+            {/* <VideoLinks
               title="Project Videos"
               videos={project.videos.map((video, index) => ({
                 name: `Video ${index + 1}`,
                 url: video,
               }))}
+              onVideoClick={handleVideoClick}
+            /> */}
+            <VideoLinks
+              title="Project Videos"
+              videos={[
+                {
+                  name: "Dummy Video",
+                  url: dummyVideoUrl,
+                },
+              ]}
+              onVideoClick={handleVideoClick}
             />
           </div>
         </div>
       </div>
+      <Dialog
+        open={selectedVideo !== null}
+        onOpenChange={() => setSelectedVideo(null)}
+      >
+        <DialogContent className="space-y-4 p-4 w-full max-w-[720px]">
+          <div className="text-center text-lg font-semibold">Project Video</div>
+          <div className="aspect-[16/9]">
+            <video
+              src={selectedVideo || ""}
+              controls
+              className="w-full h-full rounded-md"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Image Inspector Dialog */}
+      {/* <Dialog
+        open={selectedImageIndex !== null}
+        onOpenChange={() => setSelectedImageIndex(null)}
+      > */}
+
+      {/* // code to be used instead of dummy data code
+      <Dialog
+        open={selectedImageIndex !== null}
+        onOpenChange={() => setSelectedImageIndex(null)}
+      >
+        <DialogContent className="space-y-4 p-4 w-full max-w-[720px]">
+          <div className="text-center text-lg font-semibold">Project Image</div>
+          <Carousel>
+            <CarouselNext />
+            <CarouselPrevious />
+            <CarouselMainContainer className="h-96">
+              {project.images.map((image, index) => (
+                <SliderMainItem key={index} className="bg-transparent">
+                  <Image
+                    src={image}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    width={600}
+                    height={400}
+                  />
+                </SliderMainItem>
+              ))}
+            </CarouselMainContainer>
+          </Carousel>
+        </DialogContent>
+      </Dialog> */}
+
+      <Dialog
+        open={selectedImageIndex !== null}
+        onOpenChange={() => setSelectedImageIndex(null)}
+      >
+        <DialogContent className="space-y-4 p-4 w-full max-w-[720px]">
+          <div className="text-center text-lg font-semibold">Project Image</div>
+          <Carousel>
+            <CarouselNext
+              onClick={() =>
+                setSelectedImageIndex((prevIndex) =>
+                  prevIndex !== null ? (prevIndex + 1) % dummyImages.length : 0
+                )
+              }
+            />
+            <CarouselPrevious
+              onClick={() =>
+                setSelectedImageIndex((prevIndex) =>
+                  prevIndex !== null
+                    ? (prevIndex - 1 + dummyImages.length) % dummyImages.length
+                    : dummyImages.length - 1
+                )
+              }
+            />
+            <CarouselMainContainer className="h-96">
+              {selectedImageIndex !== null && (
+                <SliderMainItem className="bg-transparent">
+                  <Image
+                    src={dummyImages[selectedImageIndex]}
+                    alt={`Slide ${selectedImageIndex + 1}`}
+                    className="w-full h-full object-cover"
+                    width={600}
+                    height={400}
+                  />
+                </SliderMainItem>
+              )}
+            </CarouselMainContainer>
+          </Carousel>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
