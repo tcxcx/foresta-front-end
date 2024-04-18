@@ -378,7 +378,7 @@ async function joinCollective(senderAddress: string, joinDetails: any) {
 
 // - Create Proposal in Collective
 
-async function createProposal(senderAddress: string, proposalDetails: any) {
+export async function createProposal(senderAddress: string, proposalDetails: any) {
   const api = await initApi();
 
   const validatedDetails = createProposalSchema.parse(proposalDetails);
