@@ -6,7 +6,8 @@
  * 2. **FILE_TRANSFERRED**: Confirms that the file has been transferred to IPFS, indicating it is now stored on the decentralized web.
  * 3. **FILE_REPLICATED**: Acknowledges that the file has been replicated across the Crust Network, ensuring higher availability and redundancy.
  *
- * The webhook validates the authorization token to secure the endpoint against unauthorized access. This setup is crucial for real-time event handling in applications that rely on decentralized storage solutions, ensuring that actions can be triggered responsively as file states change on the network.
+ * The webhook validates the authorization token to secure the endpoint against unauthorized access. This setup is crucial for real-time event handling 
+ * in applications that rely on decentralized storage solutions, ensuring that actions can be triggered responsively as file states change on the network.
  */
 
 

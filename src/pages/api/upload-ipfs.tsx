@@ -6,7 +6,8 @@
  * 3. After uploading, the file's UUID (or CID) is obtained and used to fetch the corresponding IPNS link, providing a mutable reference to the immutable IPFS hash.
  * 4. Both the file UUID and the IPNS link are returned in the response, providing identifiers for accessing the file in a decentralized manner.
  *
- * The implementation ensures the files are not only uploaded but also registered under an IPNS name which can be updated without changing the URL, crucial for dynamic content that may need updates without breaking existing references.
+ * The implementation ensures the files are not only uploaded but also registered under an IPNS name which can be updated without changing the URL, crucial for dynamic content
+ *  that may need updates without breaking existing references.
  */
 
 

@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
+import CarbonRetirementToast from "./carbonRetirementToast";
 
 export default function RetireTab() {
   const { account } = useAuth();
@@ -60,14 +61,15 @@ export default function RetireTab() {
       await retireFromPool(accountId, selectedPool, amount, () => {});
       toast({
         title: "Retirement Successful!",
-        description: "Your retirement action was successful.",
+        description: <CarbonRetirementToast />,
       });
     } catch (error) {
       console.error("Failed to retire:", error);
       toast({
         variant: "destructive",
         title: "Retirement Failed",
-        description: "Your retirement action could not be completed. Please try again.",
+        description:
+          "Your retirement action could not be completed. Please try again.",
       });
     }
   };
@@ -85,7 +87,8 @@ export default function RetireTab() {
             <CardHeader>
               <CardTitle>Retire Carbon Credits</CardTitle>
               <CardDescription>
-                Enter the amount of carbon credits you want to retire as CO2 emissions to get your NFT certificate.
+                Enter the amount of carbon credits you want to retire as CO2
+                emissions to get your NFT certificate.
               </CardDescription>
               <p>Your Balance: {userAssets?.balance ?? 0}</p>
             </CardHeader>
