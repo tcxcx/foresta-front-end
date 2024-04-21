@@ -1,21 +1,11 @@
 "use client";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/context/account";
 import PoolTab from "@/components/dashboard/CarbonTrading/PoolTab";
 import PurchaseTab from "@/components/dashboard/CarbonTrading/PurchaseTab";
 import RetireTab from "@/components/dashboard/CarbonTrading/RetireTab";
+
 export default function CarbonTrading() {
   const [purchaseAmount, setPurchaseAmount] = useState<number>(0);
   const [sellAmount, setSellAmount] = useState<number>(0);
