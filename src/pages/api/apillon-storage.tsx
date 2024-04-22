@@ -26,6 +26,7 @@ import axios, { AxiosInstance } from 'axios';
 interface FileUpload {
   name: string;
   type: string;
+  data: Buffer;
 }
 
 interface UploadData {
@@ -38,10 +39,10 @@ interface UploadData {
 
 // Initialize axios instance with Apillon base URL
 const apillonAPI: AxiosInstance = axios.create({
-  baseURL: process.env.APILLION_API_ENDPOINT,
+  baseURL: process.env.NEXT_PUBLIC_APILLION_API_ENDPOINT,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Basic ${Buffer.from(`${process.env.APILLION_API_KEY}:${process.env.APILLION_API_SECRET}`).toString('base64')}`
+    'Authorization': `Basic ${Buffer.from(`${process.env.NEXT_PUBLIC_APILLION_API_KEY}:${process.env.NEXT_PUBLIC_APILLION_API_SECRET}`).toString('base64')}`
   }
 });
 

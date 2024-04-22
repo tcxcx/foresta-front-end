@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
-import CarbonRetirementToast from "./carbonRetirementToast";
 
 export default function RetireTab() {
   const { account } = useAuth();
@@ -35,14 +34,17 @@ export default function RetireTab() {
     selectedPool,
     accountId
   );
-
-  const { handleSubmit, control, setValue, watch } = useForm({
+  const { handleSubmit, control, watch, setValue } = useForm({
     defaultValues: {
       amount: "",
+      reason: "",
       pool: "",
     },
   });
+
+  const [loading, setLoading] = useState(false);
   const amount = watch("amount");
+  const reason = watch("reason");
 
   useEffect(() => {
     if (userAssets) {
@@ -58,10 +60,11 @@ export default function RetireTab() {
       return;
     }
     try {
-      await retireFromPool(accountId, selectedPool, amount, () => {});
+      await retireFromPool(accountId, selectedPool, amount, reason, setLoading);
+
       toast({
         title: "Retirement Successful!",
-        description: <CarbonRetirementToast />,
+        description: "Your retirement action was successful.",
       });
     } catch (error) {
       console.error("Failed to retire:", error);
@@ -109,6 +112,13 @@ export default function RetireTab() {
                 value={amount}
                 onChange={(e) => setValue("amount", e.target.value)}
                 min="0"
+              />
+              <Label htmlFor="retireReason">Reason for Retirement</Label>
+              <Input
+                id="retireReason"
+                type="text"
+                value={reason}
+                onChange={(e) => setValue("reason", e.target.value)}
               />
             </CardContent>
             <CardFooter>

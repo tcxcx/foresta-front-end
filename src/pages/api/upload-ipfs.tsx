@@ -8,11 +8,12 @@
  *
  * The implementation ensures the files are not only uploaded but also registered under an IPNS name which can be updated without changing the URL, crucial for dynamic content
  *  that may need updates without breaking existing references.
+ * This implementation is useful for documents, images and videos - for NFT certificates we can use generate-certificate.ts
  */
 
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import formidable, { errors as formidableErrors } from 'formidable';
+import formidable, { errors as formidableErrors, File } from 'formidable';
 import { uploadFileToIPFS, getIPNSLink } from '@/pages/api/apillon-storage';
 
 type Data = {
@@ -43,7 +44,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     }
 
     const fileList = Array.isArray(files.file) ? files.file : [files.file];
-    const file = fileList[0];
+    const file = fileList[0] as File;
 
     if (!file) {
       res.status(400).json({ error: 'No file uploaded' });
@@ -53,6 +54,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     const originalFilename = file.originalFilename || 'default_filename';
     const mimetype = file.mimetype || 'application/octet-stream';
 
+    // Read the file into a Buffer
+    const readFile = util.promisify(fs.readFile);
+    const data = await readFile(file.filepath);
+
     const bucketUuid = process.env.APILLION_NFT_CO2_BUCKET_UUID;
     if (!bucketUuid) {
       res.status(500).json({ error: 'Server configuration error' });
@@ -60,7 +65,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     }
 
     try {
-        const fileUuid = await uploadFileToIPFS({ name: originalFilename, type: mimetype }, bucketUuid);
+        const fileUuid = await uploadFileToIPFS({ name: originalFilename, type: mimetype, data }, bucketUuid);
         const ipnsUuid = process.env.APILLION_NFT_CO2_IPNS_UUID;
         if (!ipnsUuid) {
           throw new Error('IPNS UUID is not set in the environment variables');
