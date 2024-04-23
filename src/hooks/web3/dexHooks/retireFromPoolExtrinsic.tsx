@@ -1,75 +1,117 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { web3Enable, web3Accounts, web3FromAddress } from "@polkadot/extension-dapp";
-import { sendTx } from "@/hooks/web3/sendTx";
-import { toast } from "sonner";
+import {
+  web3Enable,
+  web3Accounts,
+  web3FromAddress,
+} from "@polkadot/extension-dapp";
+import { sendTx, SendTxParams } from "@/hooks/web3/sendTx";
 import { WSS_ENDPOINT, APP_NAME } from "@/lib/constants";
 import { generateCertificate } from "@/pages/api/generate-certificate";
+import useRetirementStore from "@/hooks/context/retirementStore";
+import { ISubmittableResult } from "@polkadot/types/types";
+import { useToast } from "@/components/ui/use-toast";
 
-const initApi = async () => {
-  const wsProvider = new WsProvider(WSS_ENDPOINT);
-  return ApiPromise.create({ provider: wsProvider });
-};
+interface RetirePoolParams {
+  senderAddress: string;
+  poolId: string;
+  amount: string;
+  reason: string;
+  setLoading: (loading: boolean) => void;
+}
 
-const enableWeb3 = async () => {
-  const extensions = await web3Enable(APP_NAME);
-  if (extensions.length === 0) {
-    console.error("Polkadot{.js} extension not found");
-    toast.error("Please install Polkadot{.js} extension.");
-    throw new Error("Polkadot{.js} extension not found");
-  }
-  return extensions;
-};
+export const useRetireFromPool = () => {
+  const {
+    setRetirementStatus,
+    setIsRetiring,
+    setRetirementError,
+    setCertificateLink,
+  } = useRetirementStore();
+  const { toast } = useToast();
 
-const getSigner = async (senderAddress: string) => {
-  await enableWeb3();
-  const allAccounts = await web3Accounts();
-  const senderAccount = allAccounts.find((account) => account.address === senderAddress);
-  if (!senderAccount) {
-    const error = "Sender account not found. Please ensure the Polkadot{.js} extension is installed and the sender account is loaded.";
-    console.error(error);
-    toast.error(error);
-    throw new Error(error);
-  }
-  const injector = await web3FromAddress(senderAddress);
-  return injector.signer;
-};
+  const initApi = async () => {
+    const wsProvider = new WsProvider(WSS_ENDPOINT);
+    return ApiPromise.create({ provider: wsProvider });
+  };
 
-export const retireFromPool = async (
-  senderAddress: string,
-  poolId: string,
-  amount: string,
-  reason: string,
-  setLoading: (isLoading: boolean) => void
-) => {
-  try {
-    const api = await initApi();
-    const signer = await getSigner(senderAddress);
-    api.setSigner(signer);
+  const getSigner = async (senderAddress: string) => {
+    const extensions = await web3Enable(APP_NAME);
+    if (extensions.length === 0) {
+      throw new Error("Polkadot{.js} extension not found");
+    }
+    const accounts = await web3Accounts();
+    const account = accounts.find((acc) => acc.address === senderAddress);
+    if (!account) {
+      throw new Error("Sender account not found.");
+    }
+    return (await web3FromAddress(senderAddress)).signer;
+  };
 
-    const metadata = { amount, reason, senderAddress };
+  return async ({
+    senderAddress,
+    poolId,
+    amount,
+    reason,
+    setLoading,
+  }: RetirePoolParams) => {
+    setIsRetiring(true);
+    setRetirementStatus("Loading...");
 
-    const { cid, ipnsLink } = await generateCertificate(metadata);
+    try {
+      const api = await initApi();
+      setRetirementStatus("Getting extension injected accounts.");
 
-    const tx = api.tx.carbonCreditsPools.retire(poolId, amount, reason, cid, ipnsLink);
+      const signer = await getSigner(senderAddress);
+      setRetirementStatus("Getting signer.");
 
-    await sendTx({
-      api,
-      tx,
-      setLoading,
-      onFinalized: () => {
-        console.log(`[retireFromPool] Retirement from pool ${poolId} finalized successfully.`);
-        toast.success("Retirement successful.");
-      },
-      onInBlock: () => {},
-      onSubmitted: () => {},
-      onClose: () => {},
-      dispatch: () => {},
-      signerAddress: senderAddress,
-      section: "carbonCreditsPools",
-      method: "retire",
-    });
-  } catch (error: any) {
-    console.error("[retireFromPool] Error retiring from pool:", error);
-    toast.error(`Error retiring from pool: ${error.message}`);
-  }
+      api.setSigner(signer);
+      setRetirementStatus(
+        "We are generating your CO2 retirement certificate. Please wait..."
+      );
+      const metadata = { amount, reason, senderAddress };
+      const { cid, ipnsLink } = await generateCertificate(metadata);
+      setCertificateLink(ipnsLink);
+      setRetirementStatus("Uploading certificate to IPFS...");
+      const tx = api.tx.carbonCreditsPools.retire(
+        poolId,
+        amount,
+        reason,
+        cid,
+        ipnsLink
+      );
+      setRetirementStatus("Please sign the transaction to proceed.");
+      const txParams: SendTxParams = {
+        api,
+        tx,
+        setLoading,
+        onSubmitted: () => {
+          setRetirementStatus("Transaction submitted to the blockchain...");
+          console.log("Transaction submitted...");
+        },
+        onFinalized: () => {
+          setRetirementStatus("Transaction finalized.");
+        },
+        onInBlock: () => setRetirementStatus("Transaction is in block..."),
+        onClose: () => setIsRetiring(false),
+        onSuccess: (result: ISubmittableResult) => {
+          console.log("Transaction successful!");
+          setRetirementStatus("Transaction extrinsic finalized successfully.");
+          toast({
+            title: "Carbon Credits retired successfully",
+            description:
+              "Your carbon credit certificate NFT has been added to your account",
+          });
+        },
+        onError: (error: any) => setRetirementError(error.message),
+        dispatch: () => {},
+        signerAddress: senderAddress,
+        section: "carbonCreditsPools",
+        method: "retire",
+      };
+      await sendTx(txParams);
+    } catch (error: any) {
+      console.error("[retireFromPool] Error retiring from pool:", error);
+      setRetirementError(error.message);
+      setIsRetiring(false);
+    }
+  };
 };

@@ -35,7 +35,7 @@ export function getDispatchError(dispatchError: any): string {
   return message;
 }
 
-interface SendTxParams {
+export interface SendTxParams {
   api: ApiPromise;
   tx: any;
   dispatch: Function;
@@ -45,6 +45,7 @@ interface SendTxParams {
   onSubmitted: (signerAddress: string) => void;
   onSuccess?: (result: ISubmittableResult) => void
   onClose: () => void;
+  onError: (error: any) => void;
   signerAddress: string;
   section?: string;
   method?: string;
@@ -59,6 +60,7 @@ export async function sendTx({
   onSubmitted,
   onClose,
   onSuccess,
+  onError,
   signerAddress,
   section: sectionName,
   method: methodName,
@@ -109,6 +111,7 @@ export async function sendTx({
     onSubmitted(signerAddress);
   } catch (error: any) {
     console.error("Error during transaction signing and sending:", error);
+    onError(error);
     setLoading(false);
     toast.error(`Transaction failed: ${error.message || error.toString()}`);
   } finally {

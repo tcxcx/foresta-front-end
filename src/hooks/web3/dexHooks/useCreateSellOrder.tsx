@@ -71,6 +71,7 @@ export const createSellOrder = async (
       onInBlock: () => {},
       onSubmitted: () => {},
       onClose: () => {},
+      onError: () => {},
       dispatch: () => {},
       signerAddress: senderAddress,
       section: "dex",

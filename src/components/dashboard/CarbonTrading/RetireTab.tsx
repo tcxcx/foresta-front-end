@@ -12,7 +12,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { retireFromPool } from "@/hooks/web3/dexHooks/retireFromPoolExtrinsic";
+import { useRetireFromPool } from "@/hooks/web3/dexHooks/retireFromPoolExtrinsic";
 import {
   Card,
   CardContent,
@@ -21,8 +21,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
+import useRetirementStore from "@/hooks/context/retirementStore";
+import { RetirementModal } from "@/components/dashboard/CarbonRetirements/RetirementModal";
 
 export default function RetireTab() {
   const { account } = useAuth();
@@ -45,6 +48,19 @@ export default function RetireTab() {
   const [loading, setLoading] = useState(false);
   const amount = watch("amount");
   const reason = watch("reason");
+  const retireFromPool = useRetireFromPool();
+
+  const { retirementStatus } = useRetirementStore.getState();
+
+  useEffect(() => {
+    if (retirementStatus === "Transaction extrinsic finalized successfully.") {
+      toast({
+        title: "Carbon Credits retired successfully",
+        description: "Your carbon credit certificate NFT has been added to your account",
+      });
+    }
+  }, [retirementStatus, toast]);
+
 
   useEffect(() => {
     if (userAssets) {
@@ -52,21 +68,30 @@ export default function RetireTab() {
     }
   }, [userAssets, setValue]);
 
-  const handleRetire = async () => {
+  const handleRetireClick = async () => {
     if (!selectedPool || amount === "") {
       toast({
-        description: "Please select a pool, enter an amount.",
+        description: "Please select a pool and enter an amount.",
       });
       return;
     }
-    try {
-      await retireFromPool(accountId, selectedPool, amount, reason, setLoading);
+    const { setIsRetiring, setRetirementStatus, setRetirementError } =
+      useRetirementStore.getState();
 
-      toast({
-        title: "Retirement Successful!",
-        description: "Your retirement action was successful.",
+    setIsRetiring(true);
+    setRetirementStatus("Initiating retirement...");
+
+    try {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      await retireFromPool({
+        senderAddress: accountId,
+        poolId: selectedPool,
+        amount,
+        reason,
+        setLoading
       });
-    } catch (error) {
+      setRetirementStatus("Retirement successful. Please wait as we retrieve your certificate.");
+    } catch (error: any) {
       console.error("Failed to retire:", error);
       toast({
         variant: "destructive",
@@ -74,18 +99,23 @@ export default function RetireTab() {
         description:
           "Your retirement action could not be completed. Please try again.",
       });
+      setRetirementError(error.message || "An unknown error occurred");
+    } finally {
+      setIsRetiring(false);
     }
   };
 
   return (
     <div className="flex justify-center items-center h-full">
-      <Tabs defaultValue="retireFromPool" className="w-full max-w-xl">
+      <RetirementModal />
+
+      <Tabs defaultValue="RetireFromPool " className="w-full max-w-xl">
         <TabsList className="flex divide-x divide-gray-200 rounded-lg bg-gray-100 p-1">
-          <TabsTrigger value="retireFromPool" className="flex-1 uppercase">
+          <TabsTrigger value="RetireFromPool " className="flex-1 uppercase">
             MINT NFT CERTIFICATE
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="retireFromPool">
+        <TabsContent value="RetireFromPool ">
           <Card>
             <CardHeader>
               <CardTitle>Retire Carbon Credits</CardTitle>
@@ -101,7 +131,7 @@ export default function RetireTab() {
                   <SelectValue placeholder="Select a pool" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10001">Bio Carbon</SelectItem>
+                  <SelectItem value="10002">Bio Carbon</SelectItem>
                   {/* Add more pools as needed */}
                 </SelectContent>
               </Select>
@@ -114,18 +144,21 @@ export default function RetireTab() {
                 min="0"
               />
               <Label htmlFor="retireReason">Reason for Retirement</Label>
-              <Input
-                id="retireReason"
-                type="text"
-                value={reason}
-                onChange={(e) => setValue("reason", e.target.value)}
-              />
+              <div className="grid w-full gap-2">
+                <Textarea
+                  id="retireReason"
+                  value={reason}
+                  onChange={(e) => setValue("reason", e.target.value)}
+                  placeholder="Type your retirement message here."
+                />
+                <Button
+                  onClick={handleRetireClick}
+                  className="font-clash uppercase"
+                >
+                  Retire
+                </Button>{" "}
+              </div>
             </CardContent>
-            <CardFooter>
-              <Button onClick={handleRetire} className="font-clash uppercase">
-                Retire
-              </Button>
-            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>

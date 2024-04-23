@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { uploadFileToIPFS, getIPNSLink } from "./apillon-storage";
 import { generateCertificateImage } from "@/lib/generateCertificate";
 

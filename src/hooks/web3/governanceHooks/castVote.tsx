@@ -29,6 +29,7 @@ export async function castVote(senderAddress: string, voteId: number, vote: bool
     onInBlock: (eventData) => console.log(`Transaction included in block`, eventData),
     onSubmitted: (signerAddress) => console.log(`Transaction submitted by ${signerAddress}`),
     onClose: () => console.log("Transaction process ended"),
+    onError: () => {},
     dispatch: () => {},
     section: "forestaCollectives", 
     method: "castVote",

@@ -57,6 +57,7 @@ export async function createProject(senderAddress: string, projectDetails: any) 
       console.log(`Transaction submitted by ${senderAddress}`),
     onClose: () => console.log("Transaction process ended"),
     signerAddress: senderAddress,
+    onError: () => {},
     // dispatch could be used to update the UI based on the outcome of blockchain transactions or events. For example, after submitting a transaction to list a new project on a blockchain, the application might dispatch actions to update the state to reflect that the transaction is pending, succeeded, or failed, which in turn can trigger UI updates to inform the user.
     dispatch: () => {}, // function used to send ("dispatch") actions to the store or context to update the application's state based on user actions, API calls, or other events.
 
@@ -65,107 +66,6 @@ export async function createProject(senderAddress: string, projectDetails: any) 
     method: "create", // Refers to the specific function or extrinsic within the pallet that you want to call. It's the action you want to perform within the specified section.
   });
 }
-// // - Approve or Reject a carbon credit project
-// export async function approveOrRejectProject(
-//   senderAddress: string,
-//   projectApprovalDetails: any
-// ) {
-//   const api = await initApi();
-//   const parsedDetails = approveProjectSchema.parse(projectApprovalDetails);
-//   const tx = api.tx.carbonCredits.approveProject(
-//     parsedDetails.projectId,
-//     parsedDetails.isApproved
-//   );
-
-//   await sendTx({
-//     api,
-//     tx,
-//     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-//     onFinalized: (blockHash) =>
-//       console.log(`Transaction finalized at blockHash ${blockHash}`),
-//     onInBlock: (eventData) =>
-//       console.log(`Transaction included in block`, eventData),
-//     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
-//     onClose: () => console.log("Transaction process ended"),
-//     signerAddress: senderAddress,
-//     dispatch: () => {},
-//     section: "carbonCredits",
-//     method: "approve_project",
-//   });
-// }
-
-// - Mint Carbon Credits
-
-// /**
-//  * Mint tokens for an approved project.
-//  * @param {string} senderAddress - The address of the user initiating the transaction.
-//  * @param {object} mintDetails - The details required for minting tokens, including the project and group IDs, the amount to mint, and whether to list them on the marketplace.
-//  */
-// export async function mintTokensForProject(
-//   senderAddress: string,
-//   mintDetails: any
-// ) {
-//   const api = await initApi(); // Make sure you have a function to initialize your Polkadot.js API
-//   // Validate mintDetails with Zod
-//   const parsedDetails = mintCarbonCreditsSchema.parse(mintDetails);
-
-//   // Construct the transaction using Polkadot.js
-//   const tx = api.tx.carbonCredits.mint(
-//     parsedDetails.projectId,
-//     parsedDetails.groupId,
-//     parsedDetails.amountToMint,
-//     parsedDetails.listToMarketplace
-//   );
-
-//   // Use sendTx to submit the transaction
-//   await sendTx({
-//     api,
-//     tx,
-//     signerAddress: senderAddress,
-//     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-//     onFinalized: (blockHash) =>
-//       console.log(`Transaction finalized at blockHash ${blockHash}`),
-//     onInBlock: (eventData) =>
-//       console.log(`Transaction included in block`, eventData),
-//     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
-//     onClose: () => console.log("Transaction process ended"),
-//     dispatch: () => {},
-//     section: "carbonCredits",
-//     method: "mint",
-//   });
-// }
-
-// - Retire Credits Tokens
-
-// async function retireCarbonCredits(senderAddress: string, retireDetails: any) {
-//   const api = await initApi(); // Initialize your Polkadot.js API
-//   const parsedDetails = retireCarbonCreditsSchema.parse(retireDetails); // Validate input
-
-//   // Construct the transaction
-//   const tx = api.tx.carbonCredits.retire(
-//     parsedDetails.projectId,
-//     parsedDetails.groupId,
-//     parsedDetails.amount,
-//     parsedDetails.reason
-//   );
-
-//   // Use sendTx to submit the transaction, similar to how it's done in mintTokensForProject
-//   await sendTx({
-//     api,
-//     tx,
-//     signerAddress: senderAddress,
-//     setLoading: (isLoading) => console.log(`Loading: ${isLoading}`),
-//     onFinalized: (blockHash) =>
-//       console.log(`Transaction finalized at blockHash ${blockHash}`),
-//     onInBlock: (eventData) =>
-//       console.log(`Transaction included in block`, eventData),
-//     onSubmitted: () => console.log(`Transaction submitted by ${senderAddress}`),
-//     onClose: () => console.log("Transaction process ended"),
-//     dispatch: () => {},
-//     section: "carbonCredits",
-//     method: "retire",
-//   });
-// }
 
 // Create a Pool
 export async function createPool(senderAddress: string, poolDetails: any) {
@@ -189,6 +89,7 @@ export async function createPool(senderAddress: string, poolDetails: any) {
     onInBlock: () => {},
     onSubmitted: () => {},
     onClose: () => {},
+    onError: () => {},
     dispatch: () => {},
     section: "carbonCreditPool",
     method: "create",
@@ -218,6 +119,7 @@ export async function depositIntoPool(
     onInBlock: () => {},
     onSubmitted: () => {},
     onClose: () => {},
+    onError: () => {},
     dispatch: () => {},
     section: "carbonCreditPool",
     method: "deposit",
@@ -247,6 +149,7 @@ export async function retirePoolTokens(
     onSubmitted: () => {},
     onClose: () => {},
     dispatch: () => {},
+    onError: () => {},
     section: "carbonCreditPool",
     method: "retire",
   });
@@ -273,6 +176,7 @@ async function createSellOrder(senderAddress: string, sellOrderDetails: any) {
     onSubmitted: () => {},
     onClose: () => {},
     dispatch: () => {},
+    onError: () => {},
     section: "dex",
     method: "create_sell_order",
   });
@@ -293,6 +197,7 @@ async function cancelSellOrder(senderAddress: string, cancelOrderDetails: any) {
     onFinalized: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
+    onError: () => {},
     onClose: () => {},
     dispatch: () => {},
     section: "dex",
@@ -320,6 +225,7 @@ async function buyOrder(senderAddress: string, buyOrderDetails: any) {
     onFinalized: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
+    onError: () => {},
     onClose: () => {},
     dispatch: () => {},
     section: "dex",
@@ -346,6 +252,7 @@ async function addCollective(senderAddress: string, collectiveDetails: any) {
     onInBlock: () => {},
     onSubmitted: () => {},
     onClose: () => {},
+    onError: () => {},
     dispatch: () => {},
     section: "foresta-collectives",
     method: "add_collective",
@@ -369,6 +276,7 @@ async function joinCollective(senderAddress: string, joinDetails: any) {
     onFinalized: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
+    onError: () => {},
     onClose: () => {},
     dispatch: () => {},
     section: "foresta-collectives",
@@ -395,6 +303,7 @@ export async function createProposal(senderAddress: string, proposalDetails: any
     onInBlock: () => {},
     onSubmitted: () => {},
     onClose: () => {},
+    onError: () => {},
     dispatch: () => {},
     section: "foresta-collectives",
     method: "create_proposal",
@@ -420,6 +329,7 @@ async function castVote(senderAddress: string, voteDetails: any) {
     onInBlock: () => {},
     onSubmitted: () => {},
     onClose: () => {},
+    onError: () => {},
     dispatch: () => {},
     section: "foresta-collectives",
     method: "cast_vote",
@@ -439,6 +349,7 @@ async function addMember(senderAddress: string, details: any) {
     onFinalized: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
+    onError: () => {},
     onClose: () => {},
     dispatch: () => {},
     section: "foresta-collectives",
@@ -458,6 +369,7 @@ async function acceptMember(senderAddress: string, details: any) {
     signerAddress: senderAddress,
     setLoading: () => {},
     onFinalized: () => {},
+    onError: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
     onClose: () => {},
@@ -480,6 +392,7 @@ async function rejectMember(senderAddress: string, details: any) {
     setLoading: () => {},
     onFinalized: () => {},
     onInBlock: () => {},
+    onError: () => {},
     onSubmitted: () => {},
     onClose: () => {},
     dispatch: () => {},
@@ -503,6 +416,7 @@ async function removeMember(senderAddress: string, details: any) {
     onSubmitted: () => {},
     onClose: () => {},
     dispatch: () => {},
+    onError: () => {},
     section: "kyc",
     method: "remove_member",
   });
@@ -520,6 +434,7 @@ async function modifyMember(senderAddress: string, details: any) {
     setLoading: () => {},
     onFinalized: () => {},
     onInBlock: () => {},
+    onError: () => {},
     onSubmitted: () => {},
     onClose: () => {},
     dispatch: () => {},
@@ -541,6 +456,7 @@ async function addAuthorizedAccount(senderAddress: string, details: any) {
     onFinalized: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
+    onError: () => {},
     onClose: () => {},
     dispatch: () => {},
     section: "kyc",
@@ -561,6 +477,7 @@ async function removeAuthorizedAccount(senderAddress: string, details: any) {
     onFinalized: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
+    onError: () => {},
     onClose: () => {},
     dispatch: () => {},
     section: "kyc",
@@ -581,6 +498,7 @@ async function setKycAirdropAmount(senderAddress: string, details: any) {
     onFinalized: () => {},
     onInBlock: () => {},
     onSubmitted: () => {},
+    onError: () => {},
     onClose: () => {},
     dispatch: () => {},
     section: "kyc",

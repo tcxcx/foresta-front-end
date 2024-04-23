@@ -60,6 +60,7 @@ export const depositToPool = async (
         onInBlock: () => {},
         onSubmitted: () => {},
         onClose: () => {},
+        onError: () => {},
         dispatch: () => {},
         signerAddress: senderAddress,
         section: "carbonCreditsPools",

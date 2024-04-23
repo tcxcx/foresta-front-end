@@ -81,6 +81,7 @@ export const useCreateProposal = () => {
         onInBlock: () => {},
         onSubmitted: () => {},
         onClose: () => {},
+        onError: () => {},
         section: "forestaCollectives",
         method: "createProposal",
         dispatch: () => {},

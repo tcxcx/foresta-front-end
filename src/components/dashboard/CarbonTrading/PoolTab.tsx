@@ -31,7 +31,7 @@ export default function PoolTab() {
 
   const poolId =
     // selectedPool === "10003" ? "0" : selectedPool === "10002" ? "0" : "";
-    selectedPool === "10001" ? "1" : "";
+    selectedPool === "10002" ? "1" : "";
 
   const { userAssets, loading: loadingAssets } = useFetchUserAssets(
     poolId,
@@ -111,7 +111,7 @@ export default function PoolTab() {
                   <SelectValue placeholder="Select a pool" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10001">Bio Carbon</SelectItem>
+                  <SelectItem value="10002">Bio Carbon</SelectItem>
 
                   {/* <SelectItem value="10002">Gold Standard</SelectItem> */}
                   {/* <SelectItem value="10002">Verra</SelectItem> */}

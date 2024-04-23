@@ -4,6 +4,8 @@ import { useTheme } from "next-themes";
 import { LordIcon } from "@/lib/lordicon/lord-icon";
 import MintProjectDialog from "./mint-project-dialog";
 import SubmitProjectDialog from "./submit-project-dialog";
+import Spinner from "@/components/ui/spinner";
+import CarbonRetirementToast from "../CarbonTrading/carbonRetirementToast";
 
 interface PlaceholderComponentProps {
   type: PlaceholderType;
@@ -42,6 +44,7 @@ export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({
           />
         )}
         {type === PlaceholderType.Project && <SubmitProjectDialog />}
+        {type === PlaceholderType.sendTx && <Spinner />}
       </div>
     </div>
   );
