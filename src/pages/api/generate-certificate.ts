@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { uploadFileToIPFS } from "./apillon-storage";
+import { uploadFileToIPFS, getIPNSLink } from "./apillon-storage";
 import { generateCertificateImage } from "@/lib/generateCertificate";
 
-export async function generateCertificate(metadata: any): Promise<string> {
+export async function generateCertificate(metadata: any): Promise<{ cid: string; ipnsLink: string }> {
   try {
     const dataUrl = await generateCertificateImage(metadata);
     const response = await fetch(dataUrl);
@@ -12,36 +12,27 @@ export async function generateCertificate(metadata: any): Promise<string> {
     const imageBuffer = await blob.arrayBuffer();
 
     const bucketUuid = process.env.APILLION_NFT_CO2_BUCKET_UUID || "2ad4b58a-9b9a-4a03-af04-21a875003a7f";
-
     const fileName = `certificate-${metadata.amount}.png`;
     const fileType = "image/png";
 
-    const ipfsHash = await uploadFileToIPFS(
-      { name: fileName, type: fileType, data: Buffer.from(imageBuffer) },
-      bucketUuid
+    const { fileUuid, fileCID } = await uploadFileToIPFS(
+      Buffer.from(imageBuffer),
+      fileName,
+      fileType,
+      bucketUuid,
+      true
     );
 
-    return ipfsHash;
+    if (!fileCID) {
+      throw new Error("File CID is undefined, upload may have failed.");
+    }
+
+    const ipnsUuid = process.env.APILLION_NFT_CO2_IPNS_UUID || "6a8bd061-7ecb-414a-a1ec-5b1ca3d84e82";
+    const ipnsLink = await getIPNSLink(ipnsUuid, bucketUuid);
+
+    return { cid: fileCID, ipnsLink };
   } catch (error: any) {
     console.error("Error generating certificate:", error);
     throw new Error(error.message || "Failed to generate certificate");
-  }
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<{ ipfsHash?: string; error?: string }>
-) {
-  if (req.method === "POST") {
-    try {
-      const metadata = req.body;
-      const ipfsHash = await generateCertificate(metadata);
-      res.status(200).json({ ipfsHash });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message || "Failed to generate certificate" });
-    }
-  } else {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).json({ error: `Method ${req.method} not allowed` });
   }
 }

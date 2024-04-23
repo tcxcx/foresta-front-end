@@ -74,7 +74,7 @@ Fund wallet accounts from Alice account
 
     e. There are two types of voting - collective voting and general membership voting. If it is a collectives vote (eg, createProposal() which deals with proposals inside a collective) only collectives members can vote. Other type (eg., creation of pool or dex management) is open to all KYC’d members.
 
-    f. We are using on_initialize hook to decide the voting outcome so if the voting id 100 is supposed to terminate at the block # 500 then at the creation of this block, the status of the vote will change to either VoteStatus::Passed or VoteStatus::Failed based on the vote count.
+    f. We are using on_initialize hook to decide the voting     outcome so if the voting id 100 is supposed to terminate at the block # 500 then at the creation of this block, the status of the vote will change to either VoteStatus::Passed or VoteStatus::Failed based on the vote count.
 
 
 Pallet Account Ids to be funded when starting the node
