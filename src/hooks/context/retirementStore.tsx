@@ -11,6 +11,8 @@ interface RetirementState {
   setCid: (cid: string) => void;
   certificateLink: string;
   setCertificateLink: (link: string) => void;
+  imageLink: string;
+  setImageLink: (link: string) => void;
 }
 
 const useRetirementStore = create<RetirementState>((set) => ({
@@ -24,6 +26,8 @@ const useRetirementStore = create<RetirementState>((set) => ({
   setCid: (cid) => set({ cid }),
   certificateLink: '',
   setCertificateLink: (link) => set({ certificateLink: link }),
+  imageLink: '',
+  setImageLink: (link) => set({ imageLink: link }),
 }));
 
 export default useRetirementStore;

@@ -36,7 +36,7 @@ const CarbonRetirementToast: React.FC = () => {
 
     fetchImageUrl();
   }, [cid]);
-  console.log("Get Image URL!!!!!!!!!", imageUrl);
+  // console.log("Get Image URL!!!!!!!!!", imageUrl);
 
   return (
     <Card className="overflow-hidden group">

@@ -10,6 +10,7 @@ import { generateCertificate } from "@/pages/api/generate-certificate";
 import useRetirementStore from "@/hooks/context/retirementStore";
 import { ISubmittableResult } from "@polkadot/types/types";
 import { useToast } from "@/components/ui/use-toast";
+import useDownloadLink from "@/pages/api/ipfs-download-link";
 
 interface RetirePoolParams {
   senderAddress: string;
@@ -25,6 +26,7 @@ export const useRetireFromPool = () => {
     setIsRetiring,
     setRetirementError,
     setCertificateLink,
+    imageLink
   } = useRetirementStore();
   const { toast } = useToast();
 
@@ -68,7 +70,9 @@ export const useRetireFromPool = () => {
         "We are generating your CO2 retirement certificate. Please wait..."
       );
       const metadata = { amount, reason, senderAddress };
+
       const { cid, ipnsLink } = await generateCertificate(metadata);
+
       setCertificateLink(ipnsLink);
       setRetirementStatus("Uploading certificate to IPFS...");
       const tx = api.tx.carbonCreditsPools.retire(
@@ -76,7 +80,8 @@ export const useRetireFromPool = () => {
         amount,
         reason,
         cid,
-        ipnsLink
+        ipnsLink,
+        imageLink
       );
       setRetirementStatus("Please sign the transaction to proceed.");
       const txParams: SendTxParams = {

@@ -21,6 +21,7 @@ type PlaceholderProps = {
     dark: string;
     title: string;
     description: string;
+    imageData: string;
   };
 };
 
@@ -31,6 +32,7 @@ export const placeholderProps = {
     title: "Mint New Tokens",
     description:
       "Ready to convert your project contributions into tokens? Start here.",
+      imageData: "",
   },
   [PlaceholderType.Project]: {
     light: wiredEnvironemntLight,
@@ -38,6 +40,7 @@ export const placeholderProps = {
     title: "Submit a New Project",
     description:
       "Have a conservation project? Share the details with us to get started.",
+      imageData: "",
   },
   [PlaceholderType.Collectives]: {
     light: CraneLight,
@@ -45,18 +48,21 @@ export const placeholderProps = {
     title: "No Collectives Found",
     description:
       "You are currently not a part of any given collective. See upcoming collectives to see if you have been whitelisted to join a Conservation DAO.",
+      imageData: "",
   },
   [PlaceholderType.AllCollectives]: {
     light: CraneLight,
     dark: CraneDark,
     title: "No Collectives Found",
     description: "No collectives live or upcoming in the platform yet.",
+    imageData: "",
   },
   [PlaceholderType.sendTx]: {
     light: HummingBirdLight,
     dark: HummingBirdDark,
     title: "",
     description: "",
+    imageData: "",
   },
 
 };

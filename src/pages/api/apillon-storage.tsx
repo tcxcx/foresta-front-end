@@ -59,4 +59,25 @@ async function getIPNSLink(ipnsUuid: string, bucketUuid: string): Promise<string
   }
 }
 
-export { uploadFileToIPFS, getIPNSLink };
+
+async function fetchDownloadLink(cid: string): Promise<string | null> {
+  try {
+    const response = await fetch(`https://api.apillon.io/storage/link-on-ipfs/${cid}`, {
+      headers: {
+        Authorization: `Basic ${btoa(process.env.NEXT_PUBLIC_APILLION_API_KEY + ':' + process.env.NEXT_PUBLIC_APILLION_API_SECRET)}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to retrieve download link');
+    }
+    const data = await response.json();
+    return data.data.link;
+  } catch (error) {
+    console.error('Failed to retrieve download link', error);
+    return null;
+  }
+}
+
+export { uploadFileToIPFS, getIPNSLink, fetchDownloadLink };
+
+
