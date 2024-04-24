@@ -1,7 +1,6 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     domains: ['images.unsplash.com', 'ipfs.io'],
@@ -11,7 +10,9 @@ const nextConfig = {
       config.resolve.fallback = {
         fs: false,
         path: false,
+        canvas: false, 
       };
+    } else {
     }
     return config;
   },

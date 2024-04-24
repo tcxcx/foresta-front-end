@@ -7,6 +7,8 @@ interface RetirementState {
   setIsRetiring: (isRetiring: boolean) => void;
   retirementError: string;
   setRetirementError: (error: string) => void;
+  cid: string;
+  setCid: (cid: string) => void;
   certificateLink: string;
   setCertificateLink: (link: string) => void;
 }
@@ -18,6 +20,8 @@ const useRetirementStore = create<RetirementState>((set) => ({
   setIsRetiring: (isRetiring) => set({ isRetiring }),
   retirementError: '',
   setRetirementError: (error) => set({ retirementError: error }),
+  cid: '',
+  setCid: (cid) => set({ cid }),
   certificateLink: '',
   setCertificateLink: (link) => set({ certificateLink: link }),
 }));

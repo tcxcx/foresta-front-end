@@ -7,12 +7,13 @@ import {
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
 import { Progress } from "@/components/ui/progress";
-import useRetirementStore from "@/hooks/context/retirementStore";
 import { Button } from "@/components/ui/button";
 import { Terminal, X } from "lucide-react";
 import { PlaceholderComponent } from "../ProjectManagement/empty-placeholder";
 import { PlaceholderType } from "@/components/dashboard/ProjectManagement/placeholder-types";
 import CarbonRetirementToast from "../CarbonTrading/carbonRetirementToast";
+import useRetirementStore from "@/hooks/context/retirementStore";
+import useDownloadLink from "@/pages/api/ipfs-download-link";
 
 export function RetirementModal() {
   const {
@@ -20,6 +21,7 @@ export function RetirementModal() {
     isRetiring,
     retirementError,
     certificateLink,
+    cid,
     setRetirementStatus,
     setIsRetiring,
     setRetirementError,
@@ -27,6 +29,7 @@ export function RetirementModal() {
   } = useRetirementStore();
 
   const [modalOpen, setModalOpen] = useState(false);
+  const { downloadLink, isLoading, error } = useDownloadLink(cid);
 
   // Calculate the progress based on the current status
   const [progress, setProgress] = useState(0);
@@ -56,13 +59,27 @@ export function RetirementModal() {
       case "Retirement successful. Please wait as we retrieve your certificate.":
         setProgress(85);
         break;
-      case "Transaction finalized.":
+      case "Transaction extrinsic finalized successfully.":
         setProgress(94);
         break;
       default:
         setProgress(0);
     }
   }, [retirementStatus]);
+
+
+  useEffect(() => {
+    if (downloadLink) {
+      console.log('Setting certificate link:', downloadLink);
+      setCertificateLink(downloadLink);
+    }
+  }, [downloadLink, setCertificateLink]);
+  
+  useEffect(() => {
+    console.log('Current retirement status:', retirementStatus);
+    console.log('Current certificate link:', certificateLink);
+  }, [retirementStatus, certificateLink]);
+  
 
   useEffect(() => {
     if (isRetiring) {
@@ -85,6 +102,10 @@ export function RetirementModal() {
   ]);
 
   if (!modalOpen) return null;
+  console.log("Current retirment status", retirementStatus);
+  console.log("Current CID status", cid);
+  console.log("Current download link:", downloadLink );
+
 
   return (
     <AlertDialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -94,7 +115,7 @@ export function RetirementModal() {
             value={progress}
             className="fixed top-0 left-0 right-0 z-40"
           />
-          {(retirementStatus === "Transaction finalized." ||
+          {(retirementStatus === "Transaction extrinsic finalized successfully." ||
             retirementError) && (
             <Button
               variant={"default"}
@@ -111,7 +132,7 @@ export function RetirementModal() {
             </Button>
           )}
         </div>
-        {retirementStatus === "Transaction finalized." ? (
+        {retirementStatus === "Transaction extrinsic finalized successfully." ? (
           <>
             <AlertDialogHeader>
               <div className="flex items-start space-x-2">

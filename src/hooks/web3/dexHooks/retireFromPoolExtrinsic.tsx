@@ -87,7 +87,7 @@ export const useRetireFromPool = () => {
           setRetirementStatus("Transaction submitted to the blockchain...");
           console.log("Transaction submitted...");
         },
-        onFinalized: () => {
+        onFinalized: (blockHash: string | null) => {
           setRetirementStatus("Transaction finalized.");
         },
         onInBlock: () => setRetirementStatus("Transaction is in block..."),

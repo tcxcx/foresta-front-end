@@ -10,25 +10,35 @@ import {
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { useLocale } from "next-intl";
+import useRetirementStore from "@/hooks/context/retirementStore";
 
 const CarbonRetirementToast: React.FC = () => {
   const locale = useLocale();
-  const placeholderCID = "placeholder-cid";
+  const { certificateLink, cid } = useRetirementStore();
 
   return (
     <Card className="overflow-hidden group">
-      <Link href={`/${locale}/dashboard/retirement-history/${placeholderCID}`}>
+      <Link href={`/${locale}/dashboard/retirement-history/${cid}`}>
         <CardContent className="p-0">
           <div className="relative">
             <div className="flex justify-center">
-              <Image
-                alt="NFT Image"
-                className="aspect-square object-cover "
-                height={400}
-                src="/images/placeholder.svg"
-                width={400}
-              />
-
+              {certificateLink ? (
+                <Image
+                  alt="NFT Image"
+                  className="aspect-square object-cover"
+                  height={400}
+                  src={certificateLink}
+                  width={400}
+                />
+              ) : (
+                <Image
+                  alt="NFT Image"
+                  className="aspect-square object-cover"
+                  height={400}
+                  src="/images/placeholder.svg"
+                  width={400}
+                />
+              )}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-secondary/50 transition-opacity">
                 <p className="hover:underline px-4 py-2 rounded-md text-sm font-clash uppercase text-primary">
                   View Details
