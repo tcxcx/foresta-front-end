@@ -1,3 +1,5 @@
+"use client";
+
 import { CardContent, CardFooter, Card } from "@/components/ui/card";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -11,10 +13,30 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { useLocale } from "next-intl";
 import useRetirementStore from "@/hooks/context/retirementStore";
+import { useEffect, useState } from "react";
+import Spinner from "@/components/ui/spinner";
 
 const CarbonRetirementToast: React.FC = () => {
   const locale = useLocale();
-  const { certificateLink, cid } = useRetirementStore();
+  const { cid } = useRetirementStore();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchImageUrl = async () => {
+      if (!cid) return;
+
+      try {
+        const response = await fetch(`/api/get-image-url?cid=${cid}`);
+        const data = await response.json();
+        setImageUrl(data.imageUrl);
+      } catch (error) {
+        console.error("Error fetching image URL:", error);
+      }
+    };
+
+    fetchImageUrl();
+  }, [cid]);
+  console.log("Get Image URL!!!!!!!!!", imageUrl);
 
   return (
     <Card className="overflow-hidden group">
@@ -22,22 +44,18 @@ const CarbonRetirementToast: React.FC = () => {
         <CardContent className="p-0">
           <div className="relative">
             <div className="flex justify-center">
-              {certificateLink ? (
+              {imageUrl ? (
                 <Image
                   alt="NFT Image"
-                  className="aspect-square object-cover"
-                  height={400}
-                  src={certificateLink}
-                  width={400}
+                  src={imageUrl}
+                  width={500}
+                  height={500}
+                  className="rounded-lg animate-shimmer"
                 />
               ) : (
-                <Image
-                  alt="NFT Image"
-                  className="aspect-square object-cover"
-                  height={400}
-                  src="/images/placeholder.svg"
-                  width={400}
-                />
+                <div className="w-full animate-shimmer h-64 flex items-center justify-center">
+                  <Spinner text="Certificate Loading" />{" "}
+                </div>
               )}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-secondary/50 transition-opacity">
                 <p className="hover:underline px-4 py-2 rounded-md text-sm font-clash uppercase text-primary">

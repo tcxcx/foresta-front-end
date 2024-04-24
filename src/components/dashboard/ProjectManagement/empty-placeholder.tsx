@@ -44,7 +44,7 @@ export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({
           />
         )}
         {type === PlaceholderType.Project && <SubmitProjectDialog />}
-        {type === PlaceholderType.sendTx && <Spinner />}
+        {type === PlaceholderType.sendTx && <Spinner icon={iconDataUri} />}
       </div>
     </div>
   );
