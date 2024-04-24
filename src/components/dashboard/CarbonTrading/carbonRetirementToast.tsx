@@ -7,30 +7,37 @@ import {
   DropdownMenuContent,
   DropdownMenu,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import Image from "next/image";
+import { useLocale } from "next-intl";
 
 const CarbonRetirementToast: React.FC = () => {
+  const locale = useLocale();
+  const placeholderCID = "placeholder-cid";
+
   return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-0">
-        <div className="relative">
-          <div className="flex justify-center">
-            <Image
-              alt="NFT Image"
-              className="aspect-square object-cover"
-              height={400}
-              src="/placeholder.svg"
-              width={400}
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <h2 className="text-2xl font-semibold text-white">
-                Carbon Retirement Certificate
-              </h2>
+    <Card className="overflow-hidden group">
+      <Link href={`/${locale}/dashboard/retirement-history/${placeholderCID}`}>
+        <CardContent className="p-0">
+          <div className="relative">
+            <div className="flex justify-center">
+              <Image
+                alt="NFT Image"
+                className="aspect-square object-cover "
+                height={400}
+                src="/images/placeholder.svg"
+                width={400}
+              />
+
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-secondary/50 transition-opacity">
+                <p className="hover:underline px-4 py-2 rounded-md text-sm font-clash uppercase text-primary">
+                  View Details
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </CardContent>
+        </CardContent>
+      </Link>
       <CardFooter className="flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <Avatar>
@@ -54,7 +61,9 @@ const CarbonRetirementToast: React.FC = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
-              <Link href="#">View History</Link>
+              <Link href={`/${locale}/dashboard/retirement-history`}>
+                View Your Retirement History
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>Share</DropdownMenuItem>
           </DropdownMenuContent>

@@ -34,7 +34,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const locale = useLocale();
   const accountId = account?.address || "";
-  const { kycStatus, error } = useKYCSubscription(accountId);
+  const { kycStatus } = useKYCSubscription(accountId);
   const { liveCollectives, acceptedProjects, selectCollective } =
     useMarketplaceData();
   const marketplaceData = {
@@ -51,11 +51,6 @@ export default function DashboardLayout({
   const marketplaceComponent = React.cloneElement(marketplace, {
     marketplaceData,
   });
-
-  // console.log("KYC Status: ", kycStatus);
-
-  // console.log("this is the accountId: ", accountId);
-  console.log("marketplaceData: ", marketplaceData);
 
   return account ? (
     <>

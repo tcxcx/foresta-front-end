@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTheme } from "next-themes";
-import { Link } from 'next-view-transitions'
+import { Link } from "next-view-transitions";
 import { useLocale } from "next-intl";
 import {
   Tooltip,
@@ -35,9 +35,11 @@ export default function SideMenu() {
   const Project = theme === "dark" ? ProjectDark : ProjectLight;
   const Trade = theme === "dark" ? TradeDark : TradeLight;
   const UserCircle = theme === "dark" ? UserCircleDark : UserCircleLight;
-  const Sun = theme === "dark" ?  SunAnimationDark: SunAnimationLight;
+  const Sun = theme === "dark" ? SunAnimationDark : SunAnimationLight;
   const Moon = theme === "dark" ? MoonAnimationDark : MoonAnimationLight;
+  const Retire = theme === "dark" ? MoonAnimationDark : MoonAnimationLight;
 
+  
   const locale = useLocale();
   const globeIconDataUri = `data:application/json;base64,${Buffer.from(
     JSON.stringify(Globe)
@@ -51,6 +53,11 @@ export default function SideMenu() {
   const userIconDataUri = `data:application/json;base64,${Buffer.from(
     JSON.stringify(UserCircle)
   ).toString("base64")}`;
+  
+  const retirementsIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(Retire)
+  ).toString("base64")}`;
+
   const sunIconDataUri = `data:application/json;base64,${Buffer.from(
     JSON.stringify(Sun)
   ).toString("base64")}`;
@@ -145,6 +152,35 @@ export default function SideMenu() {
                 </TooltipProvider>
               </Link>
             </li>
+
+            <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
+              <Link
+                href={`/${locale}/dashboard/retirement-history`}
+                passHref
+                className="flex items-center justify-center h-full"
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="px-2">
+                        <div className="py-4">
+                          <LordIcon
+                            src={retirementsIconDataUri}
+                            trigger="hover"
+                            colors={{ primary: "#16A249" }}
+                            size={36}
+                          />
+                          <TooltipContent>
+                            <span className="font-clash">Retirements</span>
+                          </TooltipContent>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </li>
+
             <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
               <Link
                 href={`/${locale}/dashboard/account`}
