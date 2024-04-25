@@ -23,6 +23,9 @@ import SunAnimationLight from "@/lib/foresta-icons/wired-outline-804-sun.json";
 import MoonAnimationLight from "@/lib/foresta-icons/wired-outline-1821-night-sky-moon-stars.json";
 import SunAnimationDark from "@/lib/foresta-dark/wired-gradient-804-sun.json";
 import MoonAnimationDark from "@/lib/foresta-dark/wired-gradient-1821-night-sky-moon-stars.json";
+import PortfolioAnimationDark from '@/lib/foresta-dark/wired-gradient-1023-portfolio.json';
+import PortfolioAnimationLight from '@/lib/foresta-icons/wired-outline-1023-portfolio.json';
+
 
 export default function SideMenu() {
   const { theme, setTheme } = useTheme();
@@ -37,7 +40,7 @@ export default function SideMenu() {
   const UserCircle = theme === "dark" ? UserCircleDark : UserCircleLight;
   const Sun = theme === "dark" ? SunAnimationDark : SunAnimationLight;
   const Moon = theme === "dark" ? MoonAnimationDark : MoonAnimationLight;
-  const Retire = theme === "dark" ? MoonAnimationDark : MoonAnimationLight;
+  const Retire = theme === "dark" ? PortfolioAnimationDark : PortfolioAnimationLight;
 
   
   const locale = useLocale();

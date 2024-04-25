@@ -10,7 +10,6 @@ import { generateCertificate } from "@/pages/api/generate-certificate";
 import useRetirementStore from "@/hooks/context/retirementStore";
 import { ISubmittableResult } from "@polkadot/types/types";
 import { useToast } from "@/components/ui/use-toast";
-import useDownloadLink from "@/pages/api/ipfs-download-link";
 
 interface RetirePoolParams {
   senderAddress: string;

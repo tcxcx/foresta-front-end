@@ -25,8 +25,6 @@ Fund wallet accounts from Alice account
 
     Carbon Credits Pallet
 
-
-
 2. Foresta Collectives pallet
 
     a. SUDO : Add Collective1 with Account1 as a manager

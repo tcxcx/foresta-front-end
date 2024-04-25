@@ -13,6 +13,7 @@ export enum PlaceholderType {
   Collectives = "Collectives",
   AllCollectives = "AllCollectives",
   sendTx = "sendTx",
+  Retirements = "Retirements"
 }
 
 type PlaceholderProps = {
@@ -55,6 +56,13 @@ export const placeholderProps = {
     dark: CraneDark,
     title: "No Collectives Found",
     description: "No collectives live or upcoming in the platform yet.",
+    imageData: "",
+  },
+  [PlaceholderType.Retirements]: {
+    light: CraneLight,
+    dark: CraneDark,
+    title: "No Retirements Found",
+    description: "No retirement certificates have been issued to your account yet.",
     imageData: "",
   },
   [PlaceholderType.sendTx]: {

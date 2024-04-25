@@ -12,15 +12,24 @@ interface PlaceholderComponentProps {
 
 export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({ type }) => {
   const { theme } = useTheme();
-  const { light, dark, title, description, imageData } = placeholderProps[type];
+  const { light, dark, title, description } = placeholderProps[type];
   const icon = theme === "dark" ? dark : light;
   const iconDataUri = `data:application/json;base64,${Buffer.from(JSON.stringify(icon)).toString("base64")}`;
 
+  const containerClasses = type === PlaceholderType.Retirements
+    ? "flex h-[450px] items-center justify-center rounded-md border border-dashed max-w-none w-full" // Full width for Retirements
+    : "flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed max-w-[420px]"; // Fixed width for other types
+
   return (
-    <div className="flex h-[450px] shrink-0 items-center justify-center rounded-md border border-dashed">
+    <div className={containerClasses}>
       <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
         {type !== PlaceholderType.sendTx && (
-          <LordIcon src={iconDataUri} trigger="loop-on-hover" colors={{ primary: "#303f9f" }} size={100} />
+          <LordIcon
+            src={iconDataUri}
+            trigger="loop-on-hover"
+            colors={{ primary: "#303f9f" }}
+            size={100}
+          />
         )}
         <h3 className="mt-4 text-lg font-semibold">{title}</h3>
         <p className="mb-4 mt-2 text-sm text-muted-foreground">{description}</p>
@@ -35,7 +44,7 @@ export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({ type
           />
         )}
         {type === PlaceholderType.Project && <SubmitProjectDialog />}
-        {type === PlaceholderType.sendTx && <Spinner icon={imageData || iconDataUri} />}
+        {type === PlaceholderType.sendTx && <Spinner icon={iconDataUri} />}
       </div>
     </div>
   );

@@ -9,65 +9,110 @@ import {
   DropdownMenuContent,
   DropdownMenu,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { useLocale } from "next-intl";
-import useRetirementStore from "@/hooks/context/retirementStore";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/ui/spinner";
+import { decodeHexString } from "@/lib/hexDecode";
 import truncateMiddle from "truncate-middle";
+import { Share } from "lucide-react";
+import useRetirementStore from '@/hooks/context/useRetirementStore';
+import { useRouter } from 'next/navigation';
+import { RetirementData } from "@/hooks/context/useRetirementStore";
 
-const CarbonRetirementToast: React.FC = () => {
+const CarbonRetirementCard: React.FC<{ retirement: RetirementData }> = ({
+  retirement,
+}) => {
+  const { setSelectedRetirement } = useRetirementStore();
   const locale = useLocale();
-  const { cid } = useRetirementStore();
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [showPlaceholder, setShowPlaceholder] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+
+  const handleClick = () => {
+    setSelectedRetirement(retirement);
+    router.push(`/${locale}/dashboard/retirement-history/${retirement.ipfsHash[0].replace("0x", "")}`);
+  };
+
 
   useEffect(() => {
     const fetchImageUrl = async () => {
-      if (!cid) return;
-
+      if (!retirement.ipfsHash || retirement.ipfsHash[0] === "0x") {
+        setImageUrl("/images/placeholder.svg");
+        setLoading(false);
+        return;
+      }
+      const decodedCid = decodeHexString(retirement.ipfsHash[0]);
+      console.log("decoded CID", decodedCid);
       try {
-        const response = await fetch(`/api/get-image-url?cid=${cid}`);
+        const response = await fetch(`/api/get-image-url?cid=${decodedCid}`);
         const data = await response.json();
         setImageUrl(data.imageUrl);
       } catch (error) {
         console.error("Error fetching image URL:", error);
+        setImageUrl("/images/error-placeholder.svg");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchImageUrl();
-  }, [cid]);
+  }, [retirement.ipfsHash]);
 
   return (
     <>
-      <Card className="overflow-hidden group">
-        <Link href={`/${locale}/dashboard/retirement-history/${cid}`}>
+       <Card className="overflow-hidden group" onClick={handleClick}>
           <CardContent className="p-0">
             <div className="relative">
               <div className="flex justify-center">
-                {imageUrl ? (
+                {loading ? (
+                  <div className="w-full animate-shimmer h-48 flex items-center justify-center">
+                    <Spinner text="Retrieving Certificate..." />
+                  </div>
+                ) : (
                   <Image
-                    alt="NFT Image"
+                    alt="NFT Certificate Image"
                     src={imageUrl}
                     width={700}
                     height={700}
-                    className="rounded-lg animate-shimmer"
+                    className="rounded-lg"
                   />
-                ) : (
-                  <div className="w-full animate-shimmer h-48 flex items-center justify-center">
-                    <Spinner text="Certificate Loading" />{" "}
-                  </div>
                 )}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-secondary/50 transition-opacity">
-                  <p className="hover:underline px-4 py-2 rounded-md text-sm font-clash uppercase text-primary">
-                  Discover More
+                  <p className="hover:underline px-4 py-2 rounded-md text-sm font-clash uppercase text-primary dark:text-teal-300">
+                    Discover More
                   </p>
                 </div>
               </div>
             </div>
           </CardContent>
-        </Link>
         <CardFooter className="flex items-center justify-between p-4">
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarImage alt="Avatar" src="/placeholder-avatar.jpg" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <div>
+              <h3 className="font-semibold hover:underline hover:text-primary">
+                {truncateMiddle(retirement.account, 5, 5, "...")}
+              </h3>
+              <div className="flex items-center justify-end">
+                <TreesIcon className="h-4 w-4 dark:text-teal-300 text-foreground" />
+                <span className="text-sm font-semibold font-violet">
+                  <strong className="font-clash text-primary text-3xl">
+                    {retirement.count}
+                    <span> </span>
+                  </strong>
+                  t
+                  <strong className="font- dark:text-teal-300 text-primary text-base">
+                    CO2
+                  </strong>
+                  e
+                </span>
+              </div>
+            </div>
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="rounded-full" size="icon" variant="ghost">
@@ -75,13 +120,10 @@ const CarbonRetirementToast: React.FC = () => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="center" className="justify-end">
               <DropdownMenuItem>
-                <Link href={`/${locale}/dashboard/retirement-history`}>
-                  View Your Retirement History
-                </Link>
+                Share <Share className="h-4" />
               </DropdownMenuItem>
-              <DropdownMenuItem>Share</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </CardFooter>
@@ -132,4 +174,4 @@ function TreesIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-export default CarbonRetirementToast;
+export default CarbonRetirementCard;

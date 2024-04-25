@@ -199,10 +199,17 @@ export const getProjects = async (projectId: string) => {
   return api.query.carbonCredits.projects(projectId);
 };
 
-export const retiredCredits = async (projectId: string, itemId: string) => {
+export const userRetirements = async (accountId: string): Promise<[number, number][]> => {
   const api = await initApi();
-  return api.query.carbonCredits.retiredCredits(projectId, itemId);
+  const result = await api.query.carbonCredits.userRetirements(accountId);
+  return result.toJSON() as [number, number][];
 };
+
+export const retiredCredits = async (assetId: number, itemId: number) => {
+  const api = await initApi();
+  return api.query.carbonCredits.retiredCredits(assetId, itemId);
+};
+
 
 // carbon-credit-pool queries
 

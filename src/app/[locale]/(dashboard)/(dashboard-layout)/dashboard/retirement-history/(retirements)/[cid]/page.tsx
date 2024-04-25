@@ -1,4 +1,7 @@
-import RetirementDetails from '@/components/dashboard/CarbonRetirements/RetirementDetails';
+'use client'
+
+import { RetirementDetails } from '@/components/dashboard/CarbonRetirements/RetirementDetails';
+import useRetirementStore from '@/hooks/context/useRetirementStore';
 
 interface RetirementDetailsPageProps {
   params: {
@@ -7,9 +10,13 @@ interface RetirementDetailsPageProps {
 }
 
 const RetirementDetailsPage = ({ params }: RetirementDetailsPageProps) => {
-  const { cid } = params;
+  const { selectedRetirement } = useRetirementStore();
 
-  return <RetirementDetails cid={cid} />;
+  if (!selectedRetirement) {
+    return <p>Loading... or navigate back to select a retirement</p>;
+  }
+
+  return <RetirementDetails retirement={selectedRetirement} />;
 };
 
 export default RetirementDetailsPage;

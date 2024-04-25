@@ -11,7 +11,7 @@ async function uploadFileToIPFS(
   fileName: string,
   contentType: string,
   bucketUuid: string,
-  createIpns: boolean = false
+  createIpns: boolean = true
 ) {
   try {
     const bucket = storage.bucket(bucketUuid);
@@ -30,18 +30,31 @@ async function uploadFileToIPFS(
 
     const file = uploadResults[0];
 
-    let ipnsRecord = null;
+ 
+    let ipnsLink = "";
     if (createIpns && file.CID) {
-      ipnsRecord = await bucket.createIpns({
-        name: `${fileName}-ipns`,
-        cid: file.CID,
-      });
+      const ipnsName = `${fileName}-ipns`;
+      const existingIpnsRecords = await bucket.listIpnsNames({ ipnsName });
+      let ipnsRecord;
+    
+      if (existingIpnsRecords.items.length > 0) {
+        ipnsRecord = await bucket.ipns(existingIpnsRecords.items[0].uuid).publish(file.CID);
+      } else {
+        ipnsRecord = await bucket.createIpns({
+          name: ipnsName,
+          description: `IPNS record for ${fileName}`,
+          cid: file.CID,
+        });
+      }
+    
+      ipnsLink = ipnsRecord.link;
     }
+
 
     return {
       fileUuid: file.fileUuid,
       fileCID: file.CID,
-      ipnsRecord
+      ipnsLink,
     };
   } catch (error: any) {
     console.error("Error uploading file to IPFS and handling IPNS:", error);

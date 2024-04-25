@@ -12,18 +12,51 @@ import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { RetirementData } from "@/hooks/context/useRetirementStore";
+import { decodeHexString } from "@/lib/hexDecode";
+import Spinner from "@/components/ui/spinner";
+import { useEffect, useState } from "react";
+import truncateMiddle from "truncate-middle";
 
-type RetirementDetailsProps = {
-  cid: string;
-};
-
-export default function RetirementDetails({ cid }: RetirementDetailsProps) {
-  const placeholderCID = "placeholder-cid";
+export const RetirementDetails = ({
+  retirement,
+}: {
+  retirement: RetirementData;
+}) => {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showPlaceholder, setShowPlaceholder] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   const handleGoBack = () => {
     router.back();
   };
+
+  const firstRetirement = retirement.retireData[0] ?? null;
+
+  useEffect(() => {
+    const fetchImageUrl = async () => {
+      if (!retirement.ipfsHash || retirement.ipfsHash[0] === "0x") {
+        setImageUrl("/images/placeholder.svg");
+        setLoading(false);
+        return;
+      }
+      const decodedCid = decodeHexString(retirement.ipfsHash[0]);
+      console.log("decoded CID", decodedCid);
+      try {
+        const response = await fetch(`/api/get-image-url?cid=${decodedCid}`);
+        const data = await response.json();
+        setImageUrl(data.imageUrl);
+      } catch (error) {
+        console.error("Error fetching image URL:", error);
+        setImageUrl("/images/error-placeholder.svg");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImageUrl();
+  }, [retirement.ipfsHash]);
 
   return (
     <section className="bg-gray-50 dark:bg-background py-4 flex h-full">
@@ -44,8 +77,19 @@ export default function RetirementDetails({ cid }: RetirementDetailsProps) {
                   <Slash />
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
-                  <BreadcrumbLink>Retirement Details CID: {cid}</BreadcrumbLink>
+                  <BreadcrumbLink>
+                    Retirement CID:
+                    <span className="font-semibold hover:underline hover:text-primary">
+                      {truncateMiddle(
+                        decodeHexString(retirement.ipfsHash[0]),
+                        5,
+                        5,
+                        "..."
+                      )}
+                    </span>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
+
                 <BreadcrumbSeparator>
                   <Slash />
                 </BreadcrumbSeparator>
@@ -53,7 +97,9 @@ export default function RetirementDetails({ cid }: RetirementDetailsProps) {
             </Breadcrumb>
 
             <h2 className="text-3xl font-clash tracking-tight mt-2">
-              Carbon Credit NFT #1
+              {firstRetirement
+                ? decodeHexString(firstRetirement.name)
+                : "No Data Available"}
             </h2>
             <p className="text-foreground dark:text-muted-foreground font-violet mt-2">
               Explore the details of your minted carbon credit NFT and its
@@ -63,17 +109,19 @@ export default function RetirementDetails({ cid }: RetirementDetailsProps) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <Image
-              alt="NFT Image"
-              className="w-full h-96 object-cover rounded-lg"
-              height={800}
-              src="/images/placeholder.svg"
-              style={{
-                aspectRatio: "800/800",
-                objectFit: "cover",
-              }}
-              width={800}
-            />
+            {loading ? (
+              <div className="w-full animate-shimmer h-48 flex items-center justify-center">
+                <Spinner text="Retrieving Image..." />
+              </div>
+            ) : (
+              <Image
+                alt="NFT Image"
+                src={imageUrl}
+                width={700}
+                height={700}
+                className="rounded-lg"
+              />
+            )}
             <div className="mt-4">
               <h3 className="text-xl font-semibold mb-4">Share Post Preview</h3>
               <div className="bg-gray-100 dark:bg-card rounded-lg p-4">
@@ -98,7 +146,7 @@ export default function RetirementDetails({ cid }: RetirementDetailsProps) {
                   alt="NFT Image"
                   className="w-full h-48 object-cover rounded-lg mt-4"
                   height={400}
-                  src="/placeholder.svg"
+                  src="/images/araucaria-placeholder.jpg"
                   style={{
                     aspectRatio: "400/400",
                     objectFit: "cover",
@@ -116,13 +164,15 @@ export default function RetirementDetails({ cid }: RetirementDetailsProps) {
                   <p className="text-gray-600 dark:text-gray-400 mb-2">
                     Minted on:
                   </p>
-                  <p className="font-semibold">2023-05-01</p>
+                  <p className="font-semibold">
+                    {new Date(retirement.timestamp * 1000).toLocaleDateString()}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-600 dark:text-gray-400 mb-2">
                     Carbon Credits:
                   </p>
-                  <p className="font-semibold">100</p>
+                  <p className="font-semibold">{retirement.count}</p>
                 </div>
                 <div>
                   <p className="text-gray-600 dark:text-gray-400 mb-2">
@@ -147,19 +197,13 @@ export default function RetirementDetails({ cid }: RetirementDetailsProps) {
                   <p className="text-gray-600 dark:text-gray-400 mb-2">
                     CO2 Emissions Offset:
                   </p>
-                  <p className="font-semibold">20 tonnes</p>
+                  <p className="font-semibold">{retirement.count}</p>
                 </div>
                 <div>
                   <p className="text-gray-600 dark:text-gray-400 mb-2">
                     Trees Planted:
                   </p>
                   <p className="font-semibold">500</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 mb-2">
-                    Area Reforested:
-                  </p>
-                  <p className="font-semibold">5 hectares</p>
                 </div>
               </div>
             </div>
@@ -189,7 +233,7 @@ export default function RetirementDetails({ cid }: RetirementDetailsProps) {
       </div>
     </section>
   );
-}
+};
 
 function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
