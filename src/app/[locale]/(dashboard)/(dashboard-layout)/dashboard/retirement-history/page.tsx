@@ -27,6 +27,7 @@ export default function Retirements() {
       console.log("Retirements data:", retirements);
     }
   }, [retirements]);
+  
   return (
     <>
       <div className="relative">

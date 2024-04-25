@@ -44,7 +44,7 @@ export default function DashboardLayout({
 
   return jwtToken ? (
     <>
-      <div className="flex h-screen bg-gray-50 dark:bg-background border border-gray-100 dark:border-secondary z-50">
+      <div className="flex h-screen bg-muted dark:bg-background border border-gray-100 dark:border-secondary z-50">
         <Suspense fallback={<SideMenuSkeleton />}>
           <SideMenu />
         </Suspense>

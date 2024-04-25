@@ -25,6 +25,8 @@ import SunAnimationDark from "@/lib/foresta-dark/wired-gradient-804-sun.json";
 import MoonAnimationDark from "@/lib/foresta-dark/wired-gradient-1821-night-sky-moon-stars.json";
 import PortfolioAnimationDark from '@/lib/foresta-dark/wired-gradient-1023-portfolio.json';
 import PortfolioAnimationLight from '@/lib/foresta-icons/wired-outline-1023-portfolio.json';
+import BonsaiAnimationLight from '@/lib/foresta-icons/wired-outline-1851-bonsai.json';
+import BonsaiAnimationDark from '@/lib/foresta-dark/wired-gradient-1851-bonsai.json';
 
 
 export default function SideMenu() {
@@ -41,6 +43,7 @@ export default function SideMenu() {
   const Sun = theme === "dark" ? SunAnimationDark : SunAnimationLight;
   const Moon = theme === "dark" ? MoonAnimationDark : MoonAnimationLight;
   const Retire = theme === "dark" ? PortfolioAnimationDark : PortfolioAnimationLight;
+  const Bonsai = theme === "dark" ? BonsaiAnimationDark : BonsaiAnimationLight;
 
   
   const locale = useLocale();
@@ -68,6 +71,11 @@ export default function SideMenu() {
     JSON.stringify(Moon)
   ).toString("base64")}`;
 
+  const bonsaiIconDataUri = `data:application/json;base64,${Buffer.from(
+    JSON.stringify(Bonsai)
+  ).toString("base64")}`;
+
+  
   return (
     <div className="flex h-screen w-16 flex-col justify-between border-e bg-white dark:bg-background border border-gray-100 dark:border-secondary">
       <div>
@@ -126,6 +134,36 @@ export default function SideMenu() {
                 </TooltipProvider>
               </Link>
             </li>
+            <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
+              <Link
+                href={`/${locale}/dashboard/data-lake`}
+                passHref
+                className="flex items-center justify-center h-full"
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="px-2">
+                        <div className="py-4">
+                          <LordIcon
+                            src={bonsaiIconDataUri}
+                            trigger="hover"
+                            colors={{ primary: "#16A249" }}
+                            size={36}
+                          />{" "}
+                          <TooltipContent>
+                            <span className="font-clash">
+                              Data Lake
+                            </span>
+                          </TooltipContent>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </li>
+
             <li className="dark:hover:bg-secondary/50 hover:bg-secondary">
               <Link
                 href={`/${locale}/dashboard/project-management`}
