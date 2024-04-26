@@ -26,6 +26,7 @@ import {
   CircuitBoardIcon,
   Laptop,
 } from "lucide-react";
+import { useLocale } from "next-intl";
 
 import {
   SectionWrapper,
@@ -88,6 +89,7 @@ function FeatureCardDescription({ children }: FeatureCardBodyProps) {
 
 function DocumentsFeature({ className }: FeatureClassProps) {
   const dots = new Array(9);
+  const locale = useLocale();
 
   return (
     <>
@@ -165,7 +167,12 @@ function DocumentsFeature({ className }: FeatureClassProps) {
           </FeatureCardBody>
         </CardContent>
         <CardFooter className="flex justify-center gap-4 p-4">
-          <Link href={navItems[0]?.children?.[0]?.href ?? "#"} passHref>
+          <Link
+            href={`/${locale}/dashboard/data-lake${
+              navItems[0]?.children?.[0]?.href ?? "#"
+            }`}
+            passHref
+          >
             <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
               Upload Dataset
             </Button>
@@ -178,6 +185,7 @@ function DocumentsFeature({ className }: FeatureClassProps) {
 
 function ResponsesFeature({ className }: FeatureClassProps) {
   const dots = new Array(3);
+  const locale = useLocale();
 
   return (
     <>
@@ -197,7 +205,7 @@ function ResponsesFeature({ className }: FeatureClassProps) {
         <CardContent className="grid gap-2 px-8 py-3">
           <FeatureCardThumbnail>
             <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-gray-900/10 dark:border-white/10 bg-grey-900/5 dark:bg-white/5 shadow">
-            <Boxes className="relative h-8 w-8 fill-white/10 stroke-[1] text-gray-900 dark:text-white" />
+              <Boxes className="relative h-8 w-8 fill-white/10 stroke-[1] text-gray-900 dark:text-white" />
             </div>
             <div className="w-9 overflow-hidden">
               <div className="flex w-max animate-marquee justify-end [animation-direction:reverse] [animation-duration:2s]">
@@ -258,7 +266,12 @@ function ResponsesFeature({ className }: FeatureClassProps) {
           </FeatureCardBody>
         </CardContent>
         <CardFooter className="flex justify-center gap-4 p-4">
-          <Link href={navItems[2]?.children?.[1]?.href ?? "#"} passHref>
+          <Link
+            href={`/${locale}/dashboard/data-lake${
+              navItems[2]?.children?.[1]?.href ?? "#"
+            }`}
+            passHref
+          >
             <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
               Connect Network
             </Button>
@@ -271,6 +284,7 @@ function ResponsesFeature({ className }: FeatureClassProps) {
 
 function ReferencesFeature({ className }: FeatureClassProps) {
   const dots = new Array(3);
+  const locale = useLocale();
 
   return (
     <FeatureCard className={className}>
@@ -349,7 +363,12 @@ function ReferencesFeature({ className }: FeatureClassProps) {
         </FeatureCardBody>
       </CardContent>
       <CardFooter className="flex justify-center gap-4 p-4">
-        <Link href={navItems[0]?.children?.[0]?.href ?? "#"} passHref>
+        <Link
+          href={`/${locale}/dashboard/data-lake${
+            navItems[0]?.children?.[0]?.href ?? "#"
+          }`}
+          passHref
+        >
           <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
             Upload AI/ML Algorithm
           </Button>
@@ -361,7 +380,7 @@ function ReferencesFeature({ className }: FeatureClassProps) {
 
 function NetworkFeature({ className }: FeatureClassProps) {
   const dots = new Array(3);
-
+  const locale = useLocale();
   return (
     <FeatureCard className={className}>
       <CardHeader className="flex flex-row items-center gap-4 bg-gray-100 dark:bg-gray-700">
@@ -442,7 +461,10 @@ function NetworkFeature({ className }: FeatureClassProps) {
       </CardContent>
 
       <CardFooter className="flex justify-center gap-4 p-4">
-        <Link href={navItems[3]?.href ?? "#"} passHref>
+        <Link
+          href={`/${locale}/dashboard/data-lake${navItems[3]?.href ?? "#"}`}
+          passHref
+        >
           <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
             Connect Now
           </Button>

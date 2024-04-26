@@ -39,7 +39,7 @@ export const navItems = [
       {
         title: "NFT Access Management",
         href: "/nft-access",
-        icon: <BrainCircuit size={20} />,
+        icon: <BrainCircuit size={32} />,
       },
     ],
   },
