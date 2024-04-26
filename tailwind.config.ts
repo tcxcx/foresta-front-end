@@ -1,4 +1,7 @@
 import type { Config } from "tailwindcss";
+const plugin = require("tailwindcss/plugin");
+const flattenColorPalette = require("tailwindcss/lib/util/flattenColorPalette");
+const svgToDataUri = require("mini-svg-data-uri");
 
 const config = {
   darkMode: ["class"],
@@ -57,13 +60,18 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+
+      opacity: {
+        2.5: "0.025",
+        15: "0.15",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       zIndex: {
-        '100': '100',
+        "100": "100",
       },
       keyframes: {
         "accordion-down": {
@@ -86,23 +94,61 @@ const config = {
         },
         shimmer: {
           from: {
-            "backgroundPosition": "0 0"
+            backgroundPosition: "0 0",
           },
           to: {
-            "backgroundPosition": "-200% 0"
-          }
-        }
+            backgroundPosition: "-200% 0",
+          },
+        },
+        marquee: {
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "spotlight": "spotlight 2s ease .75s 1 forwards",
-        "shimmer": "shimmer 2s linear infinite"
-
+        spotlight: "spotlight 2s ease .75s 1 forwards",
+        shimmer: "shimmer 2s linear infinite",
+        marquee: "marquee 30s linear infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(function ({
+      matchUtilities,
+      theme,
+    }: {
+      matchUtilities: any;
+      theme: any;
+    }) {
+      matchUtilities(
+        {
+          "bg-grid": (value: any) => ({
+            backgroundImage: `url("${svgToDataUri(
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" stroke="${value}" fill="none"><path d="M64 0H0V64"/></svg>`
+            )}")`,
+          }),
+        },
+        {
+          values: flattenColorPalette(theme("backgroundColor")),
+          type: ["color"],
+        }
+      );
+
+      matchUtilities(
+        {
+          "bg-grid": (value: any) => ({
+            backgroundSize: value,
+          }),
+        },
+        {
+          values: theme("spacing"),
+          type: ["number", "length", "any"],
+        }
+      );
+    }),
+  ],
 } satisfies Config;
 
 export default config;

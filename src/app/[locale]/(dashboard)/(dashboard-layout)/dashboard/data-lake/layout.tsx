@@ -27,7 +27,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 
-const navItems = [
+export const navItems = [
   {
     title: "Data Management",
     children: [
@@ -44,7 +44,7 @@ const navItems = [
     ],
   },
   {
-    title: "Projects",
+    title: "DeSci Projects",
     children: [
       {
         title: "Project Requests",
@@ -96,7 +96,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-muted dark:bg-background">
-      <header className="relative z-1 border-b border-gray-100 dark:border-secondary dark:bg-background">
+      <header className="relative border-b border-gray-100 dark:border-secondary dark:bg-background">
         <div className="flex items-center my-0.5 justify-center h-full p-4">
           <div className="hidden font-bold sm:flex flex-row items-center gap-5 text-sm lg:gap-6 text-gray-600 dark:text-gray-400">
             {navItems.map((item, index) => (

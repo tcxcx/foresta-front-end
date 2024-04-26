@@ -22,7 +22,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="relative p-0 z-1 bottom-1 border-b border-t border-gray-100 dark:border-secondary bg-white dark:bg-background">
+      <header className="relative p-0 z-10 bottom-1 border-b border-t border-gray-100 dark:border-secondary bg-white dark:bg-background">
         <nav className="flex items-center px-2 justify-between">
           <div className="text-center">
             <Link href="/" passHref>
