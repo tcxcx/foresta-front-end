@@ -17,6 +17,7 @@ import {
   Rocket,
   Glasses,
   HandCoins,
+  Newspaper
 } from "lucide-react";
 import {
   NavigationMenu,
@@ -35,6 +36,11 @@ export const navItems = [
         title: "Datasets & Algorithms",
         href: "/datasets-algorithms",
         icon: <Database size={32} />,
+      },
+      {
+        title: "Purchased Data",
+        href: "/data-nft-gallery",
+        icon: <Newspaper size={32} />,
       },
       {
         title: "NFT Access Management",

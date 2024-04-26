@@ -148,7 +148,7 @@ export default function DeComputeHub() {
           <Card>
             <CardHeader>
               <CardTitle>Climate Science Subnet</CardTitle>
-              <CardDescription>Provide compute power and contribute to climate research and earn rewards.</CardDescription>
+              <CardDescription>Provide compute power and contribute to climate research while earning rewards.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between mb-4">
