@@ -52,7 +52,7 @@ interface FeatureCardBodyProps {
 interface FeatureClassProps {
   className?: string;
 }
-function FeatureCard({ children, className }: FeatureCardProps) {
+export function FeatureCard({ children, className }: FeatureCardProps) {
   return (
     <SpotlightCard className={clsx("p-0", className)}>{children}</SpotlightCard>
   );
