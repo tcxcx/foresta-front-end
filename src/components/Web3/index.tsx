@@ -77,8 +77,8 @@ export const Wallet: React.FC<WalletProps> = ({ onGoBack }) => {
           size={75}
           offsetX={0}
           offsetY={0}
-          className="absolute -top-1/2 right-0 h-[200%] w-1/3 skew-y-12 stroke-white/10 stroke-[2] [mask-image:linear-gradient(-85deg,black,transparent)]"
-        >
+          className="absolute -top-1/4 right-1 h-[200%] w-2/3 skew-y-12 stroke-white/10 stroke-[2] [mask-image:linear-gradient(-85deg,black,transparent)]"
+          >
           {gridBlocks.map(([row, column], index) => (
             <GridPattern.Block
               key={index}
@@ -88,16 +88,18 @@ export const Wallet: React.FC<WalletProps> = ({ onGoBack }) => {
             />
           ))}
         </GridPattern>
+        <div className="mb-4">
         <Button
           onClick={onGoBack}
           className={cn(
             buttonVariants({ variant: "ghost" }),
-            "absolute mt-4 z-10 uppercase"
+            "absolute z-10 uppercase bg-transparent dark:text-white text-black"
           )}
         >
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          Go Back
+          <ArrowLeft className="h-3 w-3 mr-2" />
+          Back
         </Button>
+        </div>
         {account && jwtToken ? (
           <Profile
             account={account}
@@ -113,6 +115,7 @@ export const Wallet: React.FC<WalletProps> = ({ onGoBack }) => {
         ) : (
           <ConnectWallet onAccounts={setAccounts} />
         )}
+        
       </div>
     </div>
   );

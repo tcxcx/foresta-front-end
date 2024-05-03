@@ -12,9 +12,7 @@ export default function AuthButton() {
   const locale = useLocale();
 
   const handleButtonClick = () => {
-    // Define the route based on the authentication status
     const route = account ? `/${locale}/dashboard/explore` : `/${locale}/log-in`;
-    // Navigate to the appropriate route
     router.push(route);
   };
 
