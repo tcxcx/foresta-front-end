@@ -7,10 +7,20 @@ import { SignIn } from "./SignIn";
 import { Profile } from "./AdminProfile";
 import { GridPattern } from "@/components/ui/GridPattern";
 import { useAuth } from "@/hooks/context/account";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
-export const Wallet = () => {
-  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[] | undefined>();
-  const { account, jwtToken, login, logout } = useAuth()
+interface WalletProps {
+  onGoBack: () => void;
+}
+
+export const Wallet: React.FC<WalletProps> = ({ onGoBack }) => {
+  const [accounts, setAccounts] = useState<
+    InjectedAccountWithMeta[] | undefined
+  >();
+  const { account, jwtToken, login, logout } = useAuth();
 
   const gridBlocks = [
     [2, 5],
@@ -18,7 +28,10 @@ export const Wallet = () => {
     [4, 3],
   ];
 
-  const handleSignedIn = (selectedAccount: InjectedAccountWithMeta, jwt: string) => {
+  const handleSignedIn = (
+    selectedAccount: InjectedAccountWithMeta,
+    jwt: string
+  ) => {
     login(selectedAccount, jwt);
   };
 
@@ -32,7 +45,9 @@ export const Wallet = () => {
     const { web3AccountsSubscribe } = await import("@polkadot/extension-dapp");
 
     web3AccountsSubscribe((newAccounts) => {
-      const newAddresses = newAccounts.map((account) => account.address).join("");
+      const newAddresses = newAccounts
+        .map((account) => account.address)
+        .join("");
       const oldAddresses = accounts.map((account) => account.address).join("");
       if (newAddresses !== oldAddresses) {
         setAccounts(newAccounts);
@@ -46,7 +61,11 @@ export const Wallet = () => {
 
   // Automatically sign out disconnected extensions
   useEffect(() => {
-    if (account?.address && accounts && !accounts.some((acc) => acc.address === account.address)) {
+    if (
+      account?.address &&
+      accounts &&
+      !accounts.some((acc) => acc.address === account.address)
+    ) {
       handleSignOut();
     }
   }, [accounts, account, handleSignOut]);
@@ -58,7 +77,8 @@ export const Wallet = () => {
           size={75}
           offsetX={0}
           offsetY={0}
-          className="absolute -top-1/2 right-0 h-[200%] w-1/3 skew-y-12 stroke-white/10 stroke-[2] [mask-image:linear-gradient(-85deg,black,transparent)]">
+          className="absolute -top-1/2 right-0 h-[200%] w-1/3 skew-y-12 stroke-white/10 stroke-[2] [mask-image:linear-gradient(-85deg,black,transparent)]"
+        >
           {gridBlocks.map(([row, column], index) => (
             <GridPattern.Block
               key={index}
@@ -68,6 +88,16 @@ export const Wallet = () => {
             />
           ))}
         </GridPattern>
+        <Button
+          onClick={onGoBack}
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "absolute mt-4 z-10 uppercase"
+          )}
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          Go Back
+        </Button>
         {account && jwtToken ? (
           <Profile
             account={account}

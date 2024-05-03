@@ -11,10 +11,10 @@ import React, {
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 interface AuthContextType {
-  account: InjectedAccountWithMeta | null;
+  account: InjectedAccountWithMeta | { meta: { name: string }; address: string } | null;
   jwtToken: string | null;
   role: "user" | "admin" | null;
-  login: (account: InjectedAccountWithMeta, jwtToken: string) => void;
+  login: (account: InjectedAccountWithMeta | { meta: { name: string }; address: string }, jwtToken: string) => void;
   logout: () => void;
 }
 
@@ -26,38 +26,35 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [account, setAccount] = useState<InjectedAccountWithMeta | null>(null);
+  const [account, setAccount] = useState<InjectedAccountWithMeta | { meta: { name: string }; address: string } | null>(null);
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [role, setRole] = useState<"user" | "admin" | null>(null);
 
-
   const login = useCallback(
-    (account: InjectedAccountWithMeta, jwtToken: string) => {
+    (account: InjectedAccountWithMeta | { meta: { name: string }; address: string }, jwtToken: string) => {
       setAccount(account);
       setJwtToken(jwtToken);
-      const isAdmin = account.address === adminAddress; 
+      const isAdmin = account.address === adminAddress;
       setRole(isAdmin ? "admin" : "user");
     },
     []
   );
+
 
   const logout = useCallback(() => {
     setAccount(null);
     setJwtToken(null);
   }, []);
 
-   // This effect will run once on component mount to check if the user is already logged in by checking the existence of a session cookie
-   useEffect(() => {
+  useEffect(() => {
     const checkSession = async () => {
       try {
         const response = await fetch('/api/session', {
-          credentials: 'include' // Needed to include HTTP-only cookies in the request
+          credentials: 'include'
         });
         if (response.ok) {
           const { account, role } = await response.json();
-          // Assume the response includes the account and role
-          // Adjust these lines based on your actual API response structure
-          setAccount(account);
+          setAccount(account as InjectedAccountWithMeta | { meta: { name: string }; address: string });
           setRole(role);
         } else {
           logout();
@@ -68,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
     checkSession();
-  }, [logout]); 
+  }, [logout]);
 
 
   return (

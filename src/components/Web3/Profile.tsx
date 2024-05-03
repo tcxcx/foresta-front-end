@@ -13,7 +13,7 @@ import { useLocale } from "next-intl";
 import { useSignOut } from "@/hooks/JWT/useSignOut";
 
 type Props = {
-  account: InjectedAccountWithMeta;
+  account: InjectedAccountWithMeta | { meta: { name: string }; address: string };
   jwtToken: string;
   onSignOut: () => void;
 };
