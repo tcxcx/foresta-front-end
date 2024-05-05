@@ -25,6 +25,9 @@ import {
   Satellite,
   CircuitBoardIcon,
   Laptop,
+  BrainCircuit,
+  Newspaper,
+  Cpu
 } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -37,7 +40,6 @@ import {
   SectionDescription,
 } from "@/components/ui/section";
 import { Link } from "next-view-transitions";
-import { navItems } from "@/app/[locale]/(dashboard)/(dashboard-layout)/dashboard/data-lake/layout";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 
@@ -168,13 +170,11 @@ function DocumentsFeature({ className }: FeatureClassProps) {
         </CardContent>
         <CardFooter className="flex justify-center gap-4 p-4">
           <Link
-            href={`/${locale}/dashboard/data-lake${
-              navItems[0]?.children?.[0]?.href ?? "#"
-            }`}
+            href={`/${locale}/dashboard/data-lake/datasets-algorithms`}
             passHref
           >
             <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
-              Upload Dataset
+              <DatabaseIcon className="h-6 w-6 inline" /> Datasets & Algorithms
             </Button>
           </Link>
         </CardFooter>
@@ -267,12 +267,11 @@ function ResponsesFeature({ className }: FeatureClassProps) {
         </CardContent>
         <CardFooter className="flex justify-center gap-4 p-4">
           <Link
-            href={`/${locale}/dashboard/data-lake${
-              navItems[2]?.children?.[1]?.href ?? "#"
-            }`}
+            href={`/${locale}/dashboard/data-lake/data-nft-gallery`}
             passHref
           >
             <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
+              <BrainCircuit size={32} />
               Connect Network
             </Button>
           </Link>
@@ -363,13 +362,9 @@ function ReferencesFeature({ className }: FeatureClassProps) {
         </FeatureCardBody>
       </CardContent>
       <CardFooter className="flex justify-center gap-4 p-4">
-        <Link
-          href={`/${locale}/dashboard/data-lake${
-            navItems[0]?.children?.[0]?.href ?? "#"
-          }`}
-          passHref
-        >
+        <Link href={`/${locale}/dashboard/data-lake/nft-access`} passHref>
           <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
+            <Newspaper size={32} />
             Upload AI/ML Algorithm
           </Button>
         </Link>
@@ -462,11 +457,12 @@ function NetworkFeature({ className }: FeatureClassProps) {
 
       <CardFooter className="flex justify-center gap-4 p-4">
         <Link
-          href={`/${locale}/dashboard/data-lake${navItems[3]?.href ?? "#"}`}
+          href={`/${locale}/dashboard/data-lake/decentralized-compute`}
           passHref
         >
           <Button className="bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-md shadow-md">
-            Connect Now
+          <Cpu size={32} />
+                      Connect Now
           </Button>
         </Link>
       </CardFooter>

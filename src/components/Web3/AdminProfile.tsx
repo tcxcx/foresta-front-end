@@ -13,12 +13,13 @@ import { useLocale } from "next-intl";
 import { useSignOut } from "@/hooks/JWT/useSignOut";
 
 type Props = {
-  account: InjectedAccountWithMeta;
+  account: InjectedAccountWithMeta | null;
   jwtToken: string;
   onSignOut: () => void;
 };
 
 export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
+  
   const router = useRouter();
   const locale = useLocale();
   const { jwtToken } = useAuth(); 
@@ -40,14 +41,23 @@ export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
     }
   };
 
+  if (!account) {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="p-4 bg-basement-tone-purple rounded-md">
+          <p className="text-white">No account available</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between p-4 bg-basement-tone-purple rounded-md">
         <div className="flex items-center gap-4 z-10">
-          <Identicon value={account.address} size={32} theme="polkadot" />
+          <Identicon value={account?.address} size={32} theme="polkadot" />
           <div>
-            <div className="text-white font-bold">{account.meta.name}</div>
+            <div className="text-white font-bold">{account?.meta.name}</div>
             <div className="text-stone-400 text-xs">
               {truncateMiddle(account.address, 5, 5, "...")}
             </div>

@@ -28,7 +28,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 
-export const navItems = [
+const navItems = [
   {
     title: "Data Management",
     children: [

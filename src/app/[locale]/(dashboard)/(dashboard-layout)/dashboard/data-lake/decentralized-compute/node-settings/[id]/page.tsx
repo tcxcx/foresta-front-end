@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -409,7 +408,7 @@ function LightbulbOffIcon(props: React.SVGProps<SVGSVGElement>) {
 function LineChart(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg {...props}>
-      <ResponsiveLine
+      {/* <ResponsiveLine
         data={[
           {
             id: "Desktop",
@@ -474,7 +473,7 @@ function LineChart(props: React.SVGProps<SVGSVGElement>) {
           },
         }}
         role="application"
-      />
+      /> */}
     </svg>
   );
 }
