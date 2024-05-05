@@ -36,12 +36,8 @@ declare module "@react-three/rapier" {
 }
 
 extend({ MeshLineGeometry, MeshLineMaterial });
-useGLTF.preload(
-  "https://assets.vercel.com/image/upload/contentful/image/e5382hct74si/5huRVDzcoDwnbgrKUo1Lzs/53b6dd7d6b4ffcdbd338fa60265949e1/tag.glb"
-);
-useTexture.preload(
-  "https://assets.vercel.com/image/upload/contentful/image/e5382hct74si/SOT1hmCesOHxEYxL7vkoZ/c57b29c85912047c414311723320c16b/band.jpg"
-);
+useGLTF.preload("/house-of-cards-pass-foresta.glb");
+useTexture.preload("/band_image.png");
 
 export default function PassHolder() {
   const { debug } = useControls({ debug: false });
@@ -109,12 +105,8 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     angularDamping: 2,
     linearDamping: 2,
   };
-  const { nodes, materials } = useGLTF(
-    "https://assets.vercel.com/image/upload/contentful/image/e5382hct74si/5huRVDzcoDwnbgrKUo1Lzs/53b6dd7d6b4ffcdbd338fa60265949e1/tag.glb"
-  );
-  const texture = useTexture(
-    "https://assets.vercel.com/image/upload/contentful/image/e5382hct74si/SOT1hmCesOHxEYxL7vkoZ/c57b29c85912047c414311723320c16b/band.jpg"
-  );
+  const { nodes, materials } = useGLTF("/house-of-cards-pass-foresta.glb");
+  const texture = useTexture("/band_image.png");
   const { width, height } = useThree((state) => state.size);
   const [curve] = useState(
     () =>
@@ -128,9 +120,21 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const [dragged, drag] = useState<THREE.Vector3 | false>(false);
   const [hovered, hover] = useState(false);
 
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(fixed, j1, [
+    [0, 0, 0],
+    [0, 0, 0],
+    1,
+  ]);
+  useRopeJoint(j1, j2, [
+    [0, 0, 0],
+    [0, 0, 0],
+    1,
+  ]);
+  useRopeJoint(j2, j3, [
+    [0, 0, 0],
+    [0, 0, 0],
+    1,
+  ]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
     [0, 1.45, 0],
@@ -142,8 +146,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       return () => void (document.body.style.cursor = "auto");
     }
   }, [hovered, dragged]);
-
-  const lerpedMap = useRef<Map<RapierRigidBody, THREE.Vector3>>(new Map());
 
   useFrame((state, delta) => {
     if (dragged && card.current) {
@@ -159,36 +161,18 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         z: vec.z - dragged.z,
       });
     }
-    if (
-      fixed.current &&
-      j1.current &&
-      j2.current &&
-      j3.current &&
-      card.current
-    ) {
+    if (fixed.current && j1.current && j2.current && j3.current && card.current) {
       // Fix most of the jitter when over pulling the card
       [j1.current, j2.current].forEach((ref) => {
-        if (!lerpedMap.current.has(ref)) {
-          lerpedMap.current.set(
-            ref,
-            new THREE.Vector3().copy(ref.translation())
-          );
-        }
-        const lerped = lerpedMap.current.get(ref)!;
-        const clampedDistance = Math.max(
-          0.1,
-          Math.min(1, lerped.distanceTo(ref.translation()))
-        );
-        lerped.lerp(
-          ref.translation(),
-          delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
-        );
+        if (!ref.lerped) ref.lerped = new THREE.Vector3().copy(ref.translation());
+        const clampedDistance = Math.max(0.1, Math.min(1, ref.lerped.distanceTo(ref.translation())));
+        ref.lerped.lerp(ref.translation(), delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)));
       });
 
       // Calculate catmul curve
       curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(lerpedMap.current.get(j2.current)!);
-      curve.points[2].copy(lerpedMap.current.get(j1.current)!);
+      curve.points[1].copy(j2.current.lerped);
+      curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
 
       if (band.current) {
@@ -256,7 +240,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           >
             <mesh geometry={(nodes.card as THREE.Mesh).geometry}>
               <meshPhysicalMaterial
-                map={(materials.base as THREE.MeshStandardMaterial).map}
+                map={(materials.Base as THREE.MeshStandardMaterial).map}
                 map-anisotropy={16}
                 clearcoat={1}
                 clearcoatRoughness={0.15}

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useAuth } from "@/hooks/context/account";
-import PassHolder from "../r3f/BandCardAnimation";
+import PassHolder from "../r3f/BandCardAnimationJs";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { gsap } from "gsap";
 
