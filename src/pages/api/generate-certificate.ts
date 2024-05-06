@@ -1,5 +1,5 @@
 import { uploadFileToIPFS, getIPNSLink, fetchDownloadLink } from "./apillon-storage";
-import { generateCertificateImage } from "@/lib/generateCertificate";
+import { generateCertificateImage } from "@/pages/api/generateCertificate";
 import useRetirementStore from "@/hooks/context/retirementStore";
 
 export async function generateCertificate(metadata: any): Promise<{ cid: string; ipnsLink: string }> {

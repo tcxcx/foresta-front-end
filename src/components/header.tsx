@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { AlignJustify } from "lucide-react";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 export default function Header() {
   const t = useTranslations("Navigation");
@@ -49,10 +50,10 @@ export default function Header() {
               <Image
                 src="/images/logo-icon-2.png"
                 alt="Foresta Logo"
-                width={40} // Smaller logo size for mobile
-                height={40} // Matching height to width
+                width={40} 
+                height={40}
                 objectFit="contain"
-                className="block w-10 h-10 lg:w-12 lg:h-12" // Larger on larger screens
+                className="block w-10 h-10 lg:w-12 lg:h-12"
               />
               <span className="hidden lg:block font-clash text-3xl lg:text-5xl uppercase hover:text-green-500 cursor-pointer dark:text-white">
                 Foresta
@@ -75,7 +76,14 @@ export default function Header() {
           <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-green-500 to-transparent h-px w-3/4" />
           <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent h-[5px] w-1/4 blur-sm" />
           <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
-
+          <SparklesCore
+            background="transparent"
+            minSize={0.4}
+            maxSize={0.8}
+            particleDensity={700}
+            className="w-full h-full"
+            particleColor="#FFFFFF"
+          />
           <div className="absolute inset-0 w-full h-full bg-background [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
         </div>
       </div>

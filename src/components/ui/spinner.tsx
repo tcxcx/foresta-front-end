@@ -23,7 +23,7 @@ const Spinner: React.FC<SpinnerProps> = ({ text, icon, showHummingbird = false }
         </div>
       )}
       <div className="relative h-24 w-24">
-        {(icon || showHummingbird) && (
+        {/* {(icon || showHummingbird) && (
           <div className="absolute inset-0 flex items-center justify-center z-40">
             <LordIcon
               src={icon ? `data:application/json;base64,${Buffer.from(JSON.stringify(icon)).toString("base64")}` : hummingbirdDataUri}
@@ -32,7 +32,7 @@ const Spinner: React.FC<SpinnerProps> = ({ text, icon, showHummingbird = false }
               size={80}
             />
           </div>
-        )}
+        )} */}
         <div className="absolute inset-0 animate-spin rounded-full border-t-4 border-b-4 border-primary"></div>
       </div>
     </div>

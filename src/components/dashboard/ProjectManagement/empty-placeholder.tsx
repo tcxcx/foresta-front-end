@@ -31,7 +31,7 @@ export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({ type
             size={100}
           />
         )}
-        <h3 className="mt-4 text-lg font-semibold">{title}</h3>
+        <p className="mt-4 text-lg font-semibold">{title}</p>
         <p className="mb-4 mt-2 text-sm text-muted-foreground">{description}</p>
         {type === PlaceholderType.Tokens && (
           <MintProjectDialog

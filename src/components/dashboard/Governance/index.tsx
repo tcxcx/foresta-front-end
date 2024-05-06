@@ -237,7 +237,7 @@ export default function ProposalOverview({
                 {proposal.status === "Deciding" && votePreference === null && (
                   <>
                     <button
-                      className="flex items-center p-2 gap-2 hover:bg-green-100"
+                      className="flex items-center p-2 gap-2 hover:bg-green-100 dark:hover:bg-green-900"
                       onClick={() => handleVote(true)}
                     >
                       <Smile className="fill-current text-green-500 w-6 h-6" />
@@ -246,7 +246,7 @@ export default function ProposalOverview({
                       </span>
                     </button>
                     <button
-                      className="flex items-center p-2 gap-2 hover:bg-red-100"
+                      className="flex items-center p-2 gap-2 hover:bg-red-100 dark:hover:bg-red-900"
                       onClick={() => handleVote(false)}
                     >
                       <Frown className="fill-current text-red-600 w-6 h-6" />
