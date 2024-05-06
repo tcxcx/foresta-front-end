@@ -28,7 +28,7 @@ export default function Navbar() {
             <Link href="/" passHref>
               <div className="flex items-center my-4">
                 <Image
-                  src="/images/logo-icon.png"
+                  src="/images/logo-icon-2.png"
                   alt="Foresta Logo"
                   width={30}
                   height={30}
@@ -47,7 +47,7 @@ export default function Navbar() {
           <div className="text-center invisible">
             <div className="flex items-center m-4">
               <Image
-                src="/images/logo-icon.png"
+                src="/images/logo-icon-2.png"
                 alt="Foresta Logo"
                 width={30}
                 height={30}

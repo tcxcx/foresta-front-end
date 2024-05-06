@@ -64,7 +64,7 @@ const LeftPanelImage = () => {
         <div className="absolute inset-0 bg-black/50 z-10 flex flex-col p-10">
           <div className="flex items-center mb-4">
             <Image
-              src="/images/logo-icon.png"
+              src="/images/logo-icon-2.png"
               alt="Foresta Logo"
               width={50}
               height={50}

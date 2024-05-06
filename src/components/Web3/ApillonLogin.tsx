@@ -120,7 +120,7 @@ export default function ApillonLogin({ onGoBack }: ApillonLoginProps) {
                 />
               ))}
             </GridPattern>
-        <div className="mb-4">
+            <div className="mb-4 py-4">
                 <button
                   onClick={onGoBack}
                   className={cn(

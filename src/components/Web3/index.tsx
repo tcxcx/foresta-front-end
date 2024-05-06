@@ -74,7 +74,7 @@ export const Wallet: React.FC<WalletProps> = ({ onGoBack }) => {
             />
           ))}
         </GridPattern>
-        <div className="mb-4">
+        <div className="mb-4 pt-10 lg:pt-2">
           <Button
             onClick={onGoBack}
             className={cn(

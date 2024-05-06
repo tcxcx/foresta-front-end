@@ -27,7 +27,7 @@ export default function AuthenticationPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
+    <main className="flex min-h-screen items-center justify-center lg:p-4">
       {selectedOption === "substrate" ? (
         <Wallet onGoBack={handleGoBack} />
       ) : selectedOption === "apillon" ? (

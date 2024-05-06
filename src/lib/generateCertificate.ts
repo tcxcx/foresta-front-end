@@ -50,7 +50,7 @@ export async function generateCertificateImage(metadata: CertificateMetadata) {
     400
   );
 
-  const logoPath = path.join(__dirname, "../images/logo-icon.webp");
+  const logoPath = path.join(__dirname, "../images/logo-icon-2.png");
   try {
     const logo = await loadImage(logoPath);
     context.drawImage(logo, (width - 100) / 2, 100, 100, 100);
