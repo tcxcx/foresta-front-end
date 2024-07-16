@@ -1,10 +1,6 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { Metadata } from "next";
-import SideMenu from "@/components/dashboard/SideMenu";
-import SideMenuSkeleton from "@/components/dashboard/Skeleton/SideMenuSkeleton";
-import Navbar from "@/components/dashboard/navbar";
 import { useAuth } from "@/hooks/context/account";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,16 +12,17 @@ import {
 import { ResizableSkeleton } from "@/components/dashboard/Skeleton/ResizableSkeleton";
 import { useKYCSubscription } from "@/hooks/web3/kycHooks/useKycSubscription";
 import { Terminal } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { SheetKyc1 } from "@/components/dashboard/kycLevel1";
-
+import { SheetKyc1 } from "@/components/dashboard/Marketplace/kycLevel1";
+import { useMarketplaceData } from "@/hooks/context/useMarketplaceData";
+import { MarketplaceWrapper } from "@/components/dashboard/Marketplace/MarketplaceWrapper";
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  marketplace: React.ReactNode;
+  marketplace: React.ReactElement;
   mapglobe: React.ReactNode;
   governance: React.ReactNode;
 }
+import { useLocale } from "next-intl";
 
 export default function DashboardLayout({
   children,
@@ -35,14 +32,25 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   const { account } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
   const accountId = account?.address || "";
-  const { kycStatus, error } = useKYCSubscription(accountId);
+  const { kycStatus } = useKYCSubscription(accountId);
+  const { liveCollectives, acceptedProjects, selectCollective } =
+    useMarketplaceData();
+  const marketplaceData = {
+    liveCollectives,
+    acceptedProjects,
+    selectCollective,
+  };
 
-  const hasAccess = kycStatus && (kycStatus.level === 'KYCLevel1' || kycStatus.level === 'KYCLevel2' || kycStatus.level === 'KYCLevel3');
-
-  // console.log("KYC Status: ", kycStatus);
-
-  // console.log("this is the accountId: ", accountId);
+  const hasAccess =
+    kycStatus &&
+    (kycStatus.level === "KYCLevel1" ||
+      kycStatus.level === "KYCLevel2" ||
+      kycStatus.level === "KYCLevel3");
+  const marketplaceComponent = React.cloneElement(marketplace, {
+    marketplaceData,
+  });
 
   return account ? (
     <>
@@ -71,7 +79,11 @@ export default function DashboardLayout({
           className="w-full h-full p-4"
         >
           <ResizablePanel defaultSize={250} className="flex-1 overflow-hidden">
-            {marketplace}
+            <MarketplaceWrapper
+              marketplaceData={marketplaceData}
+              locale={locale}
+            />
+            {/* Render the MarketplaceWrapper component */}
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={400} className="flex-1 overflow-hidden">

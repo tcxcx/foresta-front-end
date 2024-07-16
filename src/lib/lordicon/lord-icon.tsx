@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import lottie from 'lottie-web';
-import {defineElement} from 'lord-icon-element';
-import { useTheme } from "next-themes";
+import { defineElement } from 'lord-icon-element';
 
-defineElement(lottie.loadAnimation);
+if (typeof window !== 'undefined') {
+  defineElement(lottie.loadAnimation);
+}
 
 export type LordIconTrigger =
   | 'hover'
@@ -33,6 +34,10 @@ export const LordIcon = ({
   trigger,
   delay,
 }: LordIconProps) => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   return (
     <lord-icon
       colors={`primary:${colors?.primary},secondary:${colors?.secondary}`}

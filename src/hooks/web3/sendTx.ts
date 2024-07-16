@@ -3,6 +3,8 @@ import { APP_NAME } from "@/lib/constants";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { ApiPromise, SubmittableResult } from "@polkadot/api";
 import { web3FromAddress } from "@polkadot/extension-dapp";
+import { SubmittableExtrinsic } from "@polkadot/api/promise/types"
+import { ISubmittableResult } from "@polkadot/types/types"
 
 export async function getSigner(signerAddress: string) {
   const { web3Enable, web3FromAddress } = await import(
@@ -24,7 +26,6 @@ export function getDispatchError(dispatchError: any): string {
 
       message = `${error.section}.${error.name}`;
     } catch (error) {
-      // swallow
     }
   } else if (dispatchError.isToken) {
     message = `${dispatchError.type}.${dispatchError.asToken.type}`;
@@ -33,7 +34,7 @@ export function getDispatchError(dispatchError: any): string {
   return message;
 }
 
-interface SendTxParams {
+export interface SendTxParams {
   api: ApiPromise;
   tx: any;
   dispatch: Function;
@@ -41,7 +42,9 @@ interface SendTxParams {
   onFinalized: (blockHash: string | null) => void;
   onInBlock: (eventData?: any) => void;
   onSubmitted: (signerAddress: string) => void;
+  onSuccess?: (result: ISubmittableResult) => void
   onClose: () => void;
+  onError: (error: any) => void;
   signerAddress: string;
   section?: string;
   method?: string;
@@ -55,6 +58,8 @@ export async function sendTx({
   onInBlock,
   onSubmitted,
   onClose,
+  onSuccess,
+  onError,
   signerAddress,
   section: sectionName,
   method: methodName,
@@ -79,18 +84,12 @@ export async function sendTx({
         const { events, status } = result;
         console.log("Transaction status after send:", status.toHuman());
 
-        if (status.isInBlock || status.isFinalized) {
-          const blockHash = status.isInBlock ? status.asInBlock.toString() : status.asFinalized.toString();
+        if (status.isInBlock) {
+          const blockHash = status.asInBlock.toString();
           setLoading(false);
           toast.success(`Transaction included in block: ${blockHash}`);
-
-          console.log("Transaction events:", events.map(e => e.toHuman()));
+          console.log("Transaction events:", events.map((e) => e.toHuman()));
           console.log("Transaction Details after send:", tx.toHuman());
-
-          if (status.isFinalized) {
-            onFinalized(blockHash);
-            unsub();
-          }
 
           events.forEach(({ event: { section, method, data } }) => {
             if (section === sectionName && method === methodName) {
@@ -99,12 +98,21 @@ export async function sendTx({
             }
           });
         }
+
+        if (status.isFinalized) {
+          const blockHash = status.asFinalized.toString();
+          setLoading(false);
+          onFinalized(blockHash);
+          unsub();
+          onSuccess && onSuccess(result);
+        }
       }
     );
 
     onSubmitted(signerAddress);
   } catch (error: any) {
     console.error("Error during transaction signing and sending:", error);
+    onError(error);
     setLoading(false);
     toast.error(`Transaction failed: ${error.message || error.toString()}`);
   } finally {

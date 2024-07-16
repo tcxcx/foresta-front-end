@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useFormContext, UseFormReturn } from "react-hook-form";
-import { FormTextInput } from "./FormTextInput"; // Assuming this component exists
+import { FormTextInput } from "./FormTextInput";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Plus, Minus } from "lucide-react";
 import { z } from "zod";
@@ -14,11 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createProjectFormSchema } from "@/hooks/web3/schemas/carbon-credit-zod-validation-form";
-import { RegNameList } from "@/hooks/web3/carbonCreditHooks/createProjectTypes";
+import { RegNameList } from "@/lib/data/createProjectTypes";
 import {
-  SDGDetails,
   SdgDetails,
-} from "@/hooks/web3/carbonCreditHooks/createProjectTypes";
+} from "@/lib/data/createProjectTypes";
 
 interface StepProps {
   form: UseFormReturn<ProjectFormData>;

@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { v4 as uuid } from "uuid";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,13 +25,13 @@ import StepFinal from "./submit-project-steps/StepFinal";
 import { createProject } from "@/hooks/web3/sendTx-extrinsics";
 import { useAuth } from "@/hooks/context/account";
 import { Progress } from "@/components/ui/progress";
-import { projectType as projectTypeEnum } from "@/hooks/web3/carbonCreditHooks/createProjectTypes";
+import { transformProjectFormData } from "@/lib/data/transformProjectFormData";
 
 type ProjectFormData = z.infer<typeof createProjectFormSchema>;
 
 export default function SubmitProjectDialog() {
   const { account } = useAuth();
-  const currentUserAddress = account?.address || "";
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(createProjectFormSchema),
@@ -69,91 +68,27 @@ export default function SubmitProjectDialog() {
       case 4:
         return <StepFour form={form} setCurrentStep={setCurrentStep} />;
       case 5:
-        return <StepFinal isSuccess={submissionSuccess} />;
+        <StepFinal isSuccess={submissionSuccess} error={error} />;
       default:
         return null;
     }
   };
+
   const onSubmit = async (data: ProjectFormData) => {
-    const timestamp = Date.now();
-    const projectTypeKey = data.projectType as projectTypeEnum;
-
-    const sdgDetails = Array.isArray(data.sdgDetails)
-      ? data.sdgDetails.map((item) => ({
-          ...item,
-          references: Array.isArray(item.references) ? item.references : [],
-        }))
-      : [];
-
-    const safeConvertToStringArray = (
-      input: string | string[] | undefined
-    ): string[] => {
-      if (Array.isArray(input)) {
-        return input;
-      } else if (typeof input === "string") {
-        return input.split(",").map((s) => s.trim());
-      } else {
-        return [];
-      }
-    };
-
-    const images = safeConvertToStringArray(data.images);
-    const videos = safeConvertToStringArray(data.videos);
-    const documents = safeConvertToStringArray(data.documents);
-
-    let batchGroups: {
-      uuid: string;
-      assetId: number;
-      totalSupply: bigint;
-      minted: bigint;
-      retired: bigint;
-      batches: any[];
-    }[] = [];
-    if (Array.isArray(data.batchGroups)) {
-      batchGroups = data.batchGroups.map((group) => ({
-        ...group,
-        uuid: uuid(),
-        assetId: 0,
-        totalSupply: BigInt(group.totalSupply),
-        minted: group.minted ? BigInt(group.minted) : BigInt(0),
-        retired: group.retired ? BigInt(group.retired) : BigInt(0),
-        batches: Array.isArray(group.batches)
-          ? group.batches.map((batch) => ({
-              ...batch,
-              totalSupply: BigInt(batch.totalSupply),
-              minted: batch.minted ? BigInt(batch.minted) : BigInt(0),
-              retired: batch.retired ? BigInt(batch.retired) : BigInt(0),
-            }))
-          : [],
-      }));
-    }
-
-    const updatedData = {
-      ...data,
-      projectType: projectTypeKey,
-      created: timestamp,
-      updated: timestamp,
-      images,
-      videos,
-      documents,
-      sdgDetails,
-      batchGroups,
-      royalties: Array.isArray(data.royalties) ? data.royalties.map(royalty => ({
-        recipient: royalty.recipient.trim(),
-        percentage: parseFloat(royalty.percentage.toString()),
-      })) : [],
-      
-    };
-    
-    console.log("Refactored form data for submission:", updatedData);
-
+    const transformedData = transformProjectFormData(data);
     try {
-      await createProject(currentUserAddress, updatedData);
+      await createProject(account?.address || "", transformedData);
       console.log("Project submitted successfully");
       setSubmissionSuccess(true);
+      setError(null);
     } catch (error) {
       console.error("Failed to submit the project:", error);
       setSubmissionSuccess(false);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
 
     setCurrentStep(5);

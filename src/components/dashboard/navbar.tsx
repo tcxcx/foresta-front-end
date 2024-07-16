@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import ConnectedAccount from "../Web3/ConnectedAccount";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import { useAuth } from "@/hooks/context/account";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -17,18 +17,18 @@ export default function Navbar() {
   }, [jwtToken, router]);
 
   if (!jwtToken) {
-    return <div> unauthorized...</div>;
+    return <div className="hidden"> unauthorized...</div>;
   }
 
   return (
     <>
-      <header className="relative p-0 z-1 bottom-1 border-b border-t border-gray-100 dark:border-secondary bg-white dark:bg-background">
+      <header className="relative p-0 z-10 bottom-1 border-b border-t border-gray-100 dark:border-secondary bg-white dark:bg-background">
         <nav className="flex items-center px-2 justify-between">
           <div className="text-center">
             <Link href="/" passHref>
               <div className="flex items-center my-4">
                 <Image
-                  src="/images/logo-icon.png"
+                  src="/images/logo-icon-2.png"
                   alt="Foresta Logo"
                   width={30}
                   height={30}
@@ -47,7 +47,7 @@ export default function Navbar() {
           <div className="text-center invisible">
             <div className="flex items-center m-4">
               <Image
-                src="/images/logo-icon.png"
+                src="/images/logo-icon-2.png"
                 alt="Foresta Logo"
                 width={30}
                 height={30}

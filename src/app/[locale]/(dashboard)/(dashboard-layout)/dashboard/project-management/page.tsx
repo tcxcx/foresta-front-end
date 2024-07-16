@@ -58,6 +58,7 @@ export default function ProjectManagement() {
     }
   }, [allCollectivesInfo, loading, error]);
 
+
   const hasProjects =
     allCollectivesInfo[0]?.ForestaCollectives?.approvedProjects.length > 0;
   const hasCollectives = allCollectivesInfo.length > 0;

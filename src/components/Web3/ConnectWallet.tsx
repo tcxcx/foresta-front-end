@@ -1,7 +1,7 @@
 // ConnectWallet.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import Image from "next/image";
 import useInjectedWeb3 from "@/components/Web3/useInjectedWeb3";
@@ -42,7 +42,7 @@ export const ConnectWallet: React.FC<Props> = ({ onAccounts }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 items-center justify-items-center sm:gap-4 sm:p-4">
+      <div className="grid grid-cols-1 gap-4 items-center justify-items-center pt-10 sm:gap-4 sm:p-4">
         <p className="dark:text-white text-lg font-clash uppercase animate-pulse">
           Sign in here
         </p>

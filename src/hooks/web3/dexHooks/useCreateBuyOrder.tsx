@@ -68,6 +68,7 @@ export const createBuyOrder = async (
       onInBlock: () => {},
       onSubmitted: () => {},
       onClose: () => {},
+      onError: () => {},
       dispatch: () => {},
       signerAddress: senderAddress,
       section: "dex",

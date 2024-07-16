@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { projectType, SdgDetails } from "../carbonCreditHooks/createProjectTypes";
+import { projectType, SdgDetails } from "@/lib/data/createProjectTypes";
 
 export const RegistryDetailSchema = z.object({
   regName: z.string(),

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchPoolDetails, fetchPoolCredits } from "@/hooks/web3/queries";
+import { fetchPoolDetails } from "@/hooks/web3/queries";
 
 interface PoolDetails {
   admin: string;
@@ -21,10 +21,8 @@ export const useFetchPoolDetails = (poolId: number) => {
       try {
         setLoading(true);
         const detailsResult = await fetchPoolDetails(poolId);
-        const creditsResult = await fetchPoolCredits(poolId);
 
         setPoolDetails(detailsResult);
-        setPoolCredits(creditsResult);
       } catch (e: any) {
         console.error("Failed to fetch pool data:", e);
         setError(e.toString());
@@ -36,5 +34,5 @@ export const useFetchPoolDetails = (poolId: number) => {
     fetchData();
   }, [poolId]);
 
-  return { poolDetails, poolCredits, loading, error };
+  return { poolDetails, loading, error };
 };

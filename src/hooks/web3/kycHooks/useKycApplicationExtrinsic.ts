@@ -71,6 +71,7 @@ const useKycApplication = () => {
         onInBlock: () => {},
         onSubmitted: () => {},
         onClose: () => {},
+        onError: () => {},
         signerAddress: accountAddress,
         section: "kycPallet",
         method: "applyForMembership",

@@ -68,6 +68,7 @@ export async function createProject(
       onInBlock: () => {},
       onSubmitted: () => {},
       onClose: () => {},
+      onError: () => {},
       signerAddress: senderAddress,
       section: "carbonCredits",
       method: "create",

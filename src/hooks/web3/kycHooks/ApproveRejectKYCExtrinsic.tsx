@@ -1,12 +1,16 @@
-import { useState } from 'react';
-import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp';
-import { ApiPromise, WsProvider } from '@polkadot/api';
-import { sendTx } from '@/hooks/web3/sendTx';
-import { toast } from 'sonner';
-import { APP_NAME, WSS_ENDPOINT } from '@/lib/constants';
+import { useState } from "react";
+import {
+  web3Enable,
+  web3Accounts,
+  web3FromAddress,
+} from "@polkadot/extension-dapp";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { sendTx } from "@/hooks/web3/sendTx";
+import { toast } from "sonner";
+import { APP_NAME, WSS_ENDPOINT } from "@/lib/constants";
 
-const ADMIN_WALLET_ADDRESS = process.env.NEXT_PUBLIC_ADMIN_WALLET_ADDRESS as string;
-
+const ADMIN_WALLET_ADDRESS = process.env
+  .NEXT_PUBLIC_ADMIN_WALLET_ADDRESS as string;
 
 const useApproveRejectKYC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,9 +39,12 @@ const useApproveRejectKYC = () => {
     console.log("[useApproveRejectKYC] Retrieving admin signer...");
     await enableWeb3();
     const allAccounts = await web3Accounts();
-    const adminAccount = allAccounts.find(account => account.address === ADMIN_WALLET_ADDRESS);
+    const adminAccount = allAccounts.find(
+      (account) => account.address === ADMIN_WALLET_ADDRESS
+    );
     if (!adminAccount) {
-      const error = "Admin account not found. Please ensure the Polkadot{.js} extension is installed and the admin account is loaded.";
+      const error =
+        "Admin account not found. Please ensure the Polkadot{.js} extension is installed and the admin account is loaded.";
       console.error(`[useApproveRejectKYC] ${error}`);
       toast.error(error);
       throw new Error(error);
@@ -48,7 +55,9 @@ const useApproveRejectKYC = () => {
   };
 
   const approveKYC = async (applicantId: string, kycLevel: string) => {
-    console.log(`[useApproveRejectKYC] Approving KYC for ${applicantId} at level ${kycLevel}...`);
+    console.log(
+      `[useApproveRejectKYC] Approving KYC for ${applicantId} at level ${kycLevel}...`
+    );
     setIsLoading(true);
     try {
       const api = await initApi();
@@ -69,6 +78,7 @@ const useApproveRejectKYC = () => {
         onInBlock: () => {},
         onSubmitted: () => {},
         onClose: () => {},
+        onError: () => {},
         signerAddress: ADMIN_WALLET_ADDRESS, // Use the admin account for signing
         section: "kycPallet",
         method: "acceptMember",
@@ -103,12 +113,13 @@ const useApproveRejectKYC = () => {
         onInBlock: () => {},
         onSubmitted: () => {},
         onClose: () => {},
+        onError: () => {},
         signerAddress: ADMIN_WALLET_ADDRESS, // Use the admin account for signing
         section: "kycPallet",
         method: "rejectMember",
         dispatch: () => {}, // Provide a no-op function if needed
       });
-    } catch (error:any) {
+    } catch (error: any) {
       setIsLoading(false);
       console.error("[useApproveRejectKYC] Error in rejecting KYC:", error);
       toast.error(`Error in rejecting KYC: ${error.message}`);

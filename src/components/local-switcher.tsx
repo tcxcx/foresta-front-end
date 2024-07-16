@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
@@ -23,10 +22,10 @@ export default function LocaleSwitcher() {
 
   return (
     <Select onValueChange={handleLocaleChange} value={selectedLocale}>
-      <SelectTrigger className="w-[100px]">
+      <SelectTrigger className="w-full lg:w-[100px]">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-white shadow-xl rounded-md">
         <SelectItem value="en">English</SelectItem>
         <SelectItem value="es">Español</SelectItem>
       </SelectContent>

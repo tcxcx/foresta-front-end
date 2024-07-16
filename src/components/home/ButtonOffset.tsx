@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"; // Ensure these imports match your project's structure
+} from "@/components/ui/tooltip";
 
 interface ButtonOffsetProps {
   onClick: () => void;
@@ -28,7 +28,7 @@ const ButtonOffset: React.FC<ButtonOffsetProps> = ({ onClick, buttonText }) => {
             <button
               onClick={onClick}
               disabled={isDisabled}
-              className={`shadow-[inset_0_0_0_2px_#616467] px-12 py-4 rounded-full tracking-widest uppercase font-bold bg-transparent transition duration-200 ${
+              className={`shadow-[inset_0_0_0_2px_#616467] px-4 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-3 md:py-4 rounded-full tracking-widest uppercase font-bold bg-transparent transition duration-200 text-xs sm:text-sm md:text-base ${
                 account
                   ? "hover:bg-[#616467] hover:text-white dark:text-neutral-200"
                   : "opacity-50 cursor-not-allowed dark:text-neutral-200"

@@ -1,7 +1,6 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { hexToString } from "@polkadot/util";
 
-
 let apiInstance: ApiPromise | null = null;
 
 const initApi = async (): Promise<ApiPromise> => {
@@ -40,11 +39,6 @@ export const fetchApplicantDetails = async (accountId: string) => {
 };
 
 // Foresta Collectives queries
-// queries for project managament Collectives tab
-export const collectivesMembersCount = async (collectiveId: string) => {
-  const api = await initApi();
-  return api.query.forestaCollectives.membersCount(collectiveId);
-};
 
 /**
  * Checks if a user is a member of a collective.
@@ -52,8 +46,9 @@ export const collectivesMembersCount = async (collectiveId: string) => {
  * @param accountId The account ID of the user.
  * @returns A promise that resolves to a boolean indicating membership status.
  */
+
 export const userInCollective = async (
-  collectiveId: string,
+  collectiveId: number,
   accountId: string
 ): Promise<boolean> => {
   const api = await initApi();
@@ -64,34 +59,45 @@ export const userInCollective = async (
   return result.toHuman() === true;
 };
 
-export const projectManager = async (collectiveId: string) => {
+export const projectManager = async (collectiveId: number) => {
   const api = await initApi();
   return api.query.forestaCollectives.managers(collectiveId);
 };
 
-export const collectivesName = async (collectiveId: string) => {
+export const memberCollectiveCount = async (collectiveId: number) => {
   const api = await initApi();
-  return api.query.forestaCollectives.collectivesMap(collectiveId);
+  return api.query.forestaCollectives.membersCount(collectiveId);
+}
+
+export const collectivesName = async (collectiveId: number) => {
+  const api = await initApi();
+  const result = await api.query.forestaCollectives.collectivesMap(collectiveId);
+  return result ? result.toHuman() : "";
 };
 
-export const collectivesCount = async () => {
+export const totalCollectivesCount = async () => {
   const api = await initApi();
   return api.query.forestaCollectives.collectivesCount();
 };
 
-export const collectiveApprovedProjects = async (collectiveId: string) => {
+// forestaCollectives.projectVote: Option<PalletForestaCollectivesVote>
+// {
+//   yesVotes: 1
+//   noVotes: 0
+//   end: 2,358
+//   status: Deciding
+//   voteType: Proposal
+//   category: LandManagementAndRehabilitation
+//   priority: Low
+//   collectiveId: 0
+//   projectId: null
+// }
+export const collectiveVote = async (projectVote: number) => {
   const api = await initApi();
-  return api.query.forestaCollectives.approvedProjects(collectiveId);
+  return api.query.forestaCollectives.projectVote(projectVote);
 };
 
-// collectives governance
-
-export const activeVoting = async (collectiveId: string) => {
-  const api = await initApi();
-  return api.query.forestaCollectives.activeVoting(collectiveId);
-};
-
-export const checkMemberVote = async (accountId: string, voteId: string) => {
+export const checkMemberVote = async (accountId: string, voteId: number) => {
   const api = await initApi();
   const hasVoted = await api.query.forestaCollectives.checkMemberVote(
     accountId,
@@ -100,21 +106,23 @@ export const checkMemberVote = async (accountId: string, voteId: string) => {
   return hasVoted.toJSON();
 };
 
-export const projectVote = async (collectiveId: string) => {
+// vote for or against for a given user in a given vote. Returns boolean or none if the user has not voted.
+
+export const getVotePreference = async (  voteId: number, accountId: string ) => {
   const api = await initApi();
-  return api.query.forestaCollectives.projectVote(collectiveId);
+  return api.query.forestaCollectives.votePreferences(voteId, accountId);
 };
 
 // look what the two options mean and refactor
 export const getCollectiveProposals = async (
-  collectiveId: string,
-  proposalIndex: string
+  collectiveId: number,
+  voteId: number
 ) => {
   const api = await initApi();
-  return api.query.forestaCollectives.proposals(collectiveId, proposalIndex);
+  return api.query.forestaCollectives.proposals(collectiveId, voteId);
 };
 
-export const collectiveProposalsCount = async (collectiveId: string) => {
+export const collectiveProposalsCount = async (collectiveId: number) => {
   const api = await initApi();
   return api.query.forestaCollectives.proposalsCount(collectiveId);
 };
@@ -129,7 +137,7 @@ export const votesCount = async () => {
   return api.query.forestaCollectives.votesCount();
 };
 
-export const fetchProposalsForCollective = async (collectiveId: string) => {
+export const fetchProposalsForCollective = async (collectiveId: number) => {
   const api = await initApi();
   const proposalCount = await api.query.forestaCollectives.proposalsCount(
     collectiveId
@@ -145,6 +153,11 @@ export const fetchProposalsForCollective = async (collectiveId: string) => {
     proposals.push(proposal.toJSON());
   }
   return proposals;
+};
+
+export const collectiveApprovedProjects = async (collectiveId: string) => {
+  const api = await initApi();
+  return api.query.forestaCollectives.approvedProjects(collectiveId);
 };
 
 // carbon-credit queries
@@ -186,10 +199,17 @@ export const getProjects = async (projectId: string) => {
   return api.query.carbonCredits.projects(projectId);
 };
 
-export const retiredCredits = async (projectId: string, itemId: string) => {
+export const userRetirements = async (accountId: string): Promise<[number, number][]> => {
   const api = await initApi();
-  return api.query.carbonCredits.retiredCredits(projectId, itemId);
+  const result = await api.query.carbonCredits.userRetirements(accountId);
+  return result.toJSON() as [number, number][];
 };
+
+export const retiredCredits = async (assetId: number, itemId: number) => {
+  const api = await initApi();
+  return api.query.carbonCredits.retiredCredits(assetId, itemId);
+};
+
 
 // carbon-credit-pool queries
 
@@ -298,51 +318,55 @@ export const userOpenOrderUnitsAllowed = async (accountId: string) => {
 //   return api.query.carbonCredits.creditBalance(accountId);
 // };
 
-
 // Carbon Credits queries
 export const fetchCarbonCreditsDetails = async (assetId: string) => {
-    const api = await initApi();
-    const assetDetails = await api.query.carbonCredits.assetIdLookup(assetId);
-    const projectDetails = await api.query.carbonCredits.projects(assetDetails);
-    return { assetDetails: assetDetails.toJSON(), projectDetails: projectDetails.toJSON() };
+  const api = await initApi();
+  const assetDetails = await api.query.carbonCredits.assetIdLookup(assetId);
+  const projectDetails = await api.query.carbonCredits.projects(assetDetails);
+  return {
+    assetDetails: assetDetails.toJSON(),
+    projectDetails: projectDetails.toJSON(),
   };
+};
 
-  // Pools queries
-  export const fetchPoolCredits = async (poolId: number) => {
-    const api = await initApi();
-    return (await api.query.carbonCreditsPool.poolCredits(poolId)).toJSON();
-  };
-  
-  export const fetchPoolDetails = async (poolId: number) => {
-    const api = await initApi();
-    return (await api.query.carbonCreditsPool.pools(poolId)).toJSON();
-  };
-  
-  // DEX queries
-  export const fetchDEXBuyOrderCount = async () => {
-    const api = await initApi();
-    return (await api.query.dex.buyOrderCount()).toJSON();
-  };
+// Pools queries
 
-  export const createBuyOrder = async (orderId: string, assetId:string, units: number, maxFee: number) => {
-    const api = await initApi();
-    return (await api.query.dex.createBuyOrder(orderId, assetId, units, maxFee));
-  };
-  
-  export const fetchDEXOrders = async () => {
-    const api = await initApi();
-    return (await api.query.dex.orders()).toJSON();
-  };
-  
-  export const fetchDEXBuyOrdersByUser = async (accountId: string) => {
-    const api = await initApi();
-    return (await api.query.dex.buyOrdersByUser(accountId)).toJSON();
-  };
-  
 
-  // asset queries
+export const fetchPoolDetails = async (poolId: number) => {
+  const api = await initApi();
+  return (await api.query.carbonCreditsPool.pools(poolId)).toJSON();
+};
 
-  export const assetsAccount = async (assetId: string, accountId: string) => {
-    const api = await initApi();
-    return (await api.query.assets.account(assetId, accountId)).toJSON();
-  };
+// DEX queries
+export const fetchDEXBuyOrderCount = async () => {
+  const api = await initApi();
+  return (await api.query.dex.buyOrderCount()).toJSON();
+};
+
+export const createBuyOrder = async (
+  orderId: string,
+  assetId: string,
+  units: number,
+  maxFee: number
+) => {
+  const api = await initApi();
+  return await api.query.dex.createBuyOrder(orderId, assetId, units, maxFee);
+};
+
+export const fetchDEXOrders = async () => {
+  const api = await initApi();
+  return (await api.query.dex.orders()).toJSON();
+};
+
+export const fetchDEXBuyOrdersByUser = async (accountId: string) => {
+  const api = await initApi();
+  return (await api.query.dex.buyOrdersByUser(accountId)).toJSON();
+};
+
+// asset queries
+
+export const assetsAccount = async (assetId: string, accountId: string) => {
+  const api = await initApi();
+  return (await api.query.assets.account(assetId, accountId)).toJSON();
+};
+

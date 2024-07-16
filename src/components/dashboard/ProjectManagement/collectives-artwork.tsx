@@ -2,7 +2,6 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Separator } from "@radix-ui/react-select";
 import {
   HoverCard,
   HoverCardContent,
@@ -11,12 +10,9 @@ import {
 import truncateMiddle from "truncate-middle";
 import Identicon from "@polkadot/react-identicon";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 
-import { Collective } from "@/lib/data/projects";
-import { SDG } from "@/lib/data/SDGs";
 
 interface CollectivesArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   collective: any;
@@ -57,7 +53,7 @@ export function CollectivesArtwork({
       : "Upcoming";
 
 
-      const dummyImageUrl = "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=1682&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+      const dummyImageUrl = "https://images.unsplash.com/photo-1473448912268-2024ce9509d8?q=80&w=1682&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
   return (
     <div className={cn("space-y-3", className)} {...props}>

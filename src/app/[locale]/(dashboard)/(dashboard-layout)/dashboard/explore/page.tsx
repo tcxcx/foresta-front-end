@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { Metadata } from "next";
 import SideMenu from "@/components/dashboard/SideMenu";
 import SideMenuSkeleton from "@/components/dashboard/Skeleton/SideMenuSkeleton";
 import Navbar from "@/components/dashboard/navbar";
@@ -16,9 +15,8 @@ import {
 import { ResizableSkeleton } from "@/components/dashboard/Skeleton/ResizableSkeleton";
 import { useKYCSubscription } from "@/hooks/web3/kycHooks/useKycSubscription";
 import { Terminal } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { SheetKyc1 } from "@/components/dashboard/kycLevel1";
+import { SheetKyc1 } from "@/components/dashboard/Marketplace/kycLevel1";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -46,7 +44,7 @@ export default function DashboardLayout({
 
   return jwtToken ? (
     <>
-      <div className="flex h-screen bg-gray-50 dark:bg-background border border-gray-100 dark:border-secondary z-50">
+      <div className="flex h-screen bg-muted dark:bg-background border border-gray-100 dark:border-secondary z-50">
         <Suspense fallback={<SideMenuSkeleton />}>
           <SideMenu />
         </Suspense>

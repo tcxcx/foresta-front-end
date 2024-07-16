@@ -1,5 +1,3 @@
-import { Metadata } from "next";
-import Image from "next/image";
 import { ApplicantsList } from "@/components/admin/ApplicantsList";
 import { Button } from "@/components/ui/button";
 import {

@@ -82,13 +82,11 @@ export const SignIn: React.FC<Props> = ({ accounts, onCancel, onSignedIn }) => {
   };
 
   return (
-    <div className="h-full flex flex-1 flex-col">
-      <p className="text-black dark:text-white text-lg font-clash  uppercase">
-        Sign In
-      </p>
-      <p className="text-text-stone-900 dark:text-stone-500">
-        Select an account to sign in with.
-      </p>
+    <div className="flex flex-col justify-between h-full">
+    <div className="text-right">
+      <p className="text-black dark:text-white text-lg font-clash uppercase">Sign In</p>
+      <p className="text-gray-900 dark:text-gray-500">Select an account to sign in with.</p>
+    </div>
       <div className="my-4 flex flex-col h-full overflow-y-auto gap-3 p-2 rounded-lg border border-stone-800">
         {accounts.length > 0 ? (
           accounts.map((account) => (

@@ -1,27 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import truncateMiddle from "truncate-middle";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import Identicon from "@polkadot/react-identicon";
-import { CopyIcon, ExitIcon } from "@radix-ui/react-icons";
+import {  ExitIcon } from "@radix-ui/react-icons";
 import { useProtectedService } from "@/hooks/JWT/useProtectedService";
 import Button from "@/components/ui/ButtonLeft";
-import { Skeleton } from "@/components/ui/skeleton";
-import { copyToClipboard } from "@/lib/utils";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/context/account";
 import { useLocale } from "next-intl";
 import { useSignOut } from "@/hooks/JWT/useSignOut";
 
 type Props = {
-  account: InjectedAccountWithMeta;
+  account: InjectedAccountWithMeta | null;
   jwtToken: string;
   onSignOut: () => void;
 };
 
 export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
+  
   const router = useRouter();
   const locale = useLocale();
   const { jwtToken } = useAuth(); 
@@ -43,14 +41,23 @@ export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
     }
   };
 
+  if (!account) {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="p-4 bg-basement-tone-purple rounded-md">
+          <p className="text-white">No account available</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between p-4 bg-basement-tone-purple rounded-md">
         <div className="flex items-center gap-4 z-10">
-          <Identicon value={account.address} size={32} theme="polkadot" />
+          <Identicon value={account?.address} size={32} theme="polkadot" />
           <div>
-            <div className="text-white font-bold">{account.meta.name}</div>
+            <div className="text-white font-bold">{account?.meta.name}</div>
             <div className="text-stone-400 text-xs">
               {truncateMiddle(account.address, 5, 5, "...")}
             </div>

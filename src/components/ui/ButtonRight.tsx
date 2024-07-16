@@ -34,7 +34,7 @@ export const ButtonRight: React.FC<ButtonRightProps> = ({
         <span
           className={`absolute inset-y-0 right-0 w-[2px] bg-primary ${transitionClass} group-active:bg-primary/10 duration-300 ease-in-out`}
         ></span>
-        <span className={`relative text-lg ${textColorClass}`}>
+        <span className={`relative text-xs lg:text-xl ${textColorClass}`}>
           {disabled ? stateText : text}
         </span>
       </span>

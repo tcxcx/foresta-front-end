@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { projectType as projectTypeEnum } from "@/hooks/web3/carbonCreditHooks/createProjectTypes";
+import { projectType as projectTypeEnum } from "@/lib/data/createProjectTypes";
 
 interface StepProps {
   form: UseFormReturn<ProjectFormData>;

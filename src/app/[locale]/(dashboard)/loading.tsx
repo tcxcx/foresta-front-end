@@ -1,4 +1,3 @@
-import { ResizableSkeleton } from "@/components/dashboard/Skeleton/ResizableSkeleton";
 import SideMenuSkeleton from "@/components/dashboard/Skeleton/SideMenuSkeleton";
 
 export default function Loading() {

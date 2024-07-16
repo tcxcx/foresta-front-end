@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 import {
-  collectivesCount,
-  collectivesMembersCount,
   collectivesName,
-  collectiveApprovedProjects,
   projectManager,
   userInCollective,
-  activeVoting,
   checkMemberVote,
-  projectVote,
+  totalCollectivesCount,
   getCollectiveProposals,
+  memberCollectiveCount,
+  collectiveApprovedProjects,
   collectiveProposalsCount,
   getVotes,
+  collectiveVote,
   votesCount,
 } from "@/hooks/web3/queries";
 
@@ -43,40 +42,36 @@ export const useFetchAllCollectivesInfo = (userAccountId: string) => {
     const fetchAllCollectivesInfo = async () => {
       setLoading(true);
       try {
-        const totalCollectivesCodec = await collectivesCount();
+        const totalCollectivesCodec = await totalCollectivesCount();
         const totalCollectives = Number(totalCollectivesCodec.toString());
         const collectiveIds = Array.from({ length: totalCollectives }, (_, i) => i.toString());
 
         const collectiveInfos = await Promise.all(
-          collectiveIds.map(async (id) => {
-            const membersCountCodec = await collectivesMembersCount(id);
-            const membersCount = Number(membersCountCodec.toString());
-            const managersCodec = await projectManager(id);
-            const managers = managersCodec.toJSON() as string[];
-            const collectivesMap = (await collectivesName(id)).toHuman();
-            const approvedProjectsCodec = await collectiveApprovedProjects(id);
-            const approvedProjects = approvedProjectsCodec.toJSON() as number[];
-            const userIsMember = await userInCollective(id, userAccountId);
-
-            // Governance-related queries
-            const activeVotingsCodec = await activeVoting(id);
-            const activeVotings = activeVotingsCodec.toJSON() as number[];
-            const memberVoteStatusCodec = await checkMemberVote(userAccountId, id);
-            const memberVoteStatus = memberVoteStatusCodec === true;
-            const projectVotesCodec = await projectVote(id);
-            const projectVotes = projectVotesCodec.toHuman();
-            const proposalsCountCodec = await collectiveProposalsCount(id);
-            const proposalsCount = Number(proposalsCountCodec.toString());
-            let proposals = [];
-            for (let i = 0; i < proposalsCount; i++) {
-              const proposalCodec = await getCollectiveProposals(id, i.toString());
-              proposals.push(proposalCodec.toHuman());
-            }
-            const votesCodec = await getVotes(id);
-            const votes = votesCodec.toHuman();
-            const votesCountCodec = await votesCount();
-            const votesCountNum = Number(votesCountCodec.toString());
-
+            collectiveIds.map(async (id) => {
+                const membersCountCodec = await memberCollectiveCount(Number(id));
+                const membersCount = Number(membersCountCodec.toString());
+                const managersCodec = await projectManager(Number(id));
+                const managers = managersCodec.toJSON() as string[];
+                const collectivesMap = (await collectivesName(Number(id)))?.toString();
+                const userIsMember = await userInCollective(Number(id), userAccountId);
+                const approvedProjectsCodec = await collectiveApprovedProjects(id);
+                const approvedProjects = approvedProjectsCodec.toJSON() as number[];
+                // Governance-related queries
+                const memberVoteStatusCodec = await checkMemberVote(userAccountId, Number(id));
+                const memberVoteStatus = memberVoteStatusCodec === true;
+                const projectVotesCodec = await collectiveVote(Number(id));
+                const projectVotes = projectVotesCodec.toHuman();
+                const proposalsCountCodec = await collectiveProposalsCount(Number(id));
+                const proposalsCount = Number(proposalsCountCodec.toString());
+                let proposals = [];
+                for (let i = 0; i < proposalsCount; i++) {
+                  const proposalCodec = await getCollectiveProposals(Number(id), i);
+                  proposals.push(proposalCodec.toHuman());
+                }
+                const votesCodec = await getVotes(id);
+                const votes = votesCodec.toHuman();
+                const votesCountCodec = await votesCount();
+                const votesCountNum = Number(votesCountCodec.toString());
             return {
               ForestaCollectives: {
                 collectivesMap,
@@ -86,7 +81,6 @@ export const useFetchAllCollectivesInfo = (userAccountId: string) => {
                 userIsMember,
               },
               ForestaCollectivesGovernance: {
-                activeVotings,
                 memberVoteStatus,
                 projectVotes,
                 proposals,
@@ -98,7 +92,7 @@ export const useFetchAllCollectivesInfo = (userAccountId: string) => {
           })
         );
 
-        setAllCollectivesInfo(collectiveInfos);
+        setAllCollectivesInfo(collectiveInfos as any);
       } catch (e: any) {
         console.error("Error fetching all collectives info:", e);
         setError(e);
